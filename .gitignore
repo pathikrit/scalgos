@@ -1,0 +1,22 @@
+# Git Ignore compiled from https://github.com/github/gitignore
+
+# IntelliJ files #
+*.iml
+*.ipr
+*.iws
+.idea/
+atlassian-ide-plugin.xml
+
+# OSX files #
+.DS_Store
+.Spotlight-V100
+.Trashes
+
+# sbt stuff #
+target/
+lib_managed/
+project/boot/
+project/build/target/
+project/plugins/target/
+project/plugins/lib_managed/
+project/plugins/src_managed/
