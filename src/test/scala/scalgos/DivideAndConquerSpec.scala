@@ -10,7 +10,12 @@ class DivideAndConquerSpec extends Specification {
 
     "work for arbitrary input" in {
       val heights = Seq(2, 7, 9, 11, 1, 1, 18, 6, 8, 5)
-      maxRectangleUnderHistogram(heights) must be equalTo(21)
+      maxRectangleUnderHistogram(heights) must be equalTo 21
+    }
+
+    "return same result as the DP algorithm" in {
+      val heights = Seq(2, 7, 9, 11, 1, 1, 18, 6, 8, 5)
+      maxRectangleUnderHistogram(heights) must be equalTo scalgos.DynamicProgramming.maxRectangleUnderHistogram(heights)
     }
   }
 
