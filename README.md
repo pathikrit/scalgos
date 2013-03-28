@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/pathikrit/scalgos.png)](http://travis-ci.org/pathikrit/scalgos)
+
 Goals
 =====
 
@@ -16,7 +18,6 @@ IntelliJ
 0. Install scala & sbt plugin
 1. Do `sbt gen-idea`
 2. Open the `scalgos` folder in "Open Project" or "Import Project"
-
 
 TODO
 ====
