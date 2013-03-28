@@ -1,24 +1,18 @@
-[![Build Status](https://secure.travis-ci.org/pathikrit/scalgos.png)](http://travis-ci.org/pathikrit/scalgos)
+[![Build Status](https://travis-ci.org/pathikrit/scalgos.png)](http://travis-ci.org/pathikrit/scalgos)
 
 Goals
 =====
-
-0. Text book implementation of common algorithms in idiomatic functional Scala
-1. No, external dependency (except spec2 for unit testing)
+1. Text book implementation of common algorithms in idiomatic functional Scala
+2. No external dependency (except spec2 for unit testing)
+3. 100% test coverage and documentation
 
 Building
 ========
-
-0. Install [sbt](http://www.scala-sbt.org/release/docs/Getting-Started/Setup.html)
-1. Build and run tests - `sbt test-only`
+1. Install [sbt](http://www.scala-sbt.org/release/docs/Getting-Started/Setup.html)
+2. Build and run tests: `sbt test`
 
 IntelliJ
 ========
-
-0. Install scala & sbt plugin
-1. Do `sbt gen-idea`
-2. Open the `scalgos` folder in "Open Project" or "Import Project"
-
-TODO
-====
-chess, disjoint set, game net tree-inorder, pre-order, qsort
+1. Install scala & sbt plugin
+2. Do `sbt gen-idea`
+3. "Open Project" and select the scalgos directory
