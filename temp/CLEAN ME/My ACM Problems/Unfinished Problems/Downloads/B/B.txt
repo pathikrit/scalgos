@@ -1,0 +1,31 @@
+Problem Statement:
+Its Saturday night and Rick is planning to watch a movie online. However, his internet is often flaky and Rick wants to watch the movie uninterrupted. So, he plans to let the movie buffer for a while and then start watching. 
+For example, if the length of the movie is 1 hour and the size of the movie is 3612 bytes and the download speed is 1 bytes/s, Rick needs to wait 12 seconds to buffer and download 12 bytes during those 12 seconds. After 12 seconds, Rick can watch the movie uninterrupted for the next 1 hour (3600 seconds) as he lets the movie download simultenously as he watches it.
+
+Rick knows the length of the movie and the size of the movie and his internet speed and he wants to write a program to help him decide how long he has to wait for an uninterrupted Saturday night online movie experience.
+
+Input:
+The input consists of multiple cases. Each line contains one test case. Each input is of the form "D S L" where D is the download speed in bytes/seconds, S is the size of the movie in bytes, L is the length of the movie in seconds.
+
+Input Constraints:
+The last case of input is of the form "0 0 0". 
+For all other cases:
+D is between 0 byte/s and 1 GB/s (both exclusive)
+S is between 0 bytes and 1 GB (both exclusive) 
+L is between 0 seconds and 24 hours (both exclusive)
+
+Output:
+For each test case, output the minimum time Rick needs to wait for the movie to buffer so that he can watch the rest of the movie uninterrupted. If test case is "0 0 0", stop outputting and exit. For all other inputs, print one line of output.
+If Rick does not needs to wait at all (this happens when there is really fast download speed), output "Rick does not need to wait at all!".  If Rick needs to wait for greater than or equal to 24 hours to buffer, output "Rick needs to get a faster internet!". Otherwise, output "Rick needs to wait for: s Seconds" where s is rounded till the thousandth decimal place (s is of the form number.xxx x are digits). Note: 0.0005 is rounded up to 0.001
+
+Sample Input:
+3600 3612 1
+1 1000000000 10
+2 1 100
+0 0 0
+
+Sample Output for Sample Input:
+Rick needs to wait for: 12.000 s
+Rick needs to get a faster internet!
+Rick does not need to wait at all!
+

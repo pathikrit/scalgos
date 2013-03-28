@@ -1,0 +1,34 @@
+Problem Statement:
+Rebecca likes to listen to the radio while she drives. She is undertaking a long trip from her hometown to FarFarAway. The trip involves desolate stretches through canyons and deserts. She is worried that she might not get any radio signals in some parts of her trip.
+
+
+Help her figure out how long she has to be radio less for the trip.
+
+
+
+
+Input:
+
+The first line would contain a single integer, N, denoting the number of test cases. Each test case corresponds to a single trip.
+Each test case would start with a line containing a single integer denoting the number of radio stations Rebecca would encounter during her trip. Each of the next R lines would contain two integers S and E.
+
+
+
+
+
+Input Constraints:
+
+
+
+Output:
+
+
+
+
+Sample Input:
+
+
+
+
+Sample Output for Sample Input:
+

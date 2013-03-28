@@ -1,0 +1,40 @@
+Problem Statement:
+There are B boys in DICS (Dudes in Computer Science) and G girls in WICS (Women in Computer Science). Lorenzo wants to select exactly N boy-girl pair for pair-programming his latest operating system. But, this is not a straightforward task since some of the girls do not like some of the boys. Help Lorenzo figure out how many different ways he can select N boy-girl pairs where the girls do like their partners.
+
+Input:
+The input consists of multiple cases. The first line would contain a positive integer, C, denoting the number of test-cases. Each test case begins with a line of the form "B G N". The next B lines contains strings of length G. If the jth character of the ith string is Y, it means the ith boy can work with the jth girl. But, if that character is 'N', it means that the jth girl does not like the ith boy.
+
+Input Constraints:    
+B, G and N each would be between 1 and 10 (both inclusive).
+Each string would only consist of upper-case letters 'Y' or 'N'.
+
+Output:
+For each input case, you should produce 1 line of output. Each output line should contain a single integer which equals the number of ways Lorenzo can select N boy-girl pairs such that all members of the pair like each other.
+ 
+Sample Input:
+4
+3 4 3
+YYYY 
+YYYY
+YYYY
+3 4 3
+YYNN 
+NYYN
+NNYY
+3 2 3
+YY
+YY
+YY
+6 6 3
+YYNNNN
+NYYNNN
+NNYYNN
+NNNYYN
+NNNNYY
+YNNNNY
+
+Sample Output for Sample Input:
+24
+4
+0
+112

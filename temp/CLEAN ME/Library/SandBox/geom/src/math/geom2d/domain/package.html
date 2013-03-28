@@ -1,0 +1,23 @@
+<html>
+<head>
+</head>
+<body>
+<p>Curves interface hierarchy, and implementations of curve sets and various poly-curves.</p> 
+
+<p>Contains the definition of Curve2D, the main interface for curves, and
+several specialisations: ContinuousCurve2D, which is continuous, and
+SmoothCurve2D, which defines tangent and curvature at each point.</p>
+
+<p>The interface OrientedCurve2D defines curves which can decide whether a
+point is inside or outside their domain. Continuous and smooth oriented curves
+are defined by classes ContinuousOrientedCurve and SmoothOrientedCurve2D
+respectively.<p>
+
+<p>Curves can be combined to form a CurveSet2D. If the curves of curveset are
+continuous and linked each other, a PolyCurve2D can be used.<p>
+
+<p>Curves can be used to define boundary of domain. Such curves must be
+instances of BoundaryCurve2D, which are either sets of OrientedCurve2D, or
+single ContinuousOrientedCurve2D.</p>
+</body>
+</html>

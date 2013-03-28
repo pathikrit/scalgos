@@ -1,0 +1,7 @@
+Given:
+You have a weird text editor which only has the following 3 operations: 
+1) If you press C, it copies the entire contents of the file into the clipboard and charges you c dollars.
+2) If you press P, it appends the contents of your clipboard to the file's contents and charges you p dollars
+3) If you press any other key, it appends one character 'X' into the file and charges you w dollars
+
+Given c, p, w and n return the cheapest cost for you to write n 'X's in an empty file

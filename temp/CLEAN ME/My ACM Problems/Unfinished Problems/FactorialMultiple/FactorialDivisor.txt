@@ -1,0 +1,1 @@
+Given an integer n, find the smallest k such that n divides k!

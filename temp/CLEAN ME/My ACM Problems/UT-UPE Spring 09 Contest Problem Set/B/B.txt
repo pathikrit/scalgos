@@ -1,0 +1,50 @@
+Problem Statement:
+The people of RGB Street have decided to paint each of their houses red, green, or blue. They've also decided that no two neighboring houses will be painted the same color. The neighbors of house i are houses i-1 and i+1. The first and last houses are not neighbors. Each house costs a certain amount to color depending on the color. Help the people of RGB Street minimze their total cost of painting their houses.
+
+Input:
+The input consists of multiple cases. The first line would contain a positive integer, C, denoting the number of test-cases. Each test case begins with a line containing a positive integer N. The next N lines would each of the form "R G B" where R, G, B on the ith line denotes the cost of coloring the ith house red, green or blue respectively.
+
+Output:
+For each input case, you should produce 1 line of output. Each output line should contain a single integer which equals the minimum cost of painting the houses in non-consequtive colors.
+ 
+Input Constraints:
+N will be between 1 and 20, both inclusive
+R, G, B will each be between 1 and 1000, both inclusive
+
+Sample Input:
+5
+3
+1 100 100
+100 1 100
+100 100 1
+3
+1 100 100
+100 100 100
+1 100 100
+3
+26 40 83
+49 60 57
+13 89 99
+6
+30 19 5
+64 77 64
+15 19 97
+4 71 57
+90 86 84
+93 32 91
+8
+71 39 44
+32 83 55
+51 37 63
+89 29 100
+83 58 11
+65 13 15
+47 25 29
+60 66 19
+
+Sample Output for Sample Input:
+3
+102
+96
+208
+253
