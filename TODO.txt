@@ -1,1 +1,5 @@
-chess, disjoint set, game net, qsort
+chess
+disjoint set
+game net
+convex hull
+chinese remainder theorem

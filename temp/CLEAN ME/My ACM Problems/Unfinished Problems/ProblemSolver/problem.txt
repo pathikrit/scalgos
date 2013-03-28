@@ -1,4 +1,0 @@
-Given:
-Problem points: p[]
-Probability of solving: s[]
-Time taken to solv
