@@ -10,8 +10,8 @@ class DynamicProgrammingSpec extends Specification {
     "return 0 for empty histograms" in { maxRectangleInHistogram(Nil) must be equalTo(0) }
 
     "work for arbitrary input" in {
-      val heights = Seq(6, 3, 8, 4, 5, 8, 1, 2, 19, 2)
-      maxRectangleInHistogram(heights) must be equalTo 19
+      val dims = Seq((6, 1), (3, 5), (8, 1), (4, 9), (5, 3), (8, 2), (1, 18), (2, 2), (19, 1), (2, 10))
+      maxRectangleInHistogram(dims) must be equalTo 58
     }
   }
 }

@@ -5,28 +5,27 @@ import collection.mutable
 object DynamicProgramming {
 
   /**
-   * Finds largest rectangle (parallel to axes) under histogram with given heights and unit width
-   * O(n) since each block is pushed/popped exactly once in O(1) time
+   * Finds largest rectangle (parallel to axes) under histogram with given heights and width
+   * O(n) since its basically recursive fibonacci algorithm
    *
-   * @param heights heights of histogram
+   * @param dimensions (width, height)s of histogram
    * @return area of largest rectangle under histogram
    */
-  def maxRectangleInHistogram(heights: Seq[Int]) = {
-    case class Block(position: Int, height: Int, leftBarrier: Int) {
-      def areaUpto(to: Int) = height * (leftBarrier + to - position)
+  def maxRectangleInHistogram(dimensions: Seq[(Int, Int)]) = {
+    case class Block(width: Int, height: Int) {
+      val area = width * height
+      def join(other: Block) = Block(width + other.width, height min other.height)
     }
-    val blocks = mutable.Stack[Block]()
-    var (maxArea, position) = (0, 0)
-    for (height <- heights :+ 0) {    // insert 0 at end to flush stack
-      var popped = 0
-      while(!blocks.isEmpty && blocks.top.height > height) {
-        val taller = blocks.pop()
-        maxArea = maxArea max taller.areaUpto(position)
-        popped += 1
-      }
-      blocks push Block(position, height, popped)
-      position += 1
-    }
-    maxArea
+    implicit def toBlock(dimension: (Int, Int)) = Block(dimension._1, dimension._2)
+
+    val cache = mutable.Map.empty[Seq[Block], Int]
+
+    def area(blocks: Seq[Block]): Int = cache getOrElseUpdate (blocks, blocks match {
+      case Nil => 0
+      case first :: Nil => first.area
+      case first :: second :: rest => Seq(first.area, area(second :: rest), area((first join second) :: rest)).max
+    })
+
+    area(dimensions map toBlock)
   }
 }
