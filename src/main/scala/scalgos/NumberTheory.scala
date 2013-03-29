@@ -1,6 +1,7 @@
 package scalgos
 
 import collection.mutable
+import util.Random
 
 object NumberTheory {
 
@@ -8,7 +9,8 @@ object NumberTheory {
     val isPrime = new mutable.BitSet(n)
   }
 
-
-
-
+  def rand(start: Int = 0, end: Int) = {
+    assume(end >= start)
+    start + Random.nextInt(end - start)
+  }
 }

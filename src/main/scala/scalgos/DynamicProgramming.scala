@@ -28,6 +28,7 @@ object DynamicProgramming {
   /**
    * Finds largest rectangle (parallel to axes) under histogram with given heights and width
    * O(n) since its basically recursive fibonacci algorithm
+   * TODO: are there O(n) items in cache?
    *
    * @param dimensions (width, height)s of histogram
    * @return area of largest rectangle under histogram
