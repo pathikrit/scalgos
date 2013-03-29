@@ -1,16 +1,66 @@
 package scalgos
 
+import collection.mutable
+
 object Geometry {
 
-  case class Point(x: Double, y: Double)
+  case class Point(x: Double, y: Double) {
+    def manhattan = x+y
+  }
+
+  val origin = (0.0, 0.0)
+
+  case class Vector(A: Point, B: Point) {
+    def X(C: Point) = crossProduct(A, B, C)
+  }
+
   implicit def toPoint(tuple: (Double, Double)) = Point(tuple._1, tuple._2)
 
-  type Segment = (Point, Point)
+  /**
+   * Cross product of Segment(a, b) and Segment(a, c)
+   * Signed area of triangle formed by (a,b,c) i.e. if 0 then collinear
+   * if <0 counter-clockwise turn from (a,b) to (a,c) and vice-versa
+   * determinant | a.x  a.y  a.z |
+   *             | b.x  b.y  b.z |
+   *             | c.x  c.y  c.z |
+   *
+   * @param a first point
+   * @param b second point
+   * @param c third point
+   * @return cross product of segment(a,b) and segment(a,c)
+   */
+  def crossProduct(a: Point, b: Point, c: Point) = (b.x - a.x) * (c.y - a.y) - (c.x - a.x) * (b.y - a.y)
 
-  def vectorProduct(p0: Point, p1: Point, p2: Point) = (p1.x - p0.x) * (p2.y - p0.y) - (p2.x - p0.x) * (p1.y - p0.y)
+  /**
+   * Check if 2 segments intersect
+   * TODO: proof?
+   *
+   * @param i first segment
+   * @param j second segment
+   * @return true iff first and second intersects
+   */
+  def intersects(i: Vector, j: Vector) = (i X j.A) * (i X j.B) <= 0 && (j X i.A) * (j X i.B) <= 0
 
-  def intersects(a: Segment, b: Segment) =
-    vectorProduct(a._1, a._2, b._1) * vectorProduct(a._1, a._2, b._2) <= 0 &&
-    vectorProduct(b._1, b._2, a._1) * vectorProduct(b._1, b._2, a._2) <= 0
+  /**
+   * Finds convex hull using Graham Scan
+   * O(n log n) because of the sortBy
+   * Else each point is pushed/popped atmost twice (one each for reverse) in constant time in halfHull
+   *
+   * @param points input points
+   * @return points on the convex hull of the given points (including collinear points)
+   */
+  def grahamScan(points: Set[Point]) = {
+    assume(points.size >= 3)
+    type Hull = mutable.ArrayStack[Point]
 
+    def counterClockwise(h: Hull, p: Point) = {
+      while(h.size > 1 && crossProduct(h(1), h(0), p) < 0) { h pop }
+      h push p
+      h
+    }
+
+    def halfHull(points: Seq[Point]) = points.foldLeft(new Hull)(counterClockwise)
+    val sorted = points.toSeq.sortBy(p => (p.x, p.y))
+    (halfHull(sorted) ++ halfHull(sorted.reverse)).toSet
+  }
 }
