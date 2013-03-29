@@ -3,3 +3,12 @@ disjoint set
 game net
 convex hull
 chinese remainder theorem
+           def gcd(a: Int, b: Int): Int = if (b == 0) a else gcd(b, a%b)
+
+            def binaryGcd(a: Int, b: Int): Int = (a%2, b%2) match {
+              case (0, 0) => 2*binaryGcd(a/2, b/2)
+              case (0, 1) => binaryGcd(a/2, b)
+              case (1, 0) => binaryGcd(a, b/2)
+              case (1, 1) => binaryGcd(a-b, b)
+            }
+

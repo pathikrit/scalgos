@@ -17,7 +17,7 @@ object BinaryTree {
    */
   def reconstructBST[T](preOrder: Seq[T])(implicit ordering: Ordering[T]): Tree[T] = preOrder match {
     case Nil => None
-    case (root :: children) =>
+    case root :: children =>
       val (left, right) = children partition {_ < root}
       Some(Node(reconstructBST(left), root, reconstructBST(right)))
   }

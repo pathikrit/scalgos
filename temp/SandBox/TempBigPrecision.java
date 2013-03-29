@@ -1,30 +1,6 @@
 public class TempBigPrecision {
 
-    public static void main(String args[]) {
-        /*long k = 1<<30, m = 1<<30;
-        System.out.println(operate(k, m, '*'));
-        System.out.println("hello world");*/
 
-        for(int x = 2; x <= 100; x++)
-            for(int y= x+1; y <= 100; y++)
-                if(x + y > 100)
-                    break;
-                else if(isPrime(x) || isPrime(y))
-                    continue;
-                else {
-                    int s = x+y, p = x*y;
-                    System.out.println(s + " " + p + " (" + x + "," + y + ")");
-                }
-
-    }
-
-    static boolean isPrime(int n)
-    {
-        for(int i = 2; i*i <= n; i++)
-            if(n%i == 0)
-                return false;
-        return n>1;
-    }
 
     /*
      * Temporary solution to increase precision for +,-,* (not /) to 30 decimal digits (100 bits)
