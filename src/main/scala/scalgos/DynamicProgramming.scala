@@ -5,6 +5,22 @@ import collection.mutable
 object DynamicProgramming {
 
   /**
+   * Generate all possible valid brackets
+   * O(C(n)) = O(4^n / n^1.5)
+   * Number of brackets = C(n) i.e. the n-th Catalan number
+   * because C(n) = sigma(i = 0 to n-1 C(i)*C(n-i))
+   * TODO: memoize
+   *
+   * @param n number of pairs
+   * @return generate all possible valid n-pair bracket strings
+   */
+  def validBrackets(n: Int): Seq[String] = if (n == 0) Seq("") else for {
+    i <- 0 until n
+    a <- validBrackets(i)
+    b <- validBrackets(n-i-1)
+  } yield "(" + a  + ")" + b
+
+  /**
    * Finds largest rectangle (parallel to axes) under histogram with given heights and width
    * O(n) since its basically recursive fibonacci algorithm
    *
@@ -18,7 +34,7 @@ object DynamicProgramming {
     }
     implicit def toBlock(dimension: (Int, Int)) = Block(dimension._1, dimension._2)
 
-    val cache = mutable.Map.empty[Seq[Block], Int]
+    val cache = mutable.Map[Seq[Block], Int]()
 
     def area(blocks: Seq[Block]): Int = cache getOrElseUpdate (blocks, blocks match {
       case Nil => 0
