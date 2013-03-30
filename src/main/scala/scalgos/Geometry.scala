@@ -3,6 +3,9 @@ package scalgos
 import collection.mutable
 import java.awt.geom.GeneralPath
 
+/**
+ * Collection of geometrical algorithms
+ */
 object Geometry {
 
   /**

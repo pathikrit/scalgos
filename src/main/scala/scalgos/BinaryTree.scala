@@ -2,10 +2,22 @@ package scalgos
 
 import Ordering.Implicits._
 
+/**
+ * Collection of algorithms pertaining to Binary Trees
+ */
 object BinaryTree {
 
+  /**
+   * A BinaryTree
+   */
   type Tree[T] = Option[Node[T]]
 
+  /**
+   * A binary tree node
+   * @param left left sub-tree
+   * @param entry the value stored at the node
+   * @param right right sub-tree
+   */
   case class Node[T](left: Tree[T], entry: T, right: Tree[T])
 
   /**

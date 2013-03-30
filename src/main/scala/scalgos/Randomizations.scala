@@ -2,6 +2,9 @@ package scalgos
 
 import util.Random.{nextInt, nextDouble}
 
+/**
+ * Collection of randomized algorithms
+ */
 object Randomizations {
 
   /**

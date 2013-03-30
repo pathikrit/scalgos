@@ -1,5 +1,8 @@
 package scalgos
 
+/**
+ * Collection of divide and conquer algorithms
+ */
 object DivideAndConquer {
 
   /**

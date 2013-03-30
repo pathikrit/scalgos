@@ -2,6 +2,9 @@ package scalgos
 
 import collection.mutable
 
+/**
+ * Collection of DP algorithms
+ */
 object DynamicProgramming {
 
   /**

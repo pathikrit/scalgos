@@ -1,8 +1,10 @@
 package scalgos
 
 import collection.mutable
-import util.Random
 
+/**
+ * Collection of number theory algorithms
+ */
 object NumberTheory {
 
   def sieveOfEratosthenes(n: Int) = {
