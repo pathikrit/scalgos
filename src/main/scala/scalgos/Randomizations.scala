@@ -19,4 +19,6 @@ object Randomizations {
     assume(end > start)
     start + (end - start)*nextDouble()
   }
+
+  def findKth[T: Ordering](a: Seq[T], k: Int) = ???
 }

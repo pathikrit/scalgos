@@ -90,14 +90,15 @@ object Geometry {
       ((points filterNot quad.contains) ++ extremes).toSeq.sortBy(p => (p.x, p.y))
     }
 
-
-    def counterClockwise(h: Hull, p: Point) = {
-      while(h.size > 1 && crossProduct(h(1), h(0), p) < 0) { h pop }
+    def turnLeft(h: Hull, p: Point) = {
+      while(h.size > 1 && crossProduct(h(1), h(0), p) < 0) { // if crossProduct = 0, collinear, if > 0 "right turn"
+        h pop
+      }
       h push p
       h
     }
 
-    def halfHull(points: Seq[Point]) = points.foldLeft(new Hull)(counterClockwise)
+    def halfHull(points: Seq[Point]) = points.foldLeft(new Hull)(turnLeft)
     val sorted = aklToussaintHeuristic(points)
     (halfHull(sorted) ++ halfHull(sorted.reverse)).toSet
   }

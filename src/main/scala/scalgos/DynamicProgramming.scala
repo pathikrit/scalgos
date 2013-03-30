@@ -75,4 +75,6 @@ object DynamicProgramming {
     }
     lcs(x)(y)
   }
+
+  def longestIncreasingSubsequence[T: Ordering](a: Seq[T]) = ???
 }
