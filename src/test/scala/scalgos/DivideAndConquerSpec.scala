@@ -15,7 +15,8 @@ class DivideAndConquerSpec extends Specification {
     }
 
     "return same result as the DP algorithm" in {
-      val heights = Seq.fill(100)(NumberTheory.rand(1, 100))
+      import Randomizations.randomInteger
+      val heights = Seq.fill(100)(randomInteger(1, 100))
       maxRectangleInHistogram(heights) must be equalTo DynamicProgramming.maxRectangleInHistogram(heights map {(1, _)})
     }
   }
