@@ -1787,21 +1787,6 @@ public class Library
         return ans;
     }
     
-    //longest common SUBSEQUENCE (not substring)
-    
-    int longestCommonSubsequence(String a, String b)
-    {
-        int x = a.length(), y = b.length(), cache[][] = new int[x+1][y+1];
-        for(int i = 0; i <= x; i++)
-            for(int j = 0; j <= y; j++)
-                if(i == 0 || j == 0)
-                    cache[i][j] = 0;
-                else if(a.charAt(i-1) == b.charAt(j-1))
-                    cache[i][j] = 1 + cache[i-1][j-1];
-                else
-                    cache[i][j] = max(cache[i-1][j], cache[i][j-1]);
-        return cache[x][y];
-    }
 
     //maximum substring sum , not subset sum
     int kadane(int a[])

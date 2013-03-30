@@ -24,4 +24,16 @@ class DynamicProgrammingSpec extends Specification {
       maxRectangleInHistogram(dims) must be equalTo 58
     }
   }
+
+  "longestCommonSubsequence" should {
+    "return Nil if one of the input is empty" in {
+      {longestCommonSubsequence("hello", "") must be empty}
+      {longestCommonSubsequence("", "nastenka") must be empty}
+      {longestCommonSubsequence("", "") must be empty}
+    }
+    "return Nil if nothing common" in { longestCommonSubsequence("abcdef", "ghijklmonopqr") must be empty }
+    "work for arbitrary input" in {
+      longestCommonSubsequence("patrick", "pathikrit") must be equalTo("patik")
+    }
+  }
 }

@@ -50,4 +50,29 @@ object DynamicProgramming {
 
     area(dimensions map toBlock)
   }
+
+  /**
+   * Find longest common subsequence (not necessarily contiguous) of 2 sequences
+   * O(a.length * b.length) since each item in cache is filled exactly once in O(1) time
+   *
+   * @param a first sequence
+   * @param b second sequence
+   * @return longest common subsequence of a and b
+   */
+  def longestCommonSubsequence[T](a: Seq[T], b: Seq[T]) = {
+    val (x, y) = (a.length, b.length)
+    val lcs = Array.ofDim[Seq[T]](x+1,y+1)
+
+    for (i <- 0 to x; j <- 0 to y) lcs(i)(j) = {
+        if (i == 0 || j == 0)
+          Nil
+        else if (a(i-1) == b(j-1))
+          lcs(i-1)(j-1) :+ a(i-1)
+        else if (lcs(i-1)(j).length > lcs(i)(j-1).length)
+          lcs(i-1)(j)
+        else
+          lcs(i)(j-1)
+    }
+    lcs(x)(y)
+  }
 }
