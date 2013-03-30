@@ -12,3 +12,8 @@ chinese remainder theorem
               case (1, 1) => binaryGcd(a-b, b)
             }
 
+
+Bhowmick scan :-
+    1) select one segment on convex hull
+    2) Discard all points in between
+    3) triangular converge

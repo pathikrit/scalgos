@@ -1,17 +1,42 @@
 package scalgos
 
 import collection.mutable
+import java.awt.geom.GeneralPath
 
 object Geometry {
 
+  /**
+   * Represents a point
+   * @param x x-coordinate
+   * @param y y-coordinate
+   */
   case class Point(x: Double, y: Double) {
     def manhattan = x+y
   }
 
-  val origin = (0.0, 0.0)
-
+  /**
+   * Represents a vector between start and end
+   * @param A start
+   * @param B end
+   */
   case class Vector(A: Point, B: Point) {
     def X(C: Point) = crossProduct(A, B, C)
+  }
+
+  /**
+   * Represents a 2D shape or polygon
+   * A simple wrapper around Java's GeneralPath class
+   *
+   * @param points points on the shape
+   */
+  case class Shape(points: Set[Point]) {
+    private val polygon = new GeneralPath()
+
+    polygon moveTo (points.head.x, points.head.y)
+    points.tail foreach {p => polygon lineTo (p.x, p.y)}
+    polygon.closePath()
+
+    def contains(p: Point) = polygon contains (p.x, p.y)
   }
 
   implicit def toPoint(tuple: (Double, Double)) = Point(tuple._1, tuple._2)
@@ -53,6 +78,19 @@ object Geometry {
     assume(points.size >= 3)
     type Hull = mutable.ArrayStack[Point]
 
+    /**
+     * Discard points in interior of the quadrilateral formed by top, left, bottom, right
+     * @param points set of input points
+     * @return sorted remaining points
+     */
+    def aklToussaintHeuristic(points: Set[Point]) = {
+      def extremities: Array[Point => Double] = Array(_.x, -_.x, _.y, -_.y)
+      val extremes = extremities map {points minBy _}
+      val quad = Shape(extremes.toSet)
+      ((points filterNot quad.contains) ++ extremes).toSeq.sortBy(p => (p.x, p.y))
+    }
+
+
     def counterClockwise(h: Hull, p: Point) = {
       while(h.size > 1 && crossProduct(h(1), h(0), p) < 0) { h pop }
       h push p
@@ -60,7 +98,7 @@ object Geometry {
     }
 
     def halfHull(points: Seq[Point]) = points.foldLeft(new Hull)(counterClockwise)
-    val sorted = points.toSeq.sortBy(p => (p.x, p.y))
+    val sorted = aklToussaintHeuristic(points)
     (halfHull(sorted) ++ halfHull(sorted.reverse)).toSet
   }
 }
