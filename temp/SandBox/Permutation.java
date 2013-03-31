@@ -34,6 +34,7 @@ public class Permutation {
     }
 
     // for(long c = (1<<k)-1; c != 0; c = nextChooseK(n, c)) { print(Long.toBinaryString(c))}
+    // http://stackoverflow.com/questions/1851134/generate-all-binary-strings-of-length-n-with-k-bits-set
     static long nextChooseK(int n, long c) {
         long u = -c&c, v = c + u;
         return (c = v + (v^c)/u/4)>>n == 0 ? c : 0;

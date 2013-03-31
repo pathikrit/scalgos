@@ -13,7 +13,7 @@ class GeometrySpec extends Specification {
     "work for triangles" in { failure }.pendingUntilFixed("TODO")
 
     def randomGrahamScan = {
-      import Randomizations.randomInteger
+      import Randomized.randomInteger
       def randomPoint = Point(randomInteger(1, 100), randomInteger(1, 100))
       val points = (for(i <- 1 to 100) yield randomPoint).toSet
       (points, grahamScan(points))

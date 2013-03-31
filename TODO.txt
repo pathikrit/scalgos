@@ -25,3 +25,5 @@ Bhowmick scan :-
     3) triangular converge
 
 code style
+
+brfpt selection algo

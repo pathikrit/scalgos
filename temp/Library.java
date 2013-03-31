@@ -38,44 +38,11 @@ public class Library
     //toggle 1 or 0
     void print(Object ...o) { assert 1>0 : deepToString(o);}
 
-    //see StringBuilder for cool stuff
-    String reverse(String s) {return new String(new StringBuilder(s).reverse());}
-
     //returns 1 if a is greater than b, -1 if a is less than be b, 0 if they are equal
     int compareDoubles(double a, double b)
     {
         double d = a-b;
         return d > EPS ? 1 : d < -EPS ? -1 : 0;
-    }
-
-	int indexOf(Object array[], Object element) {
-		for(int i = 0; i < array.length; i++)
-			if(array[i].equals(element))
-				return i;
-		return -1;
-	}
-
-    //enum!
-    enum Language
-    {
-        JAVA   (".java", -9),
-        CPP    (".cpp", 3),
-        CSHARP (".cs", 5),
-        VBNET  (".vb", 6);
-
-        private String extension;
-        private int crap;
-
-        Language(String ext, int somenum)
-        {
-            extension = ext;
-            crap = somenum;
-        }
-
-        public String getExtension()
-        {
-            return extension;
-        }
     }
 
     // - a_min because it fucks other mins in this file
@@ -1061,44 +1028,7 @@ public class Library
 	// LCA in O(1) and O(height):
 	// Figure depth of node1 and node2 in O(height)
 	// Lift lower to same level such that node1 and node2 are in same level O(height)
-	// Then pair wise climb up 
-
-    //randomized algorithm to get the k-highest element in a[] in O(a.length) ammortized
-    int findKth(int a[], int k)
-    {
-        int n = a.length;
-
-        int val = a[(int)(n*random())];
-
-        ArrayList<Integer> high = new ArrayList(), low = new ArrayList(), equal = new ArrayList(), temp;
-
-        for(int i = 0; i < n; i++)
-            if(a[i] < val)
-                low.add(a[i]);
-            else if(a[i] > val)
-                high.add(a[i]);
-            else
-                equal.add(a[i]);
-
-        int l = low.size(), e = equal.size(), h = high.size();
-
-        if(k < l)
-            temp = low;
-        else if (k < l + e)
-            return val;
-        else
-        {
-            temp = high;
-            k -= l+e;
-        }
-
-        int next[] = new int[temp.size()];
-        for(int i = 0; i < next.length; i++)
-            next[i] = temp.get(i);
-
-        return findKth(next, k);
-    }
-    //experimentation ends
+	// Then pair wise climb up
 
     /*
      * naive implementation of dijkstra

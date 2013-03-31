@@ -15,8 +15,7 @@ class BinaryTreeSpec extends Specification {
 
   "reconstruct" should {
     "do a round-trip" in {
-      val inOrder = Seq(1, 2, 3, 4, 5)
-      val preOrder = Seq(5, 4, 3, 2, 1)
+      val (inOrder, preOrder) = (Seq(1, 2, 3, 4, 5), Seq(5, 4, 3, 2, 1))
       preOrderTraversal(reconstruct(inOrder, preOrder)) must be equalTo(preOrder)
     }
   }
