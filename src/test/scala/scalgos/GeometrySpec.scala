@@ -6,7 +6,7 @@ import scalgos.Geometry._
 
 class GeometrySpec extends Specification {
 
-  "graham scan" should {
+  "grahamScan" should {
 
     "fail for <3 points" in { failure }.pendingUntilFixed("TODO")
 
@@ -29,6 +29,6 @@ class GeometrySpec extends Specification {
 
     "work for circles" in { failure }.pendingUntilFixed("TODO")
 
-    "must match jarvis march" in { failure }.pendingUntilFixed("TODO")
+    "match jarvis march" in { failure }.pendingUntilFixed("TODO")
   }
 }

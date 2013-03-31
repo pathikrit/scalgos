@@ -18,7 +18,7 @@ class DynamicProgrammingSpec extends Specification {
       validBrackets(3) must contain("()()()", "()(())", "(())()", "((()))", "(()())").only
     }
 
-    "must match catalan numbers" in { failure }.pendingUntilFixed("TODO")
+    "match catalan numbers" in { failure }.pendingUntilFixed("TODO")
   }
 
   "maxRectangleUnderHistogram" should {
@@ -33,13 +33,13 @@ class DynamicProgrammingSpec extends Specification {
   }
 
   "longestCommonSubsequence" should {
-    "be Nil if one of the input is empty" in {
+    "be empty if one of the input is empty" in {
       {longestCommonSubsequence("hello", "") must be empty}
       {longestCommonSubsequence("", "nastenka") must be empty}
       {longestCommonSubsequence("", "") must be empty}
     }
 
-    "be Nil if nothing in common" in {
+    "be empty if nothing in common" in {
       longestCommonSubsequence("abcdef", "ghijklmonopqr") must be empty
     }
 
@@ -49,11 +49,11 @@ class DynamicProgrammingSpec extends Specification {
   }
 
   "longestIncreasingSubsequence" should {
-    "be Nil for empty sequence" in {
+    "be empty for empty sequence" in {
       longestIncreasingSubsequence(Seq[Int]()) must be empty
     }
 
-    "be 1 item for decreasing sequence" in {
+    "have 1 item for decreasing sequence" in {
       longestIncreasingSubsequence(Seq(5, 4, 3, 2, 1)) must have length(1)
     }
 
