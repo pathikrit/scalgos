@@ -17,7 +17,11 @@ class DynamicProgrammingSpec extends Specification {
       validBrackets(3) must contain("()()()", "()(())", "(())()", "((()))", "(()())").only
     }
 
-    "match catalan numbers" in { failure }.pendingUntilFixed("TODO")
+    "match catalan numbers" in {
+      for (i <- 0 to 10) {
+        validBrackets(i).length must be equalTo(NumberTheory.catalan(i).intValue)
+      }
+    }
   }
 
   "maxRectangleUnderHistogram" should {
