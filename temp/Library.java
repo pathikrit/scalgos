@@ -1766,26 +1766,6 @@ public class Library
             rep=REP+editDistance(aa,bb,cache);
         return cache[x][y] = min(del, min(ins, rep));
     }
-
-    /*
-     * if( a.length == 0), array index out of bonds exception
-     * above can be fixed by putting b[i] = 1 inside the for loop -> then it would return -1 for such case
-     * a faster O(n log n) algorithm exists
-     * Edge from i to j if a[i]<=a[j] and j>i. Find longest path in graph
-     */
-    int longestNonDecreasingSubsequence(int a[])
-    {
-        int n = a.length, ans = -1, b[] = new int[n];    //b stands for best
-        b[0] = 1;
-        for(int i = 0; i < n; i++)
-        {
-            for(int j = 0; j < i; j++)
-                if(b[i] <= b[j] && a[j] < a[i])        //here "non-decreasing" is defined, don't mess with b[i] <= b[j] !
-                    b[i] = b[j] + 1;
-            ans = max(ans, b[i]);
-        }
-        return ans;
-    }
     
 
     //maximum substring sum , not subset sum

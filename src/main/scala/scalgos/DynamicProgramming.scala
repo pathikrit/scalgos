@@ -1,6 +1,7 @@
 package scalgos
 
 import collection.mutable
+import scala.math.Ordering.Implicits._
 
 /**
  * Collection of DP algorithms
@@ -79,5 +80,47 @@ object DynamicProgramming {
     lcs(x)(y)
   }
 
-  def longestIncreasingSubsequence[T: Ordering](a: Seq[T]) = ???
+  /**
+   * Find longest (strictly) increasing subsequence
+   * O(n log n)
+   * Proof of correctness by induction
+   *
+   * @param s input sequence
+   * @return return longest increasing subsequence of a
+   */
+  def longestIncreasingSubsequence[T: Ordering](s: Seq[T]) = {
+    val best = mutable.Map.empty[Int, Seq[T]] // best(i) is longest sequence of length i
+    best(0) = Nil
+
+    /**
+     * Find i such that (best(i) :: a) is a valid increasing sequence where start <= i <= end
+     * O(log n) since we binary search
+     *
+     * @param a element to be inserted
+     * @param start start index of best
+     * @param end end index of best
+     * @return the longest item from best[start..end] where a can be appended to
+     */
+    def findCandidate(a: T, start: Int = 0, end: Int = best.size - 1): Int = {
+      if (start == end) {
+        start
+      } else {
+        assert(end > start)
+        val mid = (start + end + 1)/2       // bias towards right to handle 0,1 case since best(0).last is invalid
+        if (best(mid).last < a) {
+          findCandidate(a, mid, end)
+        } else {
+          findCandidate(a, start, mid-1)
+        }
+      }
+    }
+
+    for (item <- s) {
+      // Fredman-Knuth speedup: Quickly check if we can extend current best before doing binary search
+      val position = if (best.size > 1 && best(best.size-1).last < item) best.size-1 else findCandidate(item)
+      best(position+1) = best(position) :+ item   // end element of smaller list < end elements of larger lists
+    }
+
+    best(best.size - 1)
+  }
 }
