@@ -1,30 +1,34 @@
 package scalgos
 
 import org.specs2.mutable._
+
 import util.Random._
+
 import scalgos.Geometry.Point
-import util.Random
 
 class ScalgosSpec extends Specification {
 
-  def todo(msg: String) = msg in { failure }.pendingUntilFixed
+  def TODO(msg: String) = msg in { failure }.pendingUntilFixed
 
-  def randomInteger(start: Int = 0, end: Int) = {
+  def randomInteger(start: Int = 0, end: Int = 100) = {
     assume(end > start)
     start + nextInt(end - start + 1)
   }
 
-  def randomNumber(start: Double = 0, end: Double) = {
+  def randomNumber(start: Double = 0, end: Double = 1) = {
     assume(end > start)
     start + (end - start)*nextDouble()
   }
 
-  def randomSeq(number: Int, start: Int, end: Int) = Seq.fill(number)(randomInteger(start, end))
+  def randomSeq(number: Int = 100, min: Int = -10, max: Int = 10) = Seq.fill(number)(randomInteger(min, max))
 
-  def randomPoints(minX: Int, minY: Int, maxX: Int, maxY: Int, howMany: Int = 1) =
+  def randomPositiveSeq(number: Int = 100, max: Int = 10) = randomSeq(number, 0, max)
+
+  def randomPoints(minX: Int = -10, minY: Int = -10, maxX: Int = 10, maxY: Int = 10, howMany: Int = 100) =
     (for (i <- 1 to howMany) yield Point(randomInteger(minX, maxX), randomInteger(minY, maxY))).toSet
 
-  def randomGraph(numVertices: Int, edgeDensity: Double, isPositiveEdges: Boolean = true, isDirected: Boolean = true) = {
+  def randomGraph(numVertices: Int = 100, edgeDensity: Double = 0.25,
+                  isPositiveEdges: Boolean = true, isDirected: Boolean = true) = {
     assume(numVertices >= 0)
     assume(edgeDensity >= 0 && edgeDensity <= 1)
 

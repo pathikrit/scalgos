@@ -64,7 +64,7 @@ class DynamicProgrammingSpec extends ScalgosSpec {
     }
 
     "be same same as longestCommonSubsequence with sorted input" in {
-      val s = randomSeq(100, 1, 100).distinct // TODO: What happens when duplicates?
+      val s = randomSeq().distinct // TODO: What happens when duplicates?
       longestIncreasingSubsequence(s) must be equalTo(longestCommonSubsequence(s, s.sorted))
     }
   }

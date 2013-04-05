@@ -15,7 +15,7 @@ class DivideAndConquerSpec extends ScalgosSpec {
     }
 
     "be same result as the DP algorithm" in {
-      val heights = randomSeq(100, 1, 100)
+      val heights = randomPositiveSeq()
       maxRectangleInHistogram(heights) must be equalTo DynamicProgramming.maxRectangleInHistogram(heights map {(1, _)})
     }
   }
