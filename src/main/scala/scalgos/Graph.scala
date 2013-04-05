@@ -36,7 +36,8 @@ object Graph {
   type WeightedGraph = Graph[Double]
   type UnweightedGraph = Graph[Boolean]
 
-  def dijkstra(g: WeightedGraph, start: Int, end: Int) = AStar.run(start, _ == end, g.neighbours, (i, j) => g(i, j).get)
+  def dijkstra(g: WeightedGraph, start: Int, end: Int) =
+    AStar.run[Int](start, _ == end, g.neighbours, (i, j) => g(i, j).get)
 
   /**
    * Run Floyd-Warshall all pair shortest path algorithm on g

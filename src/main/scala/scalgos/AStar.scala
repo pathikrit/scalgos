@@ -20,8 +20,8 @@ object AStar {
   def run[Node](start: Node,
                 isGoal: Node => Boolean,
                 neighbors: Node => Iterable[Node],
-                distance: (Node, Node) => Double = 1,
-                heuristic: Node => Double = 0): Option[(Node, Seq[Node])] =
+                distance: (Node, Node) => Double = (i: Node, j: Node) => 1,
+                heuristic: Node => Double = (i: Node) => 0d): Option[(Node, Seq[Node])] =
   {
     val score = mutable.Map(start -> 0d).withDefaultValue(Double.PositiveInfinity)
     val priority = Ordering by {n: Node => score(n) + heuristic(n)} reverse
