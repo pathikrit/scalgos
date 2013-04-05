@@ -36,8 +36,20 @@ object Graph {
   type WeightedGraph = Graph[Double]
   type UnweightedGraph = Graph[Boolean]
 
-  def dijkstra(g: WeightedGraph, start: Int, end: Int) =
-    AStar.run[Int](start, _ == end, g.neighbours, (i, j) => g(i, j).get)
+  def dijkstra(g: WeightedGraph, start: Int, end: Int) = {
+    val aStar = AStar.run[Int](start, _ == end, g.neighbours, (i, j) => g(i, j).get)
+    if (aStar.isDefined) {
+      val (goal, path) = aStar.get
+      assert(goal == end)
+      var cost = 0d
+      for (i <- 0 until path.length-1) {
+        cost += g(path(i), path(i+1)).get
+      }
+      Some(cost, path)
+    } else {
+      None
+    }
+  }
 
   /**
    * Run Floyd-Warshall all pair shortest path algorithm on g

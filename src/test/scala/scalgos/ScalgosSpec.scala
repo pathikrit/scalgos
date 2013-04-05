@@ -39,7 +39,8 @@ class ScalgosSpec extends Specification {
     for {
       i <- g.vertices
       j <- g.vertices
-      if (Random.nextDouble < edgeDensity)
+      if i != j
+      if (randomNumber() < edgeDensity)
     } g(i, j) = randomNumber(lowestEdge, 100)
 
     g
