@@ -123,4 +123,20 @@ object DynamicProgramming {
 
     best(best.size - 1)
   }
+
+  /**
+   * Find the maximum sum of a contiguous sub array
+   * O(n) Kadane's algorithm
+   *
+   * @param s
+   * @return the maximum contiguous sub array sum
+   */
+  def maxSubArraySum(s: Seq[Int]) = {
+    var (current, best) = (0, 0)
+    for (i <- s) {
+      current = (current+i) max 0
+      best = best max current
+    }
+    best
+  }
 }
