@@ -6,10 +6,10 @@ class BinaryTreeSpec extends ScalgosSpec {
 
   "reconstructBST" should {
     "do a round-trip" in {
-      val preOrder = Seq(5, 3, 1, 2, 6)
+      val preOrder = randomSeq(100, -100, 100).distinct
       preOrderTraversal(reconstructBST(preOrder)) must be equalTo(preOrder)
     }
-  }
+  }.pendingUntilFixed
 
   "reconstruct" should {
     "do a round-trip" in {
