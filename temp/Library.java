@@ -1084,47 +1084,6 @@ public class Library
     }
 
     /*
-     * returns d[x][y] = minimum distance between 'x' & 'y'
-     * d[x][y] = INF if 'x' & 'y' disconnected, 0 if x = y
-     * if x and y in -ve cycle, d[x][y] = -INF
-     * floyd-warshall: if x and y disconnected and x is on a negative loop, d[x][y] = INF
-     * bellman-ford: if x and y disconnected and x is on a negative loop, d[x][y] = -INF
-     * to detect negative cycles, check if the diagonal of the matrix has a negative edge or not
-     */
-    int[][] floydWarshall(int mat[][])
-    {
-        int n = mat.length, d[][] = new int[n][n];
-        for(int i = 0; i < n; i++)
-            d[i] = Arrays.copyOf(mat[i], n);
-
-        for(int k = 0; k < n; k++)
-            for(int i = 0; i < n; i++)
-                for(int j = 0; j < n; j++)
-                    if(d[i][k] < INF && d[k][j] < INF)    //INF + INF = INF
-                        d[i][j] = max(-INF, min(d[i][j], d[i][k] + d[k][j]));
-
-        for(int k = 0; k < n; k++)    //do once more for -ve cycles
-            for(int i = 0; i < n; i++)
-                for(int j = 0; j < n; j++)
-                    if(d[i][k] < INF && d[k][j] < INF && d[i][j] > d[i][k] + d[k][j])
-                        d[i][j] = -INF;
-
-        return d;
-    }
-
-    /*
-     * mat[i][j] iff i is directly connected to j
-     * modifies mat so mat[i][j] iff there is a path from i to j
-     */
-    void floydWarshall(boolean mat[][]) {
-        final int N = mat.length;
-        for(int k = 0; k < N; k++)
-            for(int i = 0; i < N; i++)
-                for(int j = 0; j < N; j++)
-                    mat[i][j] |= mat[i][k] && mat[k][j];
-    }
-
-    /*
      * O(V^2 * E)
      * returns min distance b/w start and end
      * supports -ve edge weights
@@ -1565,19 +1524,6 @@ public class Library
         }
         return values[N][target];
     }
-    
-    boolean canAchieveSum(int values[], int target) = {
-        Set<Integer> possibleSums = new HashSet<Integer>()
-        for(int i : values) {
-            Set<Integer> newSums = new HashSet<Integer>();
-            for(int sum : possibleSums) {
-                newSums.add(i+sum);
-            }
-            possibleSum.addAll(newSums).add(i);
-        }
-        return possibleSums.contains(target);
-        
-    }
 
     /*
      * Finds the optimal selection of values[x] with weights[x] and quantity[x]
@@ -1695,16 +1641,6 @@ public class Library
             ins=INS+editDistance(a,bb,cache),
             rep=REP+editDistance(aa,bb,cache);
         return cache[x][y] = min(del, min(ins, rep));
-    }
-    
-
-    //maximum substring sum , not subset sum
-    int kadane(int a[])
-    {
-        int r = 0, c = 0;
-        for(int i : a)
-            r = max(r, c = max(0, c+i));
-        return r;
     }
     
     /**
