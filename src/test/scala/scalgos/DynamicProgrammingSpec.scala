@@ -1,10 +1,8 @@
 package scalgos
 
-import org.specs2.mutable._
-
 import scalgos.DynamicProgramming._
 
-class DynamicProgrammingSpec extends Specification {
+class DynamicProgrammingSpec extends ScalgosSpec {
 
   "validBrackets" should {
     "be list containing empty string for 0" in {

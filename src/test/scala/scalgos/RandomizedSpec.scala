@@ -1,10 +1,8 @@
 package scalgos
 
-import org.specs2.mutable._
-
 import scalgos.Randomized._
 
-class RandomizedSpec extends Specification {
+class RandomizedSpec extends ScalgosSpec {
 
   "quickSelect" should {
     "match naive sort based algorithm" in {
@@ -12,7 +10,7 @@ class RandomizedSpec extends Specification {
       quickSelect(s, k) must be equalTo(s.sorted.apply(k))  //TODO: why apply?
     }
 
-    "match median-of-medians algorithm" in { failure }.pendingUntilFixed("TODO")
+    todo("match median-of-medians algorithm")
   }
 
 }

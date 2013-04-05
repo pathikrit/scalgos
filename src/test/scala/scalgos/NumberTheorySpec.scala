@@ -1,10 +1,8 @@
 package scalgos
 
-import org.specs2.mutable._
-
 import scalgos.NumberTheory._
 
-class NumberTheorySpec extends Specification {
+class NumberTheorySpec extends ScalgosSpec {
 
   "catalan" should {
     "match known sequence" in {

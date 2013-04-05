@@ -1,12 +1,10 @@
 package scalgos
 
-import org.specs2.mutable.Specification
-
 import util.Random
 
 import scalgos.Graph._
 
-class GraphSpec extends Specification {
+class GraphSpec extends ScalgosSpec {
 
   def randomGraph(numVertices: Int, edgeDensity: Double, isPositiveEdges: Boolean = true, isDirected: Boolean = true) = {
     assume(numVertices >= 0)
@@ -26,12 +24,11 @@ class GraphSpec extends Specification {
   }
 
   "dijkstra" should {
-    "work for trivial/empty graphs" in { failure }.pendingUntilFixed("TODO")
-    "work for trivial graphs" in { failure }.pendingUntilFixed("TODO")
-    "work for graphs with no edges" in { failure }.pendingUntilFixed("TODO")
-    "not work for negative edges" in { failure }.pendingUntilFixed("TODO")
-
-    "match floyd-warshall" in { failure }.pendingUntilFixed("TODO")
+    todo("work for trivial/empty graphs")
+    todo("work for trivial graphs")
+    todo("work for graphs with no edges")
+    todo("not work for negative edges")
+    todo("match floyd-warshall")
   }
 
 }

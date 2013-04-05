@@ -1,10 +1,8 @@
 package scalgos
 
-import org.specs2.mutable._
-
 import scalgos.DivideAndConquer._
 
-class DivideAndConquerSpec extends Specification {
+class DivideAndConquerSpec extends ScalgosSpec {
 
   "maxRectangleUnderHistogram" should {
     "be 0 for empty histograms" in {

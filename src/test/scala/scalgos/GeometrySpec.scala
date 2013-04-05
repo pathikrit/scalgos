@@ -1,16 +1,14 @@
 package scalgos
 
-import org.specs2.mutable._
-
 import scalgos.Geometry._
 
-class GeometrySpec extends Specification {
+class GeometrySpec extends ScalgosSpec {
 
   "grahamScan" should {
 
-    "fail for <3 points" in { failure }.pendingUntilFixed("TODO")
+    todo("fail for <3 points")
 
-    "work for triangles" in { failure }.pendingUntilFixed("TODO")
+    todo("work for triangles")
 
     def randomGrahamScan = {
       import Randomized.randomInteger
@@ -27,8 +25,8 @@ class GeometrySpec extends Specification {
       "must include all extremes" ! (extremes forall hull.contains)
     }
 
-    "work for circles" in { failure }.pendingUntilFixed("TODO")
+    todo("work for circles")
 
-    "match jarvis march" in { failure }.pendingUntilFixed("TODO")
+    todo("match jarvis march")
   }
 }

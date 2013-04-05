@@ -1,10 +1,8 @@
 package scalgos
 
-import org.specs2.mutable.Specification
-
 import scalgos.BinaryTree._
 
-class BinaryTreeSpec extends Specification {
+class BinaryTreeSpec extends ScalgosSpec {
 
   "reconstructBST" should {
     "do a round-trip" in {
