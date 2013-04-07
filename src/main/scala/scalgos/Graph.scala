@@ -120,7 +120,8 @@ object Graph {
    *          - each vertex is pushed/popped once
    * Trivially finds all cycles too
    * TODO: Return a DisjointSet?
-
+   * TODO: http://apps.topcoder.com/forums/?module=Thread&threadID=785825&mc=1#1714843
+   *
    * @param g input graph
    * @return the set of strongly connected components
    *         either a set is of size 1 or for every pair of vertex u,v in each set v is reachable from u
@@ -128,11 +129,12 @@ object Graph {
   def stronglyConnectedComponents(g: Graph) = {
     var count = 0
     val (index, lowLink) = (mutable.Map.empty[Int, Int], mutable.Map.empty[Int, Int])
-    val stack = mutable.Stack[Int]()
+    val stack = mutable.Stack[Int]()         //TODO: try empty here
     val inProcess = mutable.LinkedHashSet.empty[Int]
+    val sccs = mutable.Queue.empty[Set[Int]]
 
     def dfs(u: Int) {
-      index(u) = count
+      index(u) = count        // set u.index to lowest unused count
       lowLink(u) = count
       stack push u
       inProcess += u
@@ -143,20 +145,19 @@ object Graph {
           dfs(v)
           lowLink(u) = lowLink(u) min lowLink(v)
         } else if (inProcess contains v) {
-          // TODO: What happens when we always do this (i.e. if v has been processed?)
-          // TODO: add test case to test importance of this block
-          lowLink(u) = lowLink(u) min index(v) // TODO: what if we change to lowLink(u)
-        } else {
-          // TODO: whats here?
+          lowLink(u) = lowLink(u) min index(v)
         }
       }
 
       if (index(u) == lowLink(u)) {
        var v = -1
+       val scc = mutable.Set.empty[Int]
        do {
          v = stack.pop()
          inProcess -= v
+         scc += v
        } while(u != v)
+       sccs += scc.toSet
       }
     }
 
@@ -165,8 +166,7 @@ object Graph {
       if (!(index contains u))
     } dfs(u)
 
-    //TODO: Utils.invert(lowLink) map {_._2.toSet}
-    lowLink groupBy {_._2} mapValues {_.keySet} values
+    sccs.toList
   }
 }
 

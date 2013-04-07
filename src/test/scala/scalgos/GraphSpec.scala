@@ -47,17 +47,15 @@ class GraphSpec extends ScalgosSpec {
     "work on a clique" in todo
 
     "match floyd-warshall" in {
-      val g = randomGraph()
+      val g = randomGraph(edgeDensity = 0.02)
       val f = floydWarshall(g)
 
       def inCycle(u: Int, v: Int) = !f(u)(v).isPosInfinity && !f(v)(u).isPosInfinity
 
+      def checkCycle(scc: Set[Int]) = for (u <- scc; v <- g.vertices) (scc contains v) must be equalTo inCycle(u,v)
+
       val sccs = stronglyConnectedComponents(g)
-
-      sccs foreach (scc => for {u <- scc; v <- g.vertices}
-        inCycle(u,v) must be equalTo (scc contains v)
-       )
-
+      sccs foreach checkCycle
       (sccs.flatten.toSet.size) must be equalTo g.numberOfVertices
     }
   }
