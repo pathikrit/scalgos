@@ -165,6 +165,7 @@ object Graph {
       if (!(index contains u))
     } dfs(u)
 
+    //TODO: Utils.invert(lowLink) map {_._2.toSet}
     lowLink groupBy {_._2} mapValues {_.keySet} values
   }
 }

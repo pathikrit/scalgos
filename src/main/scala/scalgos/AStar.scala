@@ -31,14 +31,12 @@ abstract class AStar[Node] {
     val parent = mutable.Map.empty[Node, Node]
     val visited = mutable.Set.empty[Node]
 
-    def removeFirst = {
-      val head = queue.head
-      queue -= head
-      head
+    def reScore(current: Node)(n: Node) {
+      score(n) = score(current) + distance(current, n)
     }
 
     while(!queue.isEmpty) {
-      val current = removeFirst
+      val current = Utils.removeFirst(queue)
       if (isGoal(current)) {
         val trace = mutable.ArrayBuffer.empty[Node]
         var (v, cost) = (current, 0d)
@@ -52,9 +50,7 @@ abstract class AStar[Node] {
       // TODO: if edge in visited, we have overestimation
       neighbors(current) filterNot visited.contains foreach {n =>
         if(score(n) >= score(current) + distance(current, n)) {
-          queue -= n
-          score(n) = score(current) + distance(current, n)
-          queue += n
+          Utils.updatePriority(queue, n, reScore(current))
           parent(n) = current
         }
       }
