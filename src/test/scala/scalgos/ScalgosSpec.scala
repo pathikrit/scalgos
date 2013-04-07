@@ -66,7 +66,7 @@ class ScalgosSpec extends Specification {
    * @param isDirected true iff graph must be directed
    * @return a random graph
    */
-  def randomGraph(numVertices: Int = 100, edgeDensity: Double = 0.25,
+  def randomGraph(numVertices: Int = 100, edgeDensity: Double = 0.1,
                   isPositiveEdges: Boolean = true, isDirected: Boolean = true) = {
     assume(numVertices >= 0)
     assume(edgeDensity >= 0 && edgeDensity <= 1)

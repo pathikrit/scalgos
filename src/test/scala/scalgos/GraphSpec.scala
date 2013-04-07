@@ -40,4 +40,33 @@ class GraphSpec extends ScalgosSpec {
     TODO("work when start is goal")
     TODO("handle negative weight cycles")
   }
+
+  "stronglyConnectedComponents" should {
+    TODO("work for empty graphs")
+    TODO("work for graphs with <4 vertices")
+    TODO("work for graphs with no edges")
+    TODO("work on a clique")
+
+    "must match floyd-warshall" in {
+      val g = randomGraph()
+      val f = floydWarshall(g)
+
+      def inCycle(u: Int, v: Int) = !f(u)(v).isPosInfinity && !f(v)(u).isPosInfinity
+
+      val sccs = stronglyConnectedComponents(g)
+
+      sccs foreach (scc => {
+        for {
+          u <- scc
+          v <- g.vertices
+        } if(scc contains v) {
+          s"$u to $v must be in cycle" ! inCycle(u,v)
+        } else {
+          s"$u to $v must not be in cycle" ! !inCycle(u,v)
+        }
+      })
+
+      (sccs.flatten.toSet.size) must be equalTo g.numberOfVertices
+    }
+  }
 }

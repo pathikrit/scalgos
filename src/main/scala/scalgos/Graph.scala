@@ -72,7 +72,7 @@ class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
   /**
    * @return the adjacency matrix of this graph
    */
-  def adjacencyMatrix = Array.tabulate[Double](numberOfVertices, numberOfVertices)((i, j) => this(i->j))
+  def adjacencyMatrix = Array.tabulate(numberOfVertices, numberOfVertices)((u, v) => this(u->v))
 }
 
 /**
@@ -96,7 +96,8 @@ object Graph {
 
   /**
    * Run Floyd-Warshall all pair shortest path algorithm on g
-   * O(V&#94;3)
+   * O(V*V*V)
+   * TODO: handle negative weight cycle f(i)(i) < 0
    *
    * @param g input graph
    * @return the minimum distance matrix of g i.e. f(x)(y) = minimum distance between x and y
@@ -110,9 +111,57 @@ object Graph {
       f(i)(j) = f(i)(j) min (f(i)(k) + f(k)(j))
     }
 
-    // TODO: handle negative weight cycle f(i)(i) < 0
-
     f
+  }
+
+  /**
+   * Run Tarjan's strongly connected component algorithm in G
+   * O(E + V) - each edge is examined once
+   *          - each vertex is pushed/popped once
+   * Trivially finds all cycles too
+   * TODO: Return a DisjointSet?
+
+   * @param g input graph
+   * @return the set of strongly connected components
+   *         either a set is of size 1 or for every pair of vertex u,v in each set v is reachable from u
+   */
+  def stronglyConnectedComponents(g: Graph) = {
+    var count = 0
+    val (index, lowLink) = (mutable.Map.empty[Int, Int], mutable.Map.empty[Int, Int])
+    val stack = mutable.Stack[Int]()
+    val inProcess = mutable.LinkedHashSet.empty[Int]
+
+    def dfs(u: Int) {
+      index(u) = count
+      lowLink(u) = count
+      stack push u
+      inProcess += u
+      count += 1
+
+      g neighbours u foreach {v =>
+        if(!(index contains v)) {
+          dfs(v)
+          lowLink(u) = lowLink(u) min lowLink(v)
+        } else if (inProcess contains u) {
+          lowLink(u) = lowLink(u) min index(v)
+        }
+      }
+
+      if (index(u) == lowLink(u)) {
+       var v = -1
+       do {
+         v = stack.pop()
+         inProcess -= v
+       } while(u != v)
+      }
+    }
+
+    for {
+      u <- g.vertices
+      if (!(index contains u))
+    } dfs(u)
+
+    lowLink groupBy {_._2} mapValues {_.keySet} values
   }
 }
 
