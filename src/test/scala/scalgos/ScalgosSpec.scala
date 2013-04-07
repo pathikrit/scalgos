@@ -6,30 +6,67 @@ import util.Random._
 
 import scalgos.Geometry.Point
 
+/**
+ * All Specs must extend this
+ * Has utility methods for random data generation and TODOs
+ */
 class ScalgosSpec extends Specification {
 
+  /**
+   * Quick way to add a pending feature test case
+   * @param msg the feature
+   * @return the pending test case
+   */
   def TODO(msg: String) = msg in { failure }.pendingUntilFixed
 
+  /**
+   * Tolerance for floating point matching
+   * sample usage: `value must be ~(expected +/- EPSILON)`
+   */
   val EPSILON = 1e-9
 
+  /**
+   * @return Random Integer in [start, end]
+   */
   def randomInteger(start: Int = 0, end: Int = 100) = {
     assume(end > start)
     start + nextInt(end - start + 1)
   }
 
+  /**
+   * @return Random Double in [start, end]
+   */
   def randomNumber(start: Double = 0, end: Double = 1) = {
     assume(end > start)
     start + (end - start)*nextDouble()
   }
 
-  def randomSeq(number: Int = 100, min: Int = -10, max: Int = 10) = Seq.fill(number)(randomInteger(min, max))
+  /**
+   * @return Random sequence of numbers in [min, max] of size = length
+   */
+  def randomSeq(length: Int = 100, min: Int = -10, max: Int = 10) = Seq.fill(length)(randomInteger(min, max))
 
-  def randomPositiveSeq(number: Int = 100, max: Int = 10) = randomSeq(number, 0, max)
+  /**
+   * @return Random sequence of numbers in [0, max] of size = length
+   */
+  def randomPositiveSeq(length: Int = 100, max: Int = 10) = randomSeq(length, 0, max)
 
+  /**
+   * @return Atmost howMany unique points in in rectangle (minX, minY) - (maxX, maxY)
+   */
   def randomPoints(minX: Int = -10, minY: Int = -10, maxX: Int = 10, maxY: Int = 10, howMany: Int = 100) =
     (for (i <- 1 to howMany) yield Point(randomInteger(minX, maxX), randomInteger(minY, maxY))).toSet
 
-  def randomGraph(numVertices: Int = 10, edgeDensity: Double = 0.25,
+  /**
+   * Generate random graph
+   *
+   * @param numVertices number of vertices in graph
+   * @param edgeDensity number of edges = edge_density * v*v/2
+   * @param isPositiveEdges if edges must be positive
+   * @param isDirected true iff graph must be directed
+   * @return a random graph
+   */
+  def randomGraph(numVertices: Int = 100, edgeDensity: Double = 0.25,
                   isPositiveEdges: Boolean = true, isDirected: Boolean = true) = {
     assume(numVertices >= 0)
     assume(edgeDensity >= 0 && edgeDensity <= 1)

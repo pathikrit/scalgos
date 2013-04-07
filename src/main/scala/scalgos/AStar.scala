@@ -19,6 +19,7 @@ abstract class AStar[Node] {
 
   /**
    * Run A* from starting node
+   * O(E + V log V) - each edge is examined atmost once and priority queue operations are log V
    *
    * @param start starting node
    * @param isGoal true iff we are at goal
@@ -81,6 +82,7 @@ abstract class AStar[Node] {
 
   /**
    * Admissible heuristic distance from node n to goal
+   * estimated cost from current node to goal
    * must never over-estimate i.e. heuristic(x) <= dist(x,y) + heuristic(y) for all x,y
    * If not known, simply use 0 (obviously fails if dist(x,y) can be negative)
    *

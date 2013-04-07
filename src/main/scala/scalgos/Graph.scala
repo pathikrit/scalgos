@@ -15,15 +15,38 @@ class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
 
   private type EndPoints = Pair[Int, Int]
 
+  /**
+   * Edge between points
+   * @param points (from,to)
+   * @return edge value (else 0 if from==to or +infinity if from and to has no edge)
+   */
   def apply(points: EndPoints) = {
     val (u, v) = points
     adjacencyList(u) getOrElse (v, if (u == v) 0 else Double.PositiveInfinity)
   }
 
+  /**
+   * Check if edge exists
+   * @param points (from,to)
+   * @return true iff from->to edge exists
+   */
   def has(points: EndPoints) = adjacencyList(points._1) contains (points._2)
 
+  /**
+   * All neighbors of a vertex
+   *
+   * @param u starting vertex
+   * @return neighbors of u
+   */
   def neighbours(u: Int) = adjacencyList(u).keySet
 
+  /**
+   * Update edges
+   * To remove use -=
+   *
+   * @param points (from, to)
+   * @param weight (from,to) weight=
+   */
   def update(points: EndPoints, weight: Double) {
     val (u, v) = points
     adjacencyList(u)(v) = weight
@@ -32,6 +55,18 @@ class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
     }
   }
 
+  /**
+   * Delete an edge between (from,to)
+   * @param points (from,to)
+   */
+  def -=(points: EndPoints) {
+    adjacencyList(points._1) -= points._2
+  }
+
+  /**
+   * Iterate over vertices
+   * @return Iterator over vertices in graph
+   */
   def vertices = adjacencyList.indices
 }
 
@@ -43,7 +78,6 @@ object Graph {
   /**
    * Run Dijkstra's shortest path algorithm
    * Basically runs A* with heuristic=0
-   * O(TODO)
    *
    * @param g input graph
    * @param start starting vertex
@@ -58,10 +92,10 @@ object Graph {
   /**
    * Run Floyd-Warshall all pair shortest path algorithm on g
    * O(V&#94;3)
-   * To detect negative cycles, call once more and see if anything changes
    *
    * @param g input graph
    * @return the minimum distance graph of g i.e. f(x,y) = minimum distance between x and y
+   *         if x and y on negative weight cycle f(x,y) = -infinity
    */
   def floydWarshall(g: Graph) = {
     val f = new Graph(g.vertices.size)
@@ -76,6 +110,15 @@ object Graph {
       i <- g.vertices
       j <- g.vertices
     } f(i->j) = f(i->j) min (f(i->k) + f(k->j))
+
+    for {
+      i <- g.vertices
+      j <- g.vertices
+    } if (f(i->j) isPosInfinity) {
+      f -= i->j
+    } else if (f(i->i) < 0) {
+      f(i->j) = Double.NegativeInfinity   // negative weight cycle - TODO: what about things from j?
+    }
 
     f
   }
