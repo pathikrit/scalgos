@@ -22,10 +22,9 @@ class GraphSpec extends ScalgosSpec {
       } if (f(i)(j) isPosInfinity) {
         d must beNone
       } else {
-        val Some(Result(goal, distance, path)) = d
+        val Some(Result(distance, path)) = d
         path.head must be equalTo i
         path.last must be equalTo j
-        goal must be equalTo j
         distance must be ~ (f(i)(j) +/- EPSILON)
       }
     }

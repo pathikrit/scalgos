@@ -8,7 +8,7 @@ class RandomizedSpec extends ScalgosSpec {
     "match naive sort based algorithm" in {
       val s = randomSeq()
       val k = randomInteger(0, s.length)
-      quickSelect(s, k) must be equalTo(s.sorted.apply(k))  //TODO: why apply?
+      quickSelect(s, k) must be equalTo(s.sorted.apply(k))
     }
 
     TODO("match median-of-medians algorithm")

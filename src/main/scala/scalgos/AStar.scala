@@ -5,11 +5,10 @@ import collection.mutable
 /**
  * The result of an A* search
  *
- * @param goal the end goal
  * @param cost the total cost to reach goal
  * @param path the path from start to goal (where path.head is start and path.last is goal)
  */
-case class Result[Node](goal: Node, cost: Double, path: Seq[Node])
+case class Result[Node](cost: Double, path: Seq[Node])
 
 /**
  * Template to run A* algorithm
@@ -48,7 +47,7 @@ abstract class AStar[Node] {
           v +=: trace
           v = parent(v)
         }
-        return Some(Result(current, cost, start +: trace.toSeq))
+        return Some(Result(cost, start +: trace.toSeq))
       }
       // TODO: if edge in visited, we have overestimation
       neighbors(current) filterNot visited.contains foreach {n =>
