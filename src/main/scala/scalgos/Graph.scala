@@ -68,6 +68,11 @@ class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
    * @return Iterator over vertices in graph
    */
   def vertices = adjacencyList.indices
+
+  /**
+   * @return the adjacency matrix of this graph
+   */
+  def adjacencyMatrix = Array.tabulate[Double](numberOfVertices, numberOfVertices)((i, j) => this(i->j))
 }
 
 /**
@@ -94,31 +99,18 @@ object Graph {
    * O(V&#94;3)
    *
    * @param g input graph
-   * @return the minimum distance graph of g i.e. f(x,y) = minimum distance between x and y
-   *         if x and y on negative weight cycle f(x,y) = -infinity
+   * @return the minimum distance matrix of g i.e. f(x)(y) = minimum distance between x and y
+   *         if x and y on negative weight cycle f(x)(y) = -infinity
+   *         if x and y disconnected then f(x)(y) = +infinity
    */
   def floydWarshall(g: Graph) = {
-    val f = new Graph(g.vertices.size)
+    val f = g.adjacencyMatrix
 
-    for {
-      i <- g.vertices
-      j <- g.vertices
-    } f(i->j) = g(i->j)
-
-    for {
-      k <- g.vertices
-      i <- g.vertices
-      j <- g.vertices
-    } f(i->j) = f(i->j) min (f(i->k) + f(k->j))
-
-    for {
-      i <- g.vertices
-      j <- g.vertices
-    } if (f(i->j) isPosInfinity) {
-      f -= i->j
-    } else if (f(i->i) < 0) {
-      f(i->j) = Double.NegativeInfinity   // negative weight cycle - TODO: what about things from j?
+    for (k <- g.vertices; i <- g.vertices; j <- g.vertices) {
+      f(i)(j) = f(i)(j) min (f(i)(k) + f(k)(j))
     }
+
+    // TODO: handle negative weight cycle f(i)(i) < 0
 
     f
   }

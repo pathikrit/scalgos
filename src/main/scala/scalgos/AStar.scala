@@ -50,6 +50,7 @@ abstract class AStar[Node] {
         }
         return Some(Result(current, cost, start +: trace.toSeq))
       }
+      // TODO: if edge in visited, we have overestimation
       neighbors(current) filterNot visited.contains foreach {n =>
         if(score(n) >= score(current) + distance(current, n)) {
           queue -= n

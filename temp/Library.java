@@ -1031,59 +1031,6 @@ public class Library
 	// Then pair wise climb up
 
     /*
-     * naive implementation of dijkstra
-     * mat[i][j] contains edge weight from vertex i to vertex j
-     * if i & j dosen't share an edje, mat[i][j] = INF
-     * mat[x][x] = 0
-     * no -ve edges
-     * returns minimum distance from vertex 'start' to vertex 'end'
-     * returns INF if 'start' & 'end' are disconnected
-     * also prints the shortest path from 'start' to 'end'
-     * in case of ties, prints the lexicographically first path (ordered by vertice's numbers)
-     */
-    int dijkstra(int mat[][], int start, int end)
-    {
-        int n = mat.length, dist[] = new int[n], from[] = new int[n];
-        fill(dist, INF);
-        fill(from, -1);
-        boolean visited[] = new boolean[n];
-
-        dist[start] = 0;
-
-        for(int pos = start, newPos = start, min = 0; pos != end && min < INF; pos = newPos)
-        {
-            min = INF;
-            visited[pos] = true;
-
-            for(int i = 0; i < n; i++)
-            {
-                int thisDist = dist[pos] + mat[pos][i];
-
-                if(thisDist < dist[i])
-                {
-                    dist[i] = thisDist;
-                    from[i] = pos;
-                }
-
-                if(!visited[i] && dist[i] < min)
-                {
-                    min = dist[i];
-                    newPos = i;
-                }
-            }
-        }
-
-        /*System.out.println("\nMinimum distance from vertex \'" + start + "\' to vertex \'" + end + "\' is "+ dist[end] + ".");
-        System.out.print("And the path is: ");
-        String path = "";
-        for(int i = end; i >= 0; i = from[i])
-            path = i + " -> " + path;
-        System.out.println(path.substring(0, path.length()-4) + "\n");*/
-
-        return dist[end];
-    }
-
-    /*
      * O(V^2 * E)
      * returns min distance b/w start and end
      * supports -ve edge weights
