@@ -2,29 +2,31 @@ package scalgos
 
 import collection.mutable
 
-object AStar {
+/**
+ * The result of an A* search
+ *
+ * @param goal the end goal
+ * @param cost the total cost to reach goal
+ * @param path the path from start to goal (where path.head is start and path.last is goal)
+ */
+case class Result[Node](goal: Node, cost: Double, path: Seq[Node])
+
+/**
+ * Template to run A* algorithm
+ * @tparam Node encapsulates each position/state in search space
+ */
+abstract class AStar[Node] {
 
   /**
-   * Run A* algorithm
+   * Run A* from starting node
    *
    * @param start starting node
    * @param isGoal true iff we are at goal
-   * @param neighbors returns neighbors of given node
-   * @param distance  distance between two neighbour nodes (guaranteed to be only called for @param neighbors)
-   * @param heuristic admissible heuristic distance from goal to node n
-   *                  must never over-estimate i.e. heuristic(x) <= dist(x,y) + heuristic(y) for all x,y
-   *                  If not known, simply use 0
-   * @tparam Node  encapsulates each position/state in search space
-   * @return If found Some(goal, path) (where path.head is start and path.last is goal) else None
+   * @return Some(Result) if goal found else None
    */
-  def run[Node](start: Node,
-                isGoal: Node => Boolean,
-                neighbors: Node => Iterable[Node],
-                distance: (Node, Node) => Double = (i: Node, j: Node) => 1,
-                heuristic: Node => Double = (i: Node) => 0d): Option[(Node, Seq[Node])] =
-  {
+  def run(start: Node, isGoal: Node => Boolean): Option[Result[Node]] = {
     val score = mutable.Map(start -> 0d).withDefaultValue(Double.PositiveInfinity)
-    val priority = Ordering by {n: Node => score(n) + heuristic(n)} reverse
+    val priority = Ordering by {n: Node => score(n) + heuristic(n)}
     val queue = mutable.TreeSet(start)(priority)
     val parent = mutable.Map.empty[Node, Node]
     val visited = mutable.Set.empty[Node]
@@ -36,27 +38,54 @@ object AStar {
     }
 
     while(!queue.isEmpty) {
-      val c = removeFirst
-      if (isGoal(c)) {
+      val current = removeFirst
+      if (isGoal(current)) {
         val trace = mutable.ArrayBuffer.empty[Node]
-        var current = c
-        while (parent contains current) {
-          current +=: trace
-          current = parent(current)
+        var (v, cost) = (current, 0d)
+        while (parent contains v) {
+          cost += distance(parent(v), v)
+          v +=: trace
+          v = parent(v)
         }
-        assert(trace.head == start && trace.tail == c)
-        return Some(c, trace.toSeq)
+        return Some(Result(current, cost, start +: trace.toSeq))
       }
-      neighbors(c) filterNot visited.contains foreach {n =>
-        if(score(n) >= score(c) + distance(c, n)) {
+      neighbors(current) filterNot visited.contains foreach {n =>
+        if(score(n) >= score(current) + distance(current, n)) {
           queue -= n
-          score(n) = score(c) + distance(c, n)
+          score(n) = score(current) + distance(current, n)
           queue += n
-          parent(n) = c
+          parent(n) = current
         }
       }
-      visited += c
+      visited += current
     }
     None
   }
+
+  /**
+   * Find neighbors of given node
+   * @param n given node
+   * @return find all nodes that have edges from n
+   */
+  def neighbors(n: Node): Iterable[Node]
+
+  /**
+   * Calculate known distance between 2 nodes
+   * Guaranteed to be called for only vertices that are @see neighbours
+   *
+   * @param from start node
+   * @param to end node
+   * @return distance between @param from and @param to
+   */
+  def distance(from: Node, to: Node) = 1d
+
+  /**
+   * Admissible heuristic distance from node n to goal
+   * must never over-estimate i.e. heuristic(x) <= dist(x,y) + heuristic(y) for all x,y
+   * If not known, simply use 0 (obviously fails if dist(x,y) can be negative)
+   *
+   * @param n input node
+   * @return estimated heuristic distance from node to goal
+   */
+  def heuristic(n: Node) = 0d
 }

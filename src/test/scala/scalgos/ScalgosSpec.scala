@@ -10,6 +10,8 @@ class ScalgosSpec extends Specification {
 
   def TODO(msg: String) = msg in { failure }.pendingUntilFixed
 
+  val EPSILON = 1e-9
+
   def randomInteger(start: Int = 0, end: Int = 100) = {
     assume(end > start)
     start + nextInt(end - start + 1)
@@ -27,21 +29,19 @@ class ScalgosSpec extends Specification {
   def randomPoints(minX: Int = -10, minY: Int = -10, maxX: Int = 10, maxY: Int = 10, howMany: Int = 100) =
     (for (i <- 1 to howMany) yield Point(randomInteger(minX, maxX), randomInteger(minY, maxY))).toSet
 
-  def randomGraph(numVertices: Int = 100, edgeDensity: Double = 0.25,
+  def randomGraph(numVertices: Int = 10, edgeDensity: Double = 0.25,
                   isPositiveEdges: Boolean = true, isDirected: Boolean = true) = {
     assume(numVertices >= 0)
     assume(edgeDensity >= 0 && edgeDensity <= 1)
 
-    val g = new Graph[Double](numVertices, isDirected)
-
-    val lowestEdge = if (isPositiveEdges) -100 else 0
+    val g = new Graph(numVertices, isDirected)
 
     for {
       i <- g.vertices
       j <- g.vertices
       if i != j
       if (randomNumber() < edgeDensity)
-    } g(i, j) = randomNumber(lowestEdge, 100)
+    } g(i->j) = if (i == j) 0 else randomNumber(if (isPositiveEdges) 0 else -10, 10)
 
     g
   }

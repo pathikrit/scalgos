@@ -3,25 +3,32 @@ package scalgos
 import collection.mutable
 
 /**
- * A semi mutable graph representation
+ * A semi mutable weighted graph representation using adjacency list
  * Can add/remove/update edges but cannot add/remove vertices
  *
  * @param numberOfVertices Number of vertices in graph
  * @param isDirected true iff a directed graph
- * @tparam E represents edge info e.g. for weighted graphs E is Double
  */
-class Graph[E](val numberOfVertices: Int, val isDirected: Boolean = true) {
+class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
 
-  private val adjacencyList = Array.fill(numberOfVertices)(mutable.Map.empty[Int, E])
+  private val adjacencyList = Array.fill(numberOfVertices)(mutable.Map.empty[Int, Double])
 
-  def apply(from: Int, to: Int) = adjacencyList(from) get to
+  private type EndPoints = Pair[Int, Int]
 
-  def neighbours(from: Int) = adjacencyList(from).keySet
+  def apply(points: EndPoints) = {
+    val (u, v) = points
+    adjacencyList(u) getOrElse (v, if (u == v) 0 else Double.PositiveInfinity)
+  }
 
-  def update(from: Int, to: Int, edge: E) {
-    adjacencyList(from)(to) = edge
+  def has(points: EndPoints) = adjacencyList(points._1) contains (points._2)
+
+  def neighbours(u: Int) = adjacencyList(u).keySet
+
+  def update(points: EndPoints, weight: Double) {
+    val (u, v) = points
+    adjacencyList(u)(v) = weight
     if (!isDirected) {
-      adjacencyList(to)(from) = edge
+      adjacencyList(v)(u) = weight
     }
   }
 
@@ -33,44 +40,44 @@ class Graph[E](val numberOfVertices: Int, val isDirected: Boolean = true) {
  */
 object Graph {
 
-  type WeightedGraph = Graph[Double]
-  type UnweightedGraph = Graph[Boolean]
-
-  def dijkstra(g: WeightedGraph, start: Int, end: Int) = {
-    val aStar = AStar.run[Int](start, _ == end, g.neighbours, (i, j) => g(i, j).get)
-    if (aStar.isDefined) {
-      val (goal, path) = aStar.get
-      assert(goal == end)
-      var cost = 0d
-      for (i <- 0 until path.length-1) {
-        cost += g(path(i), path(i+1)).get
-      }
-      Some(cost, path)
-    } else {
-      None
-    }
-  }
+  /**
+   * Run Dijkstra's shortest path algorithm
+   * Basically runs A* with heuristic=0
+   * O(TODO)
+   *
+   * @param g input graph
+   * @param start starting vertex
+   * @param goal end vertex
+   * @return result of A* search
+   */
+  def dijkstra(g: Graph, start: Int, goal: Int) = new AStar[Int] {
+    def neighbors(n: Int) = g neighbours n
+    override def distance(from: Int, to: Int) = g(from -> to)
+  } run (start, _ == goal)
 
   /**
    * Run Floyd-Warshall all pair shortest path algorithm on g
    * O(V&#94;3)
    * To detect negative cycles, call once more and see if anything changes
    *
-   *@param g input graph
+   * @param g input graph
    * @return the minimum distance graph of g i.e. f(x,y) = minimum distance between x and y
    */
-  def floydWarshall(g: WeightedGraph) = {
-    val f = new WeightedGraph(g.vertices.size)
+  def floydWarshall(g: Graph) = {
+    val f = new Graph(g.vertices.size)
+
+    for {
+      i <- g.vertices
+      j <- g.vertices
+    } f(i->j) = g(i->j)
+
     for {
       k <- g.vertices
       i <- g.vertices
-      if g(i, k).isDefined
       j <- g.vertices
-      if g(k, j).isDefined
-    } f(i, j) = f(i, j) getOrElse Double.PositiveInfinity min (g(i, k).get + g(k, i).get)
+    } f(i->j) = f(i->j) min (f(i->k) + f(k->j))
+
     f
   }
-
-
 }
 
