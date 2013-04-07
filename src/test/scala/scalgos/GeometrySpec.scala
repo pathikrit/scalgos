@@ -6,21 +6,21 @@ class GeometrySpec extends ScalgosSpec {
 
   "grahamScan" should {
 
-    TODO("fail for <3 points")
+    "fail for <3 points" in todo
 
-    TODO("work for triangles")
+    "work for triangles" in todo
 
     "include extremities" in {
       val points = randomPoints()
       val hull = grahamScan(points)
       val extremities: Array[Point => Double] = Array(_.x, _.y, _.manhattan /*,p => (p.x - p.y).abs*/)
       val extremes = (extremities map {points minBy _}) ++ (extremities map {points maxBy _})
-      "must have atleast 3 extremes" ! (extremes.size >= 3)
-      "must include all extremes" ! (extremes forall hull.contains)
+      extremes.size must be greaterThanOrEqualTo 3
+      hull must containAllOf(extremes)
     }
 
-    TODO("work for circles")
+    "work for circles" in todo
 
-    TODO("match jarvis march")
+    "match jarvis march" in todo
   }
 }

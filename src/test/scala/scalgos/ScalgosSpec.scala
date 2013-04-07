@@ -8,16 +8,10 @@ import scalgos.Geometry.Point
 
 /**
  * All Specs must extend this
- * Has utility methods for random data generation and TODOs
+ * Has utility methods for random data generation
+ * TODO: Create random data generation class?
  */
 class ScalgosSpec extends Specification {
-
-  /**
-   * Quick way to add a pending feature test case
-   * @param msg the feature
-   * @return the pending test case
-   */
-  def TODO(msg: String) = msg in { failure }.pendingUntilFixed
 
   /**
    * Tolerance for floating point matching
@@ -66,7 +60,7 @@ class ScalgosSpec extends Specification {
    * @param isDirected true iff graph must be directed
    * @return a random graph
    */
-  def randomGraph(numVertices: Int = 100, edgeDensity: Double = 0.1,
+  def randomGraph(numVertices: Int = 100, edgeDensity: Double = 0.2,
                   isPositiveEdges: Boolean = true, isDirected: Boolean = true) = {
     assume(numVertices >= 0)
     assume(edgeDensity >= 0 && edgeDensity <= 1)

@@ -5,12 +5,12 @@ import scalgos.Graph._
 class GraphSpec extends ScalgosSpec {
 
   "dijkstra" should {
-    TODO("work for empty graphs")
-    TODO("work for graphs with <4 vertices")
-    TODO("work for graphs with no edges")
-    TODO("not work for negative edges")
-    TODO("work for no path from start to end")
-    TODO("work when start is goal")
+    "work for empty graphs" in todo
+    "work for graphs with <4 vertices" in todo
+    "work for graphs with no edges" in todo
+    "not work for negative edges" in todo
+    "work for no path from start to end" in todo
+    "work when start is goal" in todo
 
     "match floyd-warshall" in {
       val g = randomGraph()
@@ -31,22 +31,22 @@ class GraphSpec extends ScalgosSpec {
   }
 
   "floyd-warshall" should {
-    TODO("work for empty graphs")
-    TODO("work for graphs with <4 vertices")
-    TODO("work for graphs with no edges")
-    TODO("not work for negative edges")
-    TODO("work for no path from start to end")
-    TODO("work when start is goal")
-    TODO("handle negative weight cycles")
+    "work for empty graphs" in todo
+    "work for graphs with <4 vertices" in todo
+    "work for graphs with no edges" in todo
+    "not work for negative edges" in todo
+    "work for no path from start to end" in todo
+    "work when start is goal" in todo
+    "handle negative weight cycles" in todo
   }
 
   "stronglyConnectedComponents" should {
-    TODO("work for empty graphs")
-    TODO("work for graphs with <4 vertices")
-    TODO("work for graphs with no edges")
-    TODO("work on a clique")
+    "work for empty graphs" in todo
+    "work for graphs with <4 vertices" in todo
+    "work for graphs with no edges" in todo
+    "work on a clique" in todo
 
-    "must match floyd-warshall" in {
+    "match floyd-warshall" in {
       val g = randomGraph()
       val f = floydWarshall(g)
 
@@ -54,16 +54,9 @@ class GraphSpec extends ScalgosSpec {
 
       val sccs = stronglyConnectedComponents(g)
 
-      sccs foreach (scc => {
-        for {
-          u <- scc
-          v <- g.vertices
-        } if(scc contains v) {
-          s"$u to $v must be in cycle" ! inCycle(u,v)
-        } else {
-          s"$u to $v must not be in cycle" ! !inCycle(u,v)
-        }
-      })
+      sccs foreach (scc => for {u <- scc; v <- g.vertices}
+        inCycle(u,v) must be equalTo (scc contains v)
+       )
 
       (sccs.flatten.toSet.size) must be equalTo g.numberOfVertices
     }

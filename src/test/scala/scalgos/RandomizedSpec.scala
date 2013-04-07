@@ -11,7 +11,7 @@ class RandomizedSpec extends ScalgosSpec {
       quickSelect(s, k) must be equalTo(s.sorted.apply(k))
     }
 
-    TODO("match median-of-medians algorithm")
+    "match median-of-medians algorithm" in todo
   }
 
 }
