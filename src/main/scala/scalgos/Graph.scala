@@ -17,11 +17,13 @@ class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
 
   /**
    * Edge between points
+   * This is more readable alternative to traditional g(u,v) i.e. g(u->v)
+   *
    * @param points (from,to)
    * @return edge value (else 0 if from==to or +infinity if from and to has no edge)
    */
   def apply(points: EndPoints) = {
-    val (u, v) = points
+    val (u,v) = points
     adjacencyList(u) getOrElse (v, if (u == v) 0 else Double.PositiveInfinity)
   }
 
@@ -59,9 +61,7 @@ class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
    * Delete an edge between (from,to)
    * @param points (from,to)
    */
-  def -=(points: EndPoints) {
-    adjacencyList(points._1) -= points._2
-  }
+  def -=(points: EndPoints) = adjacencyList(points._1) -= points._2
 
   /**
    * Iterate over vertices
@@ -144,8 +144,10 @@ object Graph {
           lowLink(u) = lowLink(u) min lowLink(v)
         } else if (inProcess contains v) {
           // TODO: What happens when we always do this (i.e. if v has been processed?)
-          // add test case to test importance of this block
-          lowLink(u) = lowLink(u) min index(v)
+          // TODO: add test case to test importance of this block
+          lowLink(u) = lowLink(u) min index(v) // TODO: what if we change to lowLink(u)
+        } else {
+          // TODO: whats here?
         }
       }
 
