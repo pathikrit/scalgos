@@ -142,7 +142,9 @@ object Graph {
         if(!(index contains v)) {
           dfs(v)
           lowLink(u) = lowLink(u) min lowLink(v)
-        } else if (inProcess contains u) {
+        } else if (inProcess contains v) {
+          // TODO: What happens when we always do this (i.e. if v has been processed?)
+          // add test case to test importance of this block
           lowLink(u) = lowLink(u) min index(v)
         }
       }
