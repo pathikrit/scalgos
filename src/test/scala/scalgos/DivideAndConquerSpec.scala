@@ -1,7 +1,6 @@
 package scalgos
 
-import org.specs2.mutable.Specification
-
+import org.specs2.mutable._
 import scalgos.DivideAndConquer._
 
 class DivideAndConquerSpec extends Specification {

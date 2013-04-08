@@ -1,7 +1,6 @@
 package scalgos
 
-import org.specs2.mutable.Specification
-
+import org.specs2.mutable._
 import scalgos.Geometry._
 
 class GeometrySpec extends Specification {
@@ -9,7 +8,6 @@ class GeometrySpec extends Specification {
   "grahamScan" should {
 
     "fail for <3 points" in todo
-
     "work for triangles" in todo
 
     "include extremities" in {
@@ -22,7 +20,6 @@ class GeometrySpec extends Specification {
     }
 
     "work for circles" in todo
-
     "match jarvis march" in todo
   }
 }

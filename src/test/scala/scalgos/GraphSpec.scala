@@ -1,7 +1,6 @@
 package scalgos
 
-import org.specs2.mutable.Specification
-
+import org.specs2.mutable._
 import scalgos.Graph._
 
 class GraphSpec extends Specification {
