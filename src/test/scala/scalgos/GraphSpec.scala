@@ -1,8 +1,10 @@
 package scalgos
 
+import org.specs2.mutable.Specification
+
 import scalgos.Graph._
 
-class GraphSpec extends RandomData {
+class GraphSpec extends Specification {
 
   "dijkstra" should {
     "work for empty graphs" in todo
@@ -13,7 +15,7 @@ class GraphSpec extends RandomData {
     "work when start is goal" in todo
 
     "match floyd-warshall" in {
-      val g = randomGraph()
+      val g = RandomData.graph()
       val f = floydWarshall(g)
       for {
         i <- g.vertices
@@ -25,7 +27,7 @@ class GraphSpec extends RandomData {
         val Some(Result(distance, path)) = d
         path.head must be equalTo i
         path.last must be equalTo j
-        distance must be ~ (f(i)(j) +/- EPSILON)
+        distance must be ~ (f(i)(j) +/- 1e-9)
       }
     }
   }
@@ -47,7 +49,7 @@ class GraphSpec extends RandomData {
     "work on a clique" in todo
 
     "match floyd-warshall" in {
-      val g = randomGraph(numberOfVertices = 20, edgeDensity = 0.1)
+      val g = RandomData.graph(numberOfVertices = 20, edgeDensity = 0.1)
       val f = floydWarshall(g)
 
       def inCycle(u: Int, v: Int) = !f(u)(v).isPosInfinity && !f(v)(u).isPosInfinity

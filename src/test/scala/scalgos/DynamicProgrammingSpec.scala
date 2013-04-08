@@ -1,8 +1,10 @@
 package scalgos
 
+import org.specs2.mutable.Specification
+
 import scalgos.DynamicProgramming._
 
-class DynamicProgrammingSpec extends RandomData {
+class DynamicProgrammingSpec extends Specification {
 
   "validBrackets" should {
     "be list containing empty string for 0" in {
@@ -64,7 +66,7 @@ class DynamicProgrammingSpec extends RandomData {
     }
 
     "be same same as longestCommonSubsequence with sorted input" in {
-      val s = randomSeq().distinct // TODO: What happens when duplicates?
+      val s = RandomData.seq().distinct // TODO: What happens when duplicates?
       longestIncreasingSubsequence(s) must be equalTo(longestCommonSubsequence(s, s.sorted))
     }
   }

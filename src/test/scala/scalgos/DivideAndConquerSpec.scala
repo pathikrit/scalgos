@@ -1,8 +1,10 @@
 package scalgos
 
+import org.specs2.mutable.Specification
+
 import scalgos.DivideAndConquer._
 
-class DivideAndConquerSpec extends RandomData {
+class DivideAndConquerSpec extends Specification {
 
   "maxRectangleUnderHistogram" should {
     "be 0 for empty histograms" in {
@@ -15,7 +17,7 @@ class DivideAndConquerSpec extends RandomData {
     }
 
     "be same result as the DP algorithm" in {
-      val heights = randomPositiveSeq()
+      val heights = RandomData.positiveSeq()
       maxRectangleInHistogram(heights) must be equalTo DynamicProgramming.maxRectangleInHistogram(heights map {(1, _)})
     }
   }

@@ -1,12 +1,14 @@
 package scalgos
 
+import org.specs2.mutable.Specification
+
 import scalgos.BinaryTree._
 
-class BinaryTreeSpec extends RandomData {
+class BinaryTreeSpec extends Specification {
 
   "reconstructBST" should {
     "do a round-trip" in {
-      val preOrder = randomSeq()
+      val preOrder = RandomData.seq()
       preOrderTraversal(reconstructBST(preOrder)) must be equalTo(preOrder)
     }.pendingUntilFixed
   }
