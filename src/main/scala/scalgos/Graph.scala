@@ -65,9 +65,15 @@ class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
 
   /**
    * Iterate over vertices
-   * @return Iterator over vertices in graph
+   * @return vertices in graph
    */
   def vertices = adjacencyList.indices
+
+  /**
+   * Iterate over edges
+   * @return edges in graph
+   */
+  def edges = for (u <- vertices; v <- neighbours(u)) yield u->v
 
   /**
    * @return the adjacency matrix of this graph
