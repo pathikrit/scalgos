@@ -2,7 +2,7 @@ package scalgos
 
 import scalgos.NumberTheory._
 
-class NumberTheorySpec extends ScalgosSpec {
+class NumberTheorySpec extends RandomData {
 
   "catalan" should {
     "match known sequence" in {

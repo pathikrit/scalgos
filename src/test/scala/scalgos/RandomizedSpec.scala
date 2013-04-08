@@ -2,7 +2,7 @@ package scalgos
 
 import scalgos.Randomized._
 
-class RandomizedSpec extends ScalgosSpec {
+class RandomizedSpec extends RandomData {
 
   "quickSelect" should {
     "match naive sort based algorithm" in {

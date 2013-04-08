@@ -11,7 +11,7 @@ import scalgos.Geometry.Point
  * Has utility methods for random data generation
  * TODO: Create random data generation class?
  */
-class ScalgosSpec extends Specification {
+class RandomData extends Specification {
 
   /**
    * Tolerance for floating point matching
@@ -54,25 +54,25 @@ class ScalgosSpec extends Specification {
   /**
    * Generate random graph
    *
-   * @param numVertices number of vertices in graph
+   * @param numberOfVertices number of vertices in graph
    * @param edgeDensity number of edges = edge_density * v*v/2
    * @param isPositiveEdges if edges must be positive
    * @param isDirected true iff graph must be directed
    * @return a random graph
    */
-  def randomGraph(numVertices: Int = 100, edgeDensity: Double = 0.2,
+  def randomGraph(numberOfVertices: Int = 100, edgeDensity: Double = 0.25,
                   isPositiveEdges: Boolean = true, isDirected: Boolean = true) = {
-    assume(numVertices >= 0)
+    assume(numberOfVertices >= 0)
     assume(edgeDensity >= 0 && edgeDensity <= 1)
 
-    val g = new Graph(numVertices, isDirected)
+    val g = new Graph(numberOfVertices, isDirected)
 
     for {
       i <- g.vertices
       j <- g.vertices
       if i != j
       if (randomNumber() < edgeDensity)
-    } g(i->j) = if (i == j) 0 else randomNumber(if (isPositiveEdges) 0 else -10, 10)
+    } g(i->j) = randomNumber(if (isPositiveEdges) 0 else -10, 10)
 
     g
   }

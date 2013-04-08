@@ -2,7 +2,7 @@ package scalgos
 
 import scalgos.BinaryTree._
 
-class BinaryTreeSpec extends ScalgosSpec {
+class BinaryTreeSpec extends RandomData {
 
   "reconstructBST" should {
     "do a round-trip" in {

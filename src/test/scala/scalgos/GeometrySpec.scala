@@ -2,7 +2,7 @@ package scalgos
 
 import scalgos.Geometry._
 
-class GeometrySpec extends ScalgosSpec {
+class GeometrySpec extends RandomData {
 
   "grahamScan" should {
 

@@ -2,7 +2,7 @@ package scalgos
 
 import scalgos.DivideAndConquer._
 
-class DivideAndConquerSpec extends ScalgosSpec {
+class DivideAndConquerSpec extends RandomData {
 
   "maxRectangleUnderHistogram" should {
     "be 0 for empty histograms" in {

@@ -2,7 +2,7 @@ package scalgos
 
 import scalgos.Graph._
 
-class GraphSpec extends ScalgosSpec {
+class GraphSpec extends RandomData {
 
   "dijkstra" should {
     "work for empty graphs" in todo
@@ -47,7 +47,7 @@ class GraphSpec extends ScalgosSpec {
     "work on a clique" in todo
 
     "match floyd-warshall" in {
-      val g = randomGraph(edgeDensity = 0.02)
+      val g = randomGraph(numberOfVertices = 20, edgeDensity = 0.1)
       val f = floydWarshall(g)
 
       def inCycle(u: Int, v: Int) = !f(u)(v).isPosInfinity && !f(v)(u).isPosInfinity

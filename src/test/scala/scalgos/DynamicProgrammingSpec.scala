@@ -2,7 +2,7 @@ package scalgos
 
 import scalgos.DynamicProgramming._
 
-class DynamicProgrammingSpec extends ScalgosSpec {
+class DynamicProgrammingSpec extends RandomData {
 
   "validBrackets" should {
     "be list containing empty string for 0" in {
