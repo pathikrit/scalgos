@@ -1117,27 +1117,6 @@ public class Library
     }
 
     /*
-     * converts an adjacency matrix to a adjacency list
-     * O(V^2)
-     * list = adjacency list
-     * each node of List[i] is of the form <v, w> which means the weight of i-v edge is w
-     */
-    LinkedList[] matrix2list(int mat[][]) {
-        int n = mat.length;
-
-        LinkedList list[] = new LinkedList[n];
-
-        for(int i = 0; i < n; i++)
-        {
-            list[i] = new LinkedList<SimpleEntry>();
-            for(int j = 0; j < n; j++)
-                if(mat[i][j] < INF)
-                    list[i].add(new SimpleEntry(j, mat[i][j]));
-        }
-        return list;
-    }
-
-    /*
      * breadth-first search
      * returns true if there is sub-infinite path from 'start' to 'end'
      * else false
@@ -1223,36 +1202,6 @@ public class Library
                     return true;
             }
 
-        return false;
-    }
-
-    //checks if vertex 'start' is part of a cycle or not
-    boolean isCycle(int mat[][], int start)
-    {
-        int n = mat.length;
-        Stack<Integer> s = new Stack<Integer>();
-        boolean visited[] = new boolean[n];
-        boolean seen[] = new boolean[n];
-        s.push(start);
-        for(seen[start] = true; !s.isEmpty();)
-        {
-            int v = s.pop();
-            visited[v] = true;
-
-            for(int i = 0; i < n; i++)
-                if(mat[v][i] < INF)
-                    if(!seen[i])
-                    {
-                        s.add(i);
-                        seen[i] = true;
-                    }
-                    else if(!visited[i])
-                    {
-                        System.out.println("There is a cycle with vertices \'"+start+"\', \'"+i+"\' & \'"+v+"\'.");
-                        return true;
-                    }
-        }
-        System.out.println("No cycle with vertex \'" + start + "\'.");
         return false;
     }
 
@@ -1732,55 +1681,7 @@ public class Library
         public int getDimension() {return n;}
     }
 
-    class Trie {
 
-        private Trie letters[] = new Trie[27]; //null, a-z
-
-        //O(s.length)
-        public void add(String s) {
-            if(s.length() == 0) {
-                letters[0] = new Trie();
-                return;
-            }
-            int i = s.charAt(0) - 'a' + 1; //change 'a' to A for uppercase
-            if(letters[i] == null)
-                letters[i] = new Trie();
-            letters[i].add(s.substring(1));
-        }
-
-        /*
-         * O(s.length)
-         * bug - dictionary always contains empty string
-         */
-        public boolean contains(String s) {
-            if(s.length() == 0)
-                return true;
-            int i = s.charAt(0) - 'a' + 1; //change 'a' to A for uppercase
-            return letters[i] == null ? false : letters[i].contains(s.substring(1));
-        }
-
-        public ArrayList<String> toSet() {
-            ArrayList<String> all = new ArrayList();
-            if(letters[0] != null)
-                all.add("");
-            for(int i = 1; i < letters.length; i++) {
-                if(letters[i] != null) {
-                    char c =  (char)('a' + i - 1); //change 'a' to A for uppercase
-                    for(String s : letters[i].toSet())
-                        all.add(c + s);
-                }
-            }
-            return all;
-        }
-
-        public int numberOfPrefixes() {
-            int p = 1;
-            for(int i = 1; i < letters.length; i++)
-                if(letters[i] != null)
-                    p += letters[i].numberOfPrefixes();
-            return p;
-        }
-    }    
     
     public class LRUCache<K, V> extends LinkedHashMap<K, V> {
         private static final int MAX_ENTRIES = 1000;

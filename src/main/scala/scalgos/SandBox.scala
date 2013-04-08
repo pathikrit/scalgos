@@ -18,4 +18,18 @@ object SandBox {
  //   val rectSum =
   }
 
+
+//  def bellmanFord(g: Graph, start: Int, goal: Int) {
+//    val distance = Array.tabulate(g.numberOfVertices)(i => g(start->i))
+//    val parent = mutable.Map.empty[Int, Int]
+//
+//    def relax = for {
+//      (u,v) <- g.edges
+//      if distance(v) > distance(u) + g(u->v)
+//    } {
+//      distance(v) = distance(u) + g(u->v)
+//      parent(v) = u
+//    }
+//  }
+
 }

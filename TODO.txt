@@ -3,6 +3,8 @@ game net
 chinese remainder theorem
            def gcd(a: Int, b: Int): Int = if (b == 0) a else gcd(b, a%b)
 
+slightly facter than euclid's aglorithm
+	 * O((log_2 (ab)^2)
             def binaryGcd(a: Int, b: Int): Int = (a, b) match {
              case (0, _) => b
              case (_, 0) => a
