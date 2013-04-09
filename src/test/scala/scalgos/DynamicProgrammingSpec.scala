@@ -8,7 +8,7 @@ class DynamicProgrammingSpec extends Specification {
 
   "validBrackets" should {
     "be list containing empty string for 0" in {
-      validBrackets(0) must be equalTo(Seq(""))
+      validBrackets(0) must be equalTo Seq("")
     }
 
     "work for arbitrary input" in {
@@ -19,14 +19,14 @@ class DynamicProgrammingSpec extends Specification {
 
     "match catalan numbers" in {
       for (i <- 0 to 10) {
-        validBrackets(i).length must be equalTo(NumberTheory.catalan(i).intValue)
+        validBrackets(i).length must be equalTo NumberTheory.catalan(i).intValue
       }
     }
   }
 
   "maxRectangleUnderHistogram" should {
     "be 0 for empty histograms" in {
-      maxRectangleInHistogram(Nil) must be equalTo(0)
+      maxRectangleInHistogram(Nil) must be equalTo 0
     }
 
     "work for arbitrary input" in {
@@ -37,9 +37,9 @@ class DynamicProgrammingSpec extends Specification {
 
   "longestCommonSubsequence" should {
     "be empty if one of the input is empty" in {
-      {longestCommonSubsequence("hello", "") must be empty}
-      {longestCommonSubsequence("", "nastenka") must be empty}
-      {longestCommonSubsequence("", "") must be empty}
+      longestCommonSubsequence("hello", "") must beEmpty
+      longestCommonSubsequence("", "nastenka") must beEmpty
+      longestCommonSubsequence("", "") must beEmpty
     }
 
     "be empty if nothing in common" in {
@@ -67,7 +67,7 @@ class DynamicProgrammingSpec extends Specification {
 
     "be same same as longestCommonSubsequence with sorted input" in {
       val s = RandomData.seq().distinct // TODO: What happens when duplicates?
-      longestIncreasingSubsequence(s) must be equalTo(longestCommonSubsequence(s, s.sorted))
+      longestIncreasingSubsequence(s) must be equalTo longestCommonSubsequence(s, s.sorted)
     }
   }
 }

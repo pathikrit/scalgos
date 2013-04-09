@@ -7,11 +7,6 @@ import collection.mutable
  */
 object NumberTheory {
 
-  def sieveOfEratosthenes(n: Int) = {
-    val isPrime = new mutable.BitSet(n)
-  }
-
-
   /**
    * Calculate catalan number
    * O(n*n) - each recursive step takes O(n) time
@@ -26,5 +21,4 @@ object NumberTheory {
     })
     _catalan(n)
   }
-
 }

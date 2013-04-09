@@ -5,7 +5,7 @@ import collection.mutable
 /**
  * Each internal node in DisjointSet
  */
-private class Node[A](val value: A) {
+private class Node[A](val entry: A) {
   /**
    * parent - the pointer to root node (by default itself)
    * rank - depth if we did not do path compression in find - else its upper bound on the distance from node to parent
@@ -68,10 +68,10 @@ class DisjointSet[A] {
   /**
    * @return the root (or the canonical element that contains x)
    */
-  def find(x: A) = x.root.value
+  def find(x: A) = x.root.entry
 
   /**
    * @return Iterator over groups of items in same set
    */
-  def sets = index.keys groupBy {_.root.value} values
+  def sets = index.keys groupBy {_.root.entry} values
 }

@@ -26,7 +26,7 @@ abstract class AStar[Node] {
    * @return Some(Result) if goal found else None
    */
   def run(start: Node, isGoal: Node => Boolean): Option[Result[Node]] = {
-    val score = mutable.Map(start -> 0d).withDefaultValue(Double.PositiveInfinity)
+    val score = mutable.Map(start -> 0d) withDefaultValue Double.PositiveInfinity
     val priority = Ordering by {n: Node => score(n) + heuristic(n)}
     val queue = mutable.TreeSet(start)(priority)
     val parent = mutable.Map.empty[Node, Node]
