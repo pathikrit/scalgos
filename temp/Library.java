@@ -1031,39 +1031,6 @@ public class Library
 	// Then pair wise climb up
 
     /*
-     * O(V^2 * E)
-     * returns min distance b/w start and end
-     * supports -ve edge weights
-     * if negative cycle, returns -INF
-     * if unreachable, returns INF
-     * floyd-warshall: if x and y disconnected and x is on a negative loop, d[x][y] = INF
-     * bellman-ford: if x and y disconnected and x is on a negative loop, d[x][y] = -INF
-     */
-    int bellmanFord(LinkedList<SimpleEntry> adjList[], int start, int end)
-    {
-        final int V = adjList.length;
-
-        int dist[] = new int[V];
-        fill(dist, INF);
-        dist[start] = 0;
-
-        for(int i = 0; i < V; i++)
-            for(int j = 0; j < V; j++)
-                for(SimpleEntry<Integer, Integer> p : adjList[j])
-                    if(dist[j] < INF)
-                        dist[p.getKey()] = min(dist[p.getKey()], dist[j] + p.getValue());
-
-        outer: for(int i = 0; i < V; i++)
-            for(SimpleEntry<Integer, Integer> p : adjList[i])
-                if(dist[p.getKey()] > dist[i] + p.getValue()) {
-                    fill(dist, -INF);
-                    break outer;
-                }
-
-        return dist[end];
-    }
-
-    /*
      * given a DAG in mat with s and t as start and end vertices and mat[i][j] = distance between i and j
      * mat[i][j] = INF means i and j are disconnected
      * before calling this set adjList = matrix2List(adjMat)

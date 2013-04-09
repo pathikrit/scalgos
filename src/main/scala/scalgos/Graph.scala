@@ -174,5 +174,35 @@ object Graph {
 
     sccs.toSeq
   }
+
+  /**
+   * Run Bellman-Ford algorithm for finding
+   * Handles negative weights
+   * TODO: Negative weight cycle?
+   * TODO: Improvements
+   * TODO: Proof of correctness
+   * TODO: Why does parent work for all vertices? can there be cycles in parent?
+   * O(VE)
+   *
+   * @param g input graph
+   * @param source starting vertex
+   * @return (d, p) where d(i) is shortest distance from source to i
+   *         and p(j) = parent of vertex j (or -1 if no parent) - follow back to source for path
+   */
+  def bellmanFord(g: Graph, source: Int) = {
+    val distance = Array.tabulate(g.numberOfVertices)(i => g(source->i))
+    val parent = Array.fill(g.numberOfVertices)(-1)
+
+    for {
+      i <- 1 until g.numberOfVertices
+      (u,v) <- g.edges
+      if distance(v) >= distance(u) + g(u->v)
+    } {
+      distance(v) = distance(u) + g(u->v)
+      parent(v) = u
+    }
+
+    (distance.toSeq, parent.toSeq)
+  }
 }
 

@@ -42,20 +42,6 @@ slightly facter than euclid's aglorithm
                             //   val rectSum =
                              }
 
-
-                           //  def bellmanFord(g: Graph, start: Int, goal: Int) {
-                           //    val distance = Array.tabulate(g.numberOfVertices)(i => g(start->i))
-                           //    val parent = mutable.Map.empty[Int, Int]
-                           //
-                           //    def relax = for {
-                           //      (u,v) <- g.edges
-                           //      if distance(v) > distance(u) + g(u->v)
-                           //    } {
-                           //      distance(v) = distance(u) + g(u->v)
-                           //      parent(v) = u
-                           //    }
-                           //  }
-
                            }
 
 
@@ -69,3 +55,10 @@ code style
 code coverage
 
 brfpt selection algo
+
+
+TODO:
+Each algorithm should have
+1) One liner
+2) O() and brief explanation why
+3) Longer proof of correctness - or why it works

@@ -36,10 +36,11 @@ class GraphSpec extends Specification {
     "work for empty graphs" in todo
     "work for graphs with 1 or 2 vertices" in todo
     "work for graphs with no edges" in todo
-    "not work for negative edges" in todo
+    "work for arbitrary input" in todo
     "work for no path from start to end" in todo
     "work when start is goal" in todo
     "handle negative weight cycles" in todo
+    "match bellman-ford algorithm" in todo
   }
 
   "stronglyConnectedComponents" should {
@@ -89,6 +90,35 @@ class GraphSpec extends Specification {
       val sccs = stronglyConnectedComponents(g)
       checkCoverage(g, sccs)
       sccs foreach checkCycle
+    }
+  }
+
+  "bellman-ford" should {
+    "work for empty graphs" in todo
+    "work for graphs with 1 or 2 vertices" in todo
+    "work for graphs with no edges" in todo
+    "work for arbitrary input" in todo
+    "work for no path from start to end" in todo
+    "work when start is goal" in todo
+    "handle negative weight cycles" in todo
+
+    "match dijkstra for positive graphs" in {
+      def trace(parents: Seq[Int], v: Int): Seq[Int] = if(parents(v) < 0) Seq(v) else (trace(parents, parents(v)) :+ v)
+
+      val g = RandomData.graph()
+      for {
+        u <- g.vertices
+        (distances, parents) = bellmanFord(g, u)
+        v <- g.vertices
+      } dijkstra(g, u, v) match {
+        case None =>
+          distances(v).isPosInfinity must beTrue
+
+        case Some(Result(distance, path)) =>
+          distances(v) must be ~(distance +/- 1e-9)
+          val pathToSource = trace(parents, v)
+          pathToSource must be equalTo path  // might be different paths with same cost - random chance of failure here!
+      }
     }
   }
 }
