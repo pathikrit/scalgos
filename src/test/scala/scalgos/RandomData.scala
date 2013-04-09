@@ -38,7 +38,7 @@ object RandomData {
   /**
    * @return Atmost howMany unique points in in rectangle (minX, minY) - (maxX, maxY)
    */
-  def randomPoints(minX: Int = -10, minY: Int = -10, maxX: Int = 10, maxY: Int = 10, howMany: Int = 100) =
+  def points(minX: Int = -10, minY: Int = -10, maxX: Int = 10, maxY: Int = 10, howMany: Int = 100) =
     (for (i <- 1 to howMany) yield Point(integer(minX, maxX), integer(minY, maxY))).toSet
 
   /**
@@ -67,4 +67,14 @@ object RandomData {
     g
   }
 
+  /**
+   * Some special trivial graphs
+   */
+  object Graphs {
+    def empty = graph(numberOfVertices = 0)
+    def point = graph(numberOfVertices = 1)
+    def line = graph(numberOfVertices = 2, edgeDensity = 1)
+    def noEdges = graph(edgeDensity = 0)
+    def clique = graph(edgeDensity = 1)
+  }
 }

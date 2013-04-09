@@ -1,6 +1,7 @@
 package scalgos
 
 import org.specs2.mutable._
+
 import scalgos.BinaryTree._
 
 class BinaryTreeSpec extends Specification {

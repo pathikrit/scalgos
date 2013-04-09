@@ -172,7 +172,7 @@ object Graph {
       if (!(index contains u))
     } dfs(u)
 
-    sccs.toList
+    sccs.toSeq
   }
 }
 

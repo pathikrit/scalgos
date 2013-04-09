@@ -1,6 +1,7 @@
 package scalgos
 
 import org.specs2.mutable._
+
 import scalgos.DynamicProgramming._
 
 class DynamicProgrammingSpec extends Specification {

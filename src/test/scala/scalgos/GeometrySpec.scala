@@ -1,6 +1,7 @@
 package scalgos
 
 import org.specs2.mutable._
+
 import scalgos.Geometry._
 
 class GeometrySpec extends Specification {
@@ -11,7 +12,7 @@ class GeometrySpec extends Specification {
     "work for triangles" in todo
 
     "include extremities" in {
-      val points = RandomData.randomPoints()
+      val points = RandomData.points()
       val hull = grahamScan(points)
       val extremities: Array[Point => Double] = Array(_.x, _.y, _.manhattan /*,p => (p.x - p.y).abs*/)
       val extremes = (extremities map {points minBy _}) ++ (extremities map {points maxBy _})
