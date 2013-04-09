@@ -1,6 +1,7 @@
 package scalgos
 
 import collection.mutable
+import scalgos.Implicits.UpdateablePriorityQueue
 
 /**
  * The result of an A* search
@@ -36,7 +37,7 @@ abstract class AStar[Node] {
     }
 
     while(!queue.isEmpty) {
-      val current = Utils.removeFirst(queue)
+      val current = queue.removeFirst
       if (isGoal(current)) {
         val trace = mutable.ArrayBuffer.empty[Node]
         var (v, cost) = (current, 0d)
@@ -50,7 +51,7 @@ abstract class AStar[Node] {
       // TODO: if edge in visited, we have overestimation
       neighbors(current) filterNot visited.contains foreach {n =>
         if(score(n) >= score(current) + distance(current, n)) {
-          Utils.updatePriority(queue, n, reScore(current))
+          queue updatePriority (n, reScore(current))
           parent(n) = current
         }
       }
