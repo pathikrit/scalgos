@@ -187,7 +187,9 @@ object Graph {
    * @param g input graph
    * @param source starting vertex
    * @return (d, p) where d(i) is shortest distance from source to i
-   *         and p(j) = parent of vertex j (or -1 if no parent) - follow back to source for path
+   *                if negative cycle then d(i) is negative infinity
+   *         and p(j) = parent of vertex j - follow back to source for path
+   *                    should either end in -1 or a loop if d(i) is positive infinity
    */
   def bellmanFord(g: Graph, source: Int) = {
     val distance = Array.tabulate(g.numberOfVertices)(i => g(source->i))

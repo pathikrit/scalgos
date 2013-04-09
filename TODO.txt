@@ -60,6 +60,12 @@ mincost max flow
 
 producer consumer
 
+next greater element
+
+range minimum query
+
+check for todos/pending
+
 
 TODO:
 Each algorithm should have

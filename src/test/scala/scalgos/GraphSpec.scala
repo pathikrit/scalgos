@@ -12,9 +12,19 @@ class GraphSpec extends Specification {
     "work for empty graphs" in todo
     "work for graphs with 1 or 2 vertices" in todo
     "work for graphs with no edges" in todo
-    "not work for negative edges" in todo
-    "work for no path from start to end" in todo
-    "work when start is goal" in todo
+
+    "may not work for negative edges" in {
+      val g = new Graph(numberOfVertices = 4)
+      g(0->1) = 5
+      g(1->2) = 5
+      g(0->2) = 1
+      g(0->3) = 100
+      g(3->1) = -200
+      val Some(Result(distance, path)) = dijkstra(g, 0, 2)
+      distance must be equalTo 1    // Dijkstra says shortest path is 1
+      val (cost, paths) = bellmanFord(g, 0)
+      cost(2) must be equalTo -95   // But, bellmanFord says its -95
+    }
 
     "match floyd-warshall" in {
       val g = RandomData.graph()
@@ -113,11 +123,11 @@ class GraphSpec extends Specification {
       } dijkstra(g, u, v) match {
         case None =>
           distances(v).isPosInfinity must beTrue
+          // TODO: no path to parent or loop here
 
         case Some(Result(distance, path)) =>
           distances(v) must be ~(distance +/- 1e-9)
-          val pathToSource = trace(parents, v)
-          pathToSource must be equalTo path  // might be different paths with same cost - random chance of failure here!
+          trace(parents, v) must be equalTo path  // might be different paths with same cost - random chance of failure!
       }
     }
   }
