@@ -1,7 +1,7 @@
 package scalgos
 
 import collection.mutable
-import scalgos.Implicits.UpdateablePriorityQueue
+import scalgos.Implicits.Updateable
 
 /**
  * The result of an A* search

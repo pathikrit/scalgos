@@ -3,6 +3,7 @@ package scalgos
 import org.specs2.mutable._
 
 import scalgos.RandomData.Graphs
+import scalgos.Implicits.Crossable
 import scalgos.Graph._
 
 class GraphSpec extends Specification {
@@ -19,15 +20,13 @@ class GraphSpec extends Specification {
       val g = RandomData.graph()
       val f = floydWarshall(g)
       for {
-        i <- g.vertices
-        j <- g.vertices
+        (i, j) <- (g.vertices X g.vertices)
         d = dijkstra(g, i, j)
       } if (f(i)(j) isPosInfinity) {
         d must beNone
       } else {
         val Some(Result(distance, path)) = d
-        path.head must be equalTo i
-        path.last must be equalTo j
+        (path.head -> path.last) must be equalTo (i -> j)
         distance must be ~ (f(i)(j) +/- 1e-9)
       }
     }
@@ -49,8 +48,7 @@ class GraphSpec extends Specification {
      */
     def checkCoverage(g: Graph, sccs: Seq[Set[Int]]) {
       for {
-        s1 <- sccs
-        s2 <- sccs
+        (s1, s2) <- (sccs X sccs)
         if (s1 != s2)
       } s1.intersect(s2) must be empty
 
@@ -86,7 +84,7 @@ class GraphSpec extends Specification {
 
       def inCycle(u: Int, v: Int) = !f(u)(v).isPosInfinity && !f(v)(u).isPosInfinity
 
-      def checkCycle(scc: Set[Int]) = for (u <- scc; v <- g.vertices) (scc contains v) must be equalTo inCycle(u,v)
+      def checkCycle(scc: Set[Int]) = for ((u, v) <- scc X g.vertices) (scc contains v) must be equalTo inCycle(u,v)
 
       val sccs = stronglyConnectedComponents(g)
       checkCoverage(g, sccs)

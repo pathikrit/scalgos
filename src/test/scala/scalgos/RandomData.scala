@@ -2,6 +2,7 @@ package scalgos
 
 import util.Random._
 
+import scalgos.Implicits.Crossable
 import scalgos.Geometry.Point
 
 /**
@@ -58,8 +59,7 @@ object RandomData {
     val g = new Graph(numberOfVertices, isDirected)
 
     for {
-      i <- g.vertices
-      j <- g.vertices
+      (i, j) <- g.vertices X g.vertices
       if i != j
       if (number() < edgeDensity)
     } g(i->j) = number(if (isPositiveEdges) 0 else -10, 10)
