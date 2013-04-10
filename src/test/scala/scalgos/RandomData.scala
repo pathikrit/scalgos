@@ -71,9 +71,9 @@ object RandomData {
    * Some special trivial graphs
    */
   object Graphs {
-    def empty = graph(numberOfVertices = 0)
-    def point = graph(numberOfVertices = 1)
-    def line = graph(numberOfVertices = 2, edgeDensity = 1)
+    def zero = graph(numberOfVertices = 0)
+    def one = graph(numberOfVertices = 1)
+    def two = graph(numberOfVertices = 2, edgeDensity = 1)
     def noEdges = graph(edgeDensity = 0)
     def clique = graph(edgeDensity = 1)
   }

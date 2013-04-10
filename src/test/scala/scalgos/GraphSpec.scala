@@ -8,10 +8,32 @@ import scalgos.Graph._
 
 class GraphSpec extends Specification {
 
+  "graph" should {
+    "work" in todo
+  }
+
   "dijkstra" should {
-    "work for empty graphs" in todo
+    "work for empty graphs" in {
+      val g = Graphs.zero
+      dijkstra(g, 0, 1) must throwA[AssertionError]
+      dijkstra(g, 0, 0) must throwA[AssertionError]
+    }
+
     "work for graphs with 1 or 2 vertices" in todo
-    "work for graphs with no edges" in todo
+
+    "work for graphs with no edges" in {
+      val g = Graphs.noEdges
+      for {
+        (u, v) <- g.vertices X g.vertices
+      } dijkstra(g, u, v) match {
+        case Some(Result(cost, path)) =>
+          cost must be equalTo 0
+          u must be equalTo(v)
+
+        case None =>
+          u must be not equalTo(v)
+      }
+    }
 
     "may not work for negative edges" in {
       val g = new Graph(numberOfVertices = 4)
@@ -67,7 +89,7 @@ class GraphSpec extends Specification {
     }
 
     "work for empty graphs" in {
-      val g = Graphs.empty
+      val g = Graphs.zero
       val sccs = stronglyConnectedComponents(g)
       checkCoverage(g, sccs)
       sccs must be empty
@@ -108,8 +130,7 @@ class GraphSpec extends Specification {
     "work for graphs with 1 or 2 vertices" in todo
     "work for graphs with no edges" in todo
     "work for arbitrary input" in todo
-    "work for no path from start to end" in todo
-    "work when start is goal" in todo
+
     "handle negative weight cycles" in todo
 
     "match dijkstra for positive graphs" in {

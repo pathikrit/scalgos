@@ -15,6 +15,11 @@ class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
 
   private type EndPoints = Pair[Int, Int]
 
+  private implicit class Edge(points: EndPoints) {
+    val (u,v) = points
+    require(hasVertices(u, v))
+  }
+
   /**
    * Edge between points
    * This is more readable alternative to traditional g(u,v) i.e. g(u->v)
@@ -22,17 +27,19 @@ class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
    * @param points (from,to)
    * @return edge value (else 0 if from==to or +infinity if from and to has no edge)
    */
-  def apply(points: EndPoints) = {
-    val (u,v) = points
-    adjacencyList(u) getOrElse (v, if (u == v) 0 else Double.PositiveInfinity)
-  }
+  def apply(points: EndPoints) = adjacencyList(points.u) getOrElse (points.v, if (points.u == points.v) 0 else Double.PositiveInfinity)
 
   /**
    * Check if edge exists
    * @param points (from,to)
    * @return true iff from->to edge exists
    */
-  def has(points: EndPoints) = adjacencyList(points._1) contains (points._2)
+  def has(points: EndPoints) = adjacencyList(points.u) contains (points.v)
+
+  /**
+   * @return true iff all vertices in graph
+   */
+  def hasVertices(vs: Int*) = vs forall vertices.contains
 
   /**
    * All neighbors of a vertex
@@ -50,10 +57,9 @@ class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
    * @param weight (from,to) weight=
    */
   def update(points: EndPoints, weight: Double) {
-    val (u, v) = points
-    adjacencyList(u)(v) = weight
+    adjacencyList(points.u)(points.v) = weight
     if (!isDirected) {
-      adjacencyList(v)(u) = weight
+      adjacencyList(points.v)(points.u) = weight
     }
   }
 
@@ -61,7 +67,7 @@ class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
    * Delete an edge between (from,to)
    * @param points (from,to)
    */
-  def -=(points: EndPoints) = adjacencyList(points._1) -= points._2
+  def -=(points: EndPoints) = adjacencyList(points.u) -= points.v
 
   /**
    * Iterate over vertices
@@ -95,10 +101,13 @@ object Graph {
    * @param goal end vertex
    * @return result of A* search
    */
-  def dijkstra(g: Graph, start: Int, goal: Int) = new AStar[Int] {
-    def neighbors(n: Int) = g neighbours n
-    override def distance(from: Int, to: Int) = g(from -> to)
-  } run (start, _ == goal)
+  def dijkstra(g: Graph, start: Int, goal: Int) = {
+    assume(g hasVertices (start, goal))
+    new AStar[Int] {
+      def neighbors(n: Int) = g neighbours n
+      override def distance(from: Int, to: Int) = g(from -> to)
+    } run (start, _ == goal)
+  }
 
   /**
    * Run Floyd-Warshall all pair shortest path algorithm on g

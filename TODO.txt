@@ -66,6 +66,8 @@ range minimum query
 
 check for todos/pending
 
+shorten docs
+
 
 TODO:
 Each algorithm should have
