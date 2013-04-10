@@ -11,8 +11,6 @@ object Randomized {
   /**
    * Randomized algorithm to select the kth item in a sequence in amortised linear time
    *
-   * @param s input sequence
-   * @param k
    * @return the k-th item in s
    */
   def quickSelect[T: Ordering](s: Seq[T], k: Int): T = {

@@ -23,6 +23,7 @@ object BinaryTree {
   /**
    * Reconstruct a BST from its pre-order traversal in O(n * depth)
    * Assume elements in BST are unique
+   * O(n)
    *
    * @param preOrder pre-order traversal of BST
    * @return reconstructed BST
@@ -36,6 +37,7 @@ object BinaryTree {
 
   /**
    * Pre-order traverse a tree
+   * O(n)
    *
    * @param root the root of the tree
    * @return the pre-order traversal

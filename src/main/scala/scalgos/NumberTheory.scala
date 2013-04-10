@@ -11,8 +11,7 @@ object NumberTheory {
    * Calculate catalan number
    * O(n*n) - each recursive step takes O(n) time
    *
-   * @param n
-   * @return n=th catalan number
+   * @return n-th catalan number
    */
   def catalan(n: Int) = {
     val cache = mutable.Map.empty[Int, BigInt]

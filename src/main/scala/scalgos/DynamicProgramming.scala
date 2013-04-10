@@ -68,14 +68,14 @@ object DynamicProgramming {
     val lcs = Array.ofDim[Seq[T]](x+1,y+1)
 
     for (i <- 0 to x; j <- 0 to y) lcs(i)(j) = {
-        if (i == 0 || j == 0)
-          Nil
-        else if (a(i-1) == b(j-1))
-          lcs(i-1)(j-1) :+ a(i-1)
-        else if (lcs(i-1)(j).length > lcs(i)(j-1).length)
-          lcs(i-1)(j)
-        else
-          lcs(i)(j-1)
+      if (i == 0 || j == 0)
+        Nil
+      else if (a(i-1) == b(j-1))
+        lcs(i-1)(j-1) :+ a(i-1)
+      else if (lcs(i-1)(j).length > lcs(i)(j-1).length)
+        lcs(i-1)(j)
+      else
+        lcs(i)(j-1)
     }
     lcs(x)(y)
   }

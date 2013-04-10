@@ -42,9 +42,6 @@ class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
   def hasVertices(vs: Int*) = vs forall vertices.contains
 
   /**
-   * All neighbors of a vertex
-   *
-   * @param u starting vertex
    * @return neighbors of u
    */
   def neighbours(u: Int) = adjacencyList(u).keySet
@@ -54,7 +51,7 @@ class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
    * To remove use -=
    *
    * @param points (from, to)
-   * @param weight (from,to) weight=
+   * @param weight (from,to) = weight
    */
   def update(points: EndPoints, weight: Double) {
     adjacencyList(points.u)(points.v) = weight
@@ -70,13 +67,11 @@ class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
   def -=(points: EndPoints) = adjacencyList(points.u) -= points.v
 
   /**
-   * Iterate over vertices
    * @return vertices in graph
    */
   def vertices = adjacencyList.indices
 
   /**
-   * Iterate over edges
    * @return edges in graph
    */
   def edges = for (u <- vertices; v <- neighbours(u)) yield u->v

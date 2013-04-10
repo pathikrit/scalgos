@@ -9,21 +9,19 @@ import java.awt.geom.GeneralPath
 object Geometry {
 
   /**
-   * Represents a point
-   * @param x x-coordinate
-   * @param y y-coordinate
+   * Represents a point (x,y)
    */
-  case class Point(x: Double, y: Double) {
+  implicit case class Point(tuple: (Double, Double)) {
+    val (x,y) = tuple
     def manhattan = x+y
   }
 
   /**
-   * Represents a vector between start and end
-   * @param A start
-   * @param B end
+   * Represents a vector between a and b
    */
-  case class Vector(A: Point, B: Point) {
-    def X(C: Point) = crossProduct(A, B, C)
+  implicit case class Vector(ends: Pair[Point, Point]) {
+    val Pair(a,b) = ends
+    def X(c: Point) = crossProduct(a, b, c)
   }
 
   /**
@@ -42,8 +40,6 @@ object Geometry {
     def contains(p: Point) = polygon contains (p.x, p.y)
   }
 
-  implicit def toPoint(tuple: (Double, Double)) = Point(tuple._1, tuple._2)
-
   /**
    * Cross product of Segment(a, b) and Segment(a, c)
    * Signed area of triangle formed by (a,b,c) i.e. if 0 then collinear
@@ -51,10 +47,6 @@ object Geometry {
    * determinant | a.x  a.y  a.z |
    *             | b.x  b.y  b.z |
    *             | c.x  c.y  c.z |
-   *
-   * @param a first point
-   * @param b second point
-   * @param c third point
    * @return cross product of segment(a,b) and segment(a,c)
    */
   def crossProduct(a: Point, b: Point, c: Point) = (b.x - a.x) * (c.y - a.y) - (c.x - a.x) * (b.y - a.y)
@@ -62,12 +54,9 @@ object Geometry {
   /**
    * Check if 2 segments intersect
    * TODO: proof?
-   *
-   * @param i first segment
-   * @param j second segment
-   * @return true iff first and second intersects
+   * @return true iff i and j intersects
    */
-  def intersects(i: Vector, j: Vector) = (i X j.A) * (i X j.B) <= 0 && (j X i.A) * (j X i.B) <= 0
+  def intersects(i: Vector, j: Vector) = (i X j.a) * (i X j.b) <= 0 && (j X i.a) * (j X i.b) <= 0
 
   /**
    * Finds convex hull using Graham Scan
@@ -82,11 +71,11 @@ object Geometry {
     type Hull = mutable.ArrayStack[Point]
 
     /**
-     * Discard points in interior of the quadrilateral formed by top, left, bottom, right
+     * Akl-Touissant Heuristic: Discard points in interior of the quadrilateral formed by top, left, bottom, right
      * @param points set of input points
      * @return sorted remaining points
      */
-    def aklToussaintHeuristic(points: Set[Point]) = {
+    def discardInteriorPoints(points: Set[Point]) = {
       def extremities: Array[Point => Double] = Array(_.x, -_.x, _.y, -_.y)
       val extremes = extremities map {points minBy _}
       val quad = Shape(extremes.toSet)
@@ -102,7 +91,7 @@ object Geometry {
     }
 
     def halfHull(points: Seq[Point]) = points.foldLeft(new Hull)(turnLeft)
-    val sorted = aklToussaintHeuristic(points)
+    val sorted = discardInteriorPoints(points)
     (halfHull(sorted) ++ halfHull(sorted.reverse)).toSet
   }
 }
