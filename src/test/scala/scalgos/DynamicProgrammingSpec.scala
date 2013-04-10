@@ -47,7 +47,7 @@ class DynamicProgrammingSpec extends Specification {
     }
 
     "work for arbitrary input" in {
-      longestCommonSubsequence("patrick", "pathikrit") must be equalTo("patik")
+      longestCommonSubsequence("patrick", "pathikrit") must be equalTo "patik"
     }
   }
 
@@ -77,20 +77,20 @@ class DynamicProgrammingSpec extends Specification {
     }
 
     "work on small sequences" in {
-      maxSubArraySum(Seq(1)) must be equalTo(1)
-      maxSubArraySum(Seq(-1)) must be equalTo(0)
-      maxSubArraySum(Seq(-1, -2)) must be equalTo(0)
-      maxSubArraySum(Seq(-1, 0, -2)) must be equalTo(0)
-      maxSubArraySum(Seq(-1, 0, 2)) must be equalTo(2)
-      maxSubArraySum(Seq(-1, 0)) must be equalTo(0)
-      maxSubArraySum(Seq(0)) must be equalTo(0)
-      maxSubArraySum(Seq(1)) must be equalTo(1)
+      maxSubArraySum(Seq(1)) must be equalTo 1
+      maxSubArraySum(Seq(-1)) must be equalTo 0
+      maxSubArraySum(Seq(-1, -2)) must be equalTo 0
+      maxSubArraySum(Seq(-1, 0, -2)) must be equalTo 0
+      maxSubArraySum(Seq(-1, 0, 2)) must be equalTo 2
+      maxSubArraySum(Seq(-1, 0)) must be equalTo 0
+      maxSubArraySum(Seq(0)) must be equalTo 0
+      maxSubArraySum(Seq(1)) must be equalTo 1
     }
 
     "match brute force algorithm" in {
       val s = RandomData.seq()
       val sums = for (start <- s.indices; end <- start to s.length) yield s.slice(start, end).sum
-      maxSubArraySum(s) must be equalTo(sums.max)
+      maxSubArraySum(s) must be equalTo sums.max
     }
   }
 }

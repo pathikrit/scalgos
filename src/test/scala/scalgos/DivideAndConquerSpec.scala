@@ -8,7 +8,7 @@ class DivideAndConquerSpec extends Specification {
 
   "maxRectangleUnderHistogram" should {
     "be 0 for empty histograms" in {
-      maxRectangleInHistogram(Nil) must be equalTo(0)
+      maxRectangleInHistogram(Nil) must be equalTo 0
     }
 
     "work for arbitrary input" in {

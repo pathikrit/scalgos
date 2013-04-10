@@ -28,7 +28,7 @@ class GraphSpec extends Specification {
       } dijkstra(g, u, v) match {
         case Some(Result(cost, path)) =>
           cost must be equalTo 0
-          u must be equalTo(v)
+          u must be equalTo v
 
         case None =>
           u must be not equalTo(v)
