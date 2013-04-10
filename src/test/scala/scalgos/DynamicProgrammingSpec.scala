@@ -70,4 +70,27 @@ class DynamicProgrammingSpec extends Specification {
       longestIncreasingSubsequence(s) must be equalTo longestCommonSubsequence(s, s.sorted)
     }
   }
+
+  "maxSubArraySum" should {
+    "work on empty sequences" in {
+      maxSubArraySum(Seq.empty) must be equalTo(0)
+    }
+
+    "work on small sequences" in {
+      maxSubArraySum(Seq(1)) must be equalTo(1)
+      maxSubArraySum(Seq(-1)) must be equalTo(0)
+      maxSubArraySum(Seq(-1, -2)) must be equalTo(0)
+      maxSubArraySum(Seq(-1, 0, -2)) must be equalTo(0)
+      maxSubArraySum(Seq(-1, 0, 2)) must be equalTo(2)
+      maxSubArraySum(Seq(-1, 0)) must be equalTo(0)
+      maxSubArraySum(Seq(0)) must be equalTo(0)
+      maxSubArraySum(Seq(1)) must be equalTo(1)
+    }
+
+    "match brute force algorithm" in {
+      val s = RandomData.seq()
+      val sums = for (start <- s.indices; end <- start to s.length) yield s.slice(start, end).sum
+      maxSubArraySum(s) must be equalTo(sums.max)
+    }
+  }
 }

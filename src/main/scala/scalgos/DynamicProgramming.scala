@@ -131,12 +131,5 @@ object DynamicProgramming {
    * @param s
    * @return the maximum contiguous sub array sum
    */
-  def maxSubArraySum(s: Seq[Int]) = {
-    var (current, best) = (0, 0)
-    for (i <- s) {
-      current = (current+i) max 0
-      best = best max current
-    }
-    best
-  }
+  def maxSubArraySum(s: Seq[Int]) = s.scanLeft(0)((sum, i) => (sum + i) max 0).max
 }
