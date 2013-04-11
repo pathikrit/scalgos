@@ -3,6 +3,7 @@ package scalgos
 import org.specs2.mutable._
 
 import scalgos.BinaryTree._
+import util.Random
 
 class BinaryTreeSpec extends Specification {
 
@@ -15,7 +16,8 @@ class BinaryTreeSpec extends Specification {
 
   "reconstruct" should {
     "do a round-trip" in {
-      val (inOrder, preOrder) = (Seq(1, 2, 3, 4, 5), Seq(5, 4, 3, 2, 1))
+      val inOrder = RandomData.seq().distinct
+      val preOrder = Random.shuffle(inOrder)
       preOrderTraversal(reconstruct(inOrder, preOrder)) must be equalTo preOrder
     }
   }

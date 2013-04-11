@@ -40,7 +40,7 @@ object RandomData {
    * @return Atmost howMany unique points in in rectangle (minX, minY) - (maxX, maxY)
    */
   def points(minX: Int = -10, minY: Int = -10, maxX: Int = 10, maxY: Int = 10, howMany: Int = 100) =
-    (for (i <- 1 to howMany) yield Point(integer(minX, maxX), integer(minY, maxY))).toSet
+    (for (i <- 1 to howMany) yield new Point((number(minX, maxX), number(minY, maxY)))).toSet
 
   /**
    * Generate random graph
@@ -52,7 +52,7 @@ object RandomData {
    * @return a random graph
    */
   def graph(numberOfVertices: Int = 100, edgeDensity: Double = 0.25,
-                  isPositiveEdges: Boolean = true, isDirected: Boolean = true) = {
+            isPositiveEdges: Boolean = true, isDirected: Boolean = true) = {
     assume(numberOfVertices >= 0)
     assume(edgeDensity >= 0 && edgeDensity <= 1)
 

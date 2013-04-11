@@ -11,7 +11,7 @@ object Geometry {
   /**
    * Represents a point (x,y)
    */
-  implicit case class Point(tuple: (Double, Double)) {
+  implicit class Point(tuple: (Double, Double)) {
     val (x,y) = tuple
     def manhattan = x+y
   }
@@ -19,7 +19,7 @@ object Geometry {
   /**
    * Represents a vector between a and b
    */
-  implicit case class Vector(ends: Pair[Point, Point]) {
+  implicit class Vector(ends: Pair[Point, Point]) {
     val Pair(a,b) = ends
     def X(c: Point) = crossProduct(a, b, c)
   }

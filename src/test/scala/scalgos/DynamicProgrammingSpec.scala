@@ -12,7 +12,7 @@ class DynamicProgrammingSpec extends Specification {
     }
 
     "work for arbitrary input" in {
-      validBrackets(1) must be equalTo(Seq("()"))
+      validBrackets(1) must be equalTo Seq("()")
       validBrackets(2) must contain("()()", "(())").only
       validBrackets(3) must contain("()()()", "()(())", "(())()", "((()))", "(()())").only
     }
