@@ -25,13 +25,29 @@ class DynamicProgrammingSpec extends Specification {
   }
 
   "maxRectangleUnderHistogram" should {
-    "be 0 for empty histograms" in {
+    "work for small inputs" in {
+      maxRectangleInHistogram(Seq((1, 1))) must be equalTo 1
+      maxRectangleInHistogram(Seq((1, 2))) must be equalTo 2
+    }
+
+    "work for zeroes" in {
       maxRectangleInHistogram(Nil) must be equalTo 0
+      maxRectangleInHistogram(Seq((0, 0))) must be equalTo 0
+      maxRectangleInHistogram(Seq((5, 0))) must be equalTo 0
+      maxRectangleInHistogram(Seq((0, 0), (5, 0))) must be equalTo 0
     }
 
     "work for arbitrary input" in {
-      val dims = Seq((6, 1), (3, 5), (8, 1), (4, 9), (5, 3), (8, 2), (1, 18), (2, 2), (19, 1), (2, 10))
+      val dims = Seq((1, 6), (5, 3), (1, 8), (9, 4), (3, 5), (2, 8), (18, 1), (2, 2), (1, 19), (10, 2))
       maxRectangleInHistogram(dims) must be equalTo 58
+    }
+
+    "fail for negative inputs" in todo
+
+    "match the divid and conquery algorithm" in {
+      val blocks = RandomData.positiveSeq() zip RandomData.positiveSeq()
+      val bars = for {b <- blocks; i <- 1 to b._2} yield b._1  //break block of width w into w blocks of width 1
+      maxRectangleInHistogram(blocks) must be equalTo DivideAndConquer.maxRectangleInHistogram(bars)
     }
   }
 
@@ -73,7 +89,7 @@ class DynamicProgrammingSpec extends Specification {
 
   "maxSubArraySum" should {
     "work on empty sequences" in {
-      maxSubArraySum(Seq.empty) must be equalTo(0)
+      maxSubArraySum(Nil) must be equalTo(0)
     }
 
     "work on small sequences" in {

@@ -31,28 +31,50 @@ object DynamicProgramming {
 
   /**
    * Finds largest rectangle (parallel to axes) under histogram with given heights and width
-   * O(n) since its basically recursive fibonacci algorithm
-   * TODO: are there O(n) items in cache?
+   * O(n) - Each step in collapse decreased either sorted.length or unprocessed.length and each step is O(1)
    *
-   * @param dimensions (width, height)s of histogram
+   * @param dimensions (height, width)s of histogram
    * @return area of largest rectangle under histogram
    */
   def maxRectangleInHistogram(dimensions: Seq[(Int, Int)]) = {
-    case class Block(width: Int, height: Int) {
+    case class Block(height: Int, width: Int) {
       val area = width * height
-      def join(other: Block) = Block(width + other.width, height min other.height)
+      def +(that: Block) = Block(this.height min that.height, this.width + that.width)
     }
-    implicit def toBlock(dimension: (Int, Int)) = Block(dimension._1, dimension._2)
 
-    val cache = mutable.Map.empty[Seq[Block], Int]
+    implicit val sizeOrdering: Ordering[Block] = Ordering by {_.area}
 
-    def area(blocks: Seq[Block]): Int = cache getOrElseUpdate (blocks, blocks match {
-      case Nil => 0
-      case first :: Nil => first.area
-      case first :: second :: rest => Seq(first.area, area(second :: rest), area((first join second) :: rest)).max
-    })
+    /**
+     * Find the largest area block by recursively collapsing unprocessed into an increasing stack
+     * Before calling make sure sorted has the (0,0) block
+     *
+     * @param sorted blocks in increasing order of height
+     *
+     * @param unprocessed the unprocessed part of the input
+     *                    if empty, start collapsing the sorted part
+     *                    else take head and see if head > sorted.top (always exists since we inserted (0,0) before)
+     *                    if head > sorted.top, push head
+     *                    else if sorted.top > head > sorted.second, combine sorted.head and head
+     *                    else combine sorted.top and sorted.second
+     *
+     * @return the largest block
+     */
+    def collapse(sorted: List[Block], unprocessed: Seq[Block]): Block = unprocessed match {
+      case Nil => sorted match {
+        case first :: Nil => first
+        case first :: second :: stack => first max collapse((first + second) :: stack, unprocessed)
+      }
+      case (current :: rest) => sorted match {
+        case first :: stack if current.height >= first.height => collapse(current :: sorted, rest)
 
-    area(dimensions map toBlock)
+        case first :: second :: stack if current.height >= second.height =>
+          first max collapse((first + current) :: second :: stack, rest)
+
+        case first :: second :: stack => first max collapse((first + second) :: stack, unprocessed)
+      }
+    }
+
+    collapse(List(Block(0, 0)), dimensions map {d => Block(d._1, d._2)}).area
   }
 
   /**

@@ -7,18 +7,30 @@ import scalgos.DivideAndConquer._
 class DivideAndConquerSpec extends Specification {
 
   "maxRectangleUnderHistogram" should {
-    "be 0 for empty histograms" in {
+
+    "work for small inputs" in {
       maxRectangleInHistogram(Nil) must be equalTo 0
+      maxRectangleInHistogram(Seq(1)) must be equalTo 1
+      maxRectangleInHistogram(Seq(1, 2)) must be equalTo 2
+      maxRectangleInHistogram(Seq(2, 1)) must be equalTo 2
+      maxRectangleInHistogram(Seq(1, 2, 3)) must be equalTo 4
+      maxRectangleInHistogram(Seq(1, 3, 2)) must be equalTo 4
+      maxRectangleInHistogram(Seq(3, 1, 2)) must be equalTo 3
+      maxRectangleInHistogram(Seq(3, 1, 2)) must be equalTo 3
+      maxRectangleInHistogram(Seq(2, 1, 3)) must be equalTo 3
+      maxRectangleInHistogram(Seq(2, 3, 1)) must be equalTo 4
     }
 
-    "work for arbitrary input" in {
-      val heights = Seq(6, 3, 8, 4, 5, 8, 1, 2, 9, 2)
-      maxRectangleInHistogram(heights) must be equalTo 18
+    "work for zeroes" in {
+      maxRectangleInHistogram(Seq(0)) must be equalTo 0
+      maxRectangleInHistogram(Seq(0, 0)) must be equalTo 0
     }
 
-    "be same result as the DP algorithm" in {
+    "fail for negative inputs" in todo
+
+    "match the DP algorithm" in {
       val heights = RandomData.positiveSeq()
-      maxRectangleInHistogram(heights) must be equalTo DynamicProgramming.maxRectangleInHistogram(heights map {(1, _)})
+      maxRectangleInHistogram(heights) must be equalTo DynamicProgramming.maxRectangleInHistogram(heights map {(_, 1)})
     }
   }
 }
