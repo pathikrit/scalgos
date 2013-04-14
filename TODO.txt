@@ -75,3 +75,10 @@ Each algorithm should have
 1) One liner
 2) O() and brief explanation why
 3) Longer proof of correctness - or why it works
+
+def topologicalSort(g: Graph) {
+    val starts = g.edges groupBy {_._2}
+
+
+
+  }

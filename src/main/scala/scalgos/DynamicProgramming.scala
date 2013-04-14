@@ -30,54 +30,6 @@ object DynamicProgramming {
   }
 
   /**
-   * Finds largest rectangle (parallel to axes) under histogram with given heights and width
-   * O(n) - Each step in collapse decreased either sorted.length or unprocessed.length and each step is O(1)
-   *
-   * @param dimensions (height, width)s of histogram
-   * @return area of largest rectangle under histogram
-   */
-  def maxRectangleInHistogram(dimensions: Seq[(Int, Int)]) = {
-    case class Block(height: Int, width: Int) {
-      val area = width * height
-      def +(that: Block) = Block(this.height min that.height, this.width + that.width)
-    }
-
-    implicit val sizeOrdering: Ordering[Block] = Ordering by {_.area}
-
-    /**
-     * Find the largest area block by recursively collapsing unprocessed into an increasing stack
-     * Before calling make sure sorted has the (0,0) block
-     *
-     * @param sorted blocks in increasing order of height
-     *
-     * @param unprocessed the unprocessed part of the input
-     *                    if empty, start collapsing the sorted part
-     *                    else take head and see if head > sorted.top (always exists since we inserted (0,0) before)
-     *                    if head > sorted.top, push head
-     *                    else if sorted.top > head > sorted.second, combine sorted.head and head
-     *                    else combine sorted.top and sorted.second
-     *
-     * @return the largest block
-     */
-    def collapse(sorted: List[Block], unprocessed: Seq[Block]): Block = unprocessed match {
-      case Nil => sorted match {
-        case first :: Nil => first
-        case first :: second :: stack => first max collapse((first + second) :: stack, unprocessed)
-      }
-      case (current :: rest) => sorted match {
-        case first :: stack if current.height >= first.height => collapse(current :: sorted, rest)
-
-        case first :: second :: stack if current.height >= second.height =>
-          first max collapse((first + current) :: second :: stack, rest)
-
-        case first :: second :: stack => first max collapse((first + second) :: stack, unprocessed)
-      }
-    }
-
-    collapse(List(Block(0, 0)), dimensions map {d => Block(d._1, d._2)}).area
-  }
-
-  /**
    * Find longest common subsequence (not necessarily contiguous) of 2 sequences
    * O(a.length * b.length) since each item in cache is filled exactly once in O(1) time
    *
