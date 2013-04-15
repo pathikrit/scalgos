@@ -210,5 +210,50 @@ object Graph {
 
     (distance.toSeq, parent.toSeq)
   }
+
+
+  /**
+   * Breadth first search from source in g
+   * If we replace queue with stack, we get DFS
+   * O(V + E) - each vertex/edge is examined atmost once
+   *
+   * @param f Apply f to each vertex in bfs order from source
+   * @return If f is true at a vertex v, return Some(v) else None
+   */
+  def bfs(g: Graph, source: Int, f: Int => Boolean): Option[Int] = {
+    val (seen, queue) = (mutable.Set.empty[Int], mutable.Queue.empty[Int])
+
+    def visit(i: Int) = {
+      seen += i
+      queue += i
+    }
+
+    visit(source)
+
+    while (!queue.isEmpty) {
+      val u = queue.dequeue()
+      if (f(u)) {
+        return Some(u)
+      }
+      g neighbours u filterNot seen foreach visit
+    }
+
+    None
+  }
+
+  /**
+   * Recursive depth first search from u in g
+   * TODO: Change BFS, DFS to cost too
+   * O(V + E) - each vertex/edge is examined atmost once
+   *
+   * @param f Apply f to each vertex in dfs order from source
+   * @return If f is true at a vertex v, return Some(v) else None
+   */
+  def dfs(g: Graph, u: Int, f: Int => Boolean, seen: Set[Int] = Set.empty[Int]): Option[Int] =
+    if(f(u)) {
+      Some(u)
+    } else {
+      g neighbours u filterNot seen find {v => dfs(g, u, f, seen + u).isDefined}
+    }
 }
 
