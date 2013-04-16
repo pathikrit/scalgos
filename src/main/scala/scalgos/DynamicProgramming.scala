@@ -1,7 +1,20 @@
 package scalgos
 
-import collection.mutable
 import scala.math.Ordering.Implicits._
+
+import collection.mutable
+
+/**
+ * Generic way to create memoized functions (even recursive ones)
+ *
+ * @param f the function to memoize
+ * @tparam A input
+ * @tparam B output
+ */
+case class Memo[A,B](f: A => B) extends (A => B) {
+  private val cache = mutable.Map.empty[A, B]
+  def apply(x: A) = cache getOrElseUpdate (x, f(x))
+}
 
 /**
  * Collection of DP algorithms
@@ -14,19 +27,13 @@ object DynamicProgramming {
    * Number of brackets = C(n) i.e. the n-th Catalan number
    * because C(n) = sigma(i = 0 to n-1 C(i)*C(n-i))
    *
-   * @param n number of pairs
-   * @return generate all possible valid n-pair bracket strings
+   * @return memoized function to generate all possible valid n-pair bracket strings
    */
-  def validBrackets(n: Int) = {
-    val cache = mutable.Map.empty[Int, Seq[String]]
-
-    def _validBrackets(n: Int): Seq[String] = cache getOrElseUpdate (n, if (n == 0) Seq("") else for {
+  val validBrackets: Memo[Int, Seq[String]] = Memo {n => if (n == 0) Seq("") else for {
       i <- 0 until n
-      a <- _validBrackets(i)
-      b <- _validBrackets(n-i-1)
-    } yield '(' + a  + ')' + b)
-
-    _validBrackets(n)
+      a <- validBrackets(i)
+      b <- validBrackets(n-i-1)
+    } yield '(' + a  + ')' + b
   }
 
   /**

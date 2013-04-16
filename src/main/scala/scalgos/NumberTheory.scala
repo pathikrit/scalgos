@@ -1,7 +1,5 @@
 package scalgos
 
-import collection.mutable
-
 /**
  * Collection of number theory algorithms
  */
@@ -11,13 +9,15 @@ object NumberTheory {
    * Calculate catalan number
    * O(n*n) - each recursive step takes O(n) time
    *
-   * @return n-th catalan number
+   * @return memoized function to calculate nth catalan number
    */
-  def catalan(n: Int) = {
-    val cache = mutable.Map.empty[Int, BigInt]
-    def _catalan(n: Int): BigInt = cache getOrElseUpdate(n, if (n == 0) 1 else {
-      (0 until n) map {i => _catalan(i) * _catalan(n-i-1)} sum
-    })
-    _catalan(n)
-  }
+  val catalan: Memo[Int, BigInt] = Memo {n => if (n == 0) 1 else (0 until n) map {i => catalan(i) * catalan(n-i-1)} sum}
+
+  /**
+   * Fibonacci number calculator
+   * O(n) - each number is calculated once in O(1) time
+   *
+   * @return memoized function to calculate nth fibonacci number
+   */
+  val fibonacci: Memo[Int, BigInt] = Memo {n => if (n <= 1) n else fibonacci(n-1) + fibonacci(n-2)}
 }
