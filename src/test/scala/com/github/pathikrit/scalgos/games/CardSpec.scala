@@ -1,4 +1,4 @@
-package scalgos.games
+package com.github.pathikrit.scalgos.games
 
 import org.specs2.mutable.Specification
 
