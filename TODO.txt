@@ -82,3 +82,29 @@ def topologicalSort(g: Graph) {
 
 
   }
+
+
+  def searchGrid[A](g: Array[Array[A]], process: A => Unit) {
+
+    def apply(i: Int, j: Int) =
+      try {
+        process(g(i)(j))
+        true
+      } catch {
+        case _: ArrayIndexOutOfBoundsException => false
+      }
+
+    for {
+      x <- g.indices
+      y <- g(x).indices
+      dx <- -1 to 1
+      dy <- -1 to 1
+      dx != 0 || dy != 0
+      i <-
+
+    }
+
+  }
+
+
+  type Vertex = Int     // todo: rewrite Int in here to use vertex
