@@ -2,6 +2,11 @@ package scalgos.games
 
 import scala.collection.mutable
 
+import scalgos.Implicits.Crossable
+
+/**
+ * Class to model a playing card
+ */
 case class Card(rank: Int, suit: Int) {
   override def toString = s"${Card ranks rank}${Card suits suit}"
 }
@@ -11,11 +16,14 @@ object Card {
 
   val (ranks, suits) = ("23456789TJQKA", "♣♠♦♥")
 
-  val all = for {rank <- 0 until ranks.length; suit <- 0 until suits.length} yield Card(rank, suit)
+  val all = for ((rank, suit) <- ranks.indices X suits.indices) yield Card(rank, suit)
 
-  implicit def fromStr(s: String) = Card((ranks indexOf s(0).toUpper), ("CSDH" indexOf s(1).toUpper))
+  implicit def fromStr(s: String) = Card(ranks indexOf s(0).toUpper, "CSDH" indexOf s(1).toUpper)
 }
 
+/**
+ * Class to model a deck of cards
+ */
 class Deck {
   val cards = mutable.Queue() ++ util.Random.shuffle(Card.all)
 
@@ -24,9 +32,15 @@ class Deck {
   def remove(discards: Set[Card]) { discards foreach {card: Card => cards dequeueFirst (_ == card)} }
 }
 
+/**
+ * A class to model hand types in poker
+ */
 object PokerHandType extends Enumeration {
   val HighCard, OnePair, TwoPair, ThreeOfAKind, Straight, Flush, FullHouse, FourOfAKind, StraightFlush = Value
 
+  /**
+   * @return (h,s) where h is the hand type and s is sorted cards to break ties
+   */
   def classify(hand: Set[Card]) = {
     def rankMatches(card: Card) = hand count (_.rank == card.rank)
     val groups = hand groupBy rankMatches mapValues {_.toList.sorted}
