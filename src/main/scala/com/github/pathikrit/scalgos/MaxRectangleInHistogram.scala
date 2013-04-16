@@ -1,4 +1,4 @@
-package scalgos
+package com.github.pathikrit.scalgos
 
 /**
  * Find area of largest rectangle in histogram

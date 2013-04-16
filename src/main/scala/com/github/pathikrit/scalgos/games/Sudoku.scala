@@ -1,6 +1,5 @@
 package com.github.pathikrit.scalgos.games
 
-
 object Sudoku {
 
   type Board = Array[Array[Int]]

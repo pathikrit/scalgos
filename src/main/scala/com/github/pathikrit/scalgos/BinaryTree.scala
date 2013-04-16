@@ -1,4 +1,4 @@
-package scalgos
+package com.github.pathikrit.scalgos
 
 import Ordering.Implicits._
 

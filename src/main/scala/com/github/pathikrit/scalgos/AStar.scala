@@ -1,7 +1,7 @@
-package scalgos
+package com.github.pathikrit.scalgos
 
 import collection.mutable
-import scalgos.Implicits.Updateable
+import Implicits.Updateable
 
 /**
  * The result of an A* search

@@ -1,4 +1,4 @@
-package scalgos
+package com.github.pathikrit.scalgos
 
 /**
  * collection of algorithms related to combinatorics

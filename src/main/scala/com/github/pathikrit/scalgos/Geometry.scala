@@ -1,4 +1,4 @@
-package scalgos
+package com.github.pathikrit.scalgos
 
 import collection.mutable
 import java.awt.geom.GeneralPath

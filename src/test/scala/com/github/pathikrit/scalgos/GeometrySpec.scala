@@ -1,8 +1,8 @@
-package scalgos
+package com.github.pathikrit.scalgos
 
 import org.specs2.mutable._
 
-import scalgos.Geometry._
+import Geometry._
 
 class GeometrySpec extends Specification {
 

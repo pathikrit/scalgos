@@ -2,7 +2,7 @@ package com.github.pathikrit.scalgos.games
 
 import scala.collection.mutable
 
-import scalgos.Implicits.Crossable
+import com.github.pathikrit.scalgos.Implicits.Crossable
 
 /**
  * Class to model a playing card

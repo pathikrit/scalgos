@@ -1,8 +1,8 @@
-package scalgos
+package com.github.pathikrit.scalgos
 
 import org.specs2.mutable._
 
-import scalgos.BinaryTree._
+import BinaryTree._
 import util.Random
 
 class BinaryTreeSpec extends Specification {

@@ -1,10 +1,10 @@
-package scalgos
+package com.github.pathikrit.scalgos
 
 import org.specs2.mutable._
 
-import scalgos.RandomData.Graphs
-import scalgos.Implicits.Crossable
-import scalgos.Graph._
+import RandomData.Graphs
+import Implicits.Crossable
+import Graph._
 
 class GraphSpec extends Specification {
 

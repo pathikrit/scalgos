@@ -1,9 +1,9 @@
-package scalgos
+package com.github.pathikrit.scalgos
 
 import util.Random._
 
-import scalgos.Implicits.Crossable
-import scalgos.Geometry.Point
+import Implicits.Crossable
+import Geometry.Point
 
 /**
  * Has utility methods for random data generation
