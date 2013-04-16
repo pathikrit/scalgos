@@ -1,12 +1,23 @@
 package com.github.pathikrit.scalgos.games
 
+/**
+ * Sudoku related algorithms
+ */
 object Sudoku {
 
   type Board = Array[Array[Int]]
 
-  def solve(sudoku: Board, cell: Int = 0): Option[Board] = {
+  /**
+   * Sudoku solver
+   * O(average elementary branching factor ^ empty cells
+   *
+   * @param sudoku input game to be solved
+   * @param cell current cell (0 at start, 81 at end)
+   * @return true iff solution exists (the sudoku board is modified in place with solution else left alone)
+   */
+  def solve(sudoku: Board, cell: Int = 0): Boolean = {
     if (cell == 9*9) {
-      return if (isValid(sudoku)) Some(sudoku) else None
+      return isSolution(sudoku)
     }
 
     val (r, c) = (cell%9, cell/9)
@@ -26,16 +37,32 @@ object Sudoku {
       solve(sudoku, cell+1)
     }
 
-    val solutions = (1 to 9) filter good flatMap guess
-
-    if (solutions isEmpty) {
-      sudoku(r)(c) = 0
-      None
-    } else {
-      Some(solutions.head)
-    }
+    ((1 to 9) filter good exists guess) || {sudoku(r)(c) = 0; false}
   }
 
-  def isValid(sudoku: Board) = true
+  /**
+   * @return true iff sudoku is in valid solved state
+   */
+  def isSolution(sudoku: Board) = true
 
+
+  /**
+   * @return pretty print sudoku board
+   */
+  def pretty(sudoku: Board) = {
+    var pretty = ""
+    for (i <- sudoku.indices) {
+      if(i == 3 || i == 6) {
+        pretty += "- - - - - - - - - - -\n"
+      }
+      for (j <- sudoku(i).indices) {
+        if (j == 3 || j == 6) {
+          pretty += "| "
+        }
+        pretty += sudoku(i)(j) + " "
+      }
+      pretty += "\n"
+    }
+    pretty
+  }
 }
