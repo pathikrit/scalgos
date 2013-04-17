@@ -196,3 +196,7 @@ def topologicalSort(g: Graph) {
   erdos-gallai
 
   prims vs kruskal
+
+  use Streams.scala in lazy way
+  def sieve(s: Stream[Int] = Stream from 2): Stream[Int] = Stream.cons(s.head, sieve(s.tail filter {_ % s.head != 0}))
+

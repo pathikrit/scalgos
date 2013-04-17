@@ -957,36 +957,43 @@ public class Library
         return f;
     }
 
-    //prime[i] = true iff i is prime, prime[0] = prime[1] = false and i can be from 0 to n (both inclusive)
-    boolean[] sieveOfEratosthenes(int n) //max n = 2^15
-    {
-        boolean prime[] = new boolean[n+1];
-        fill(prime, 2, n, true);
-        for(int i = 2; i <= n; i++)
-            if(prime[i])
-                for(int j = i*i; j <= n; j+=i) //check for i*i overflow
-                    prime[j] = false;
-        return prime;
-    }
-
-    /*
-     * returns all primes <= n
-     * O(n log n)
-     * no input validation
-     */
-    ArrayList<Integer> sieveOfSundaram(int n)   {
-        ArrayList<Integer> p = new ArrayList();
-        if(n > 1)
-            p.add(2);
-        BitSet s = new BitSet(n = (n+1)/2);
-        for(int i = 1; 2*i < n; i++)
-            for(int j = 1, x; (x = i + j + 2*i*j) < n; j++)
-                s.set(x);
-        for (int i = 0; (i = s.nextClearBit(i+1)) < n; p.add(2*i+1));
+    static BitSet sieveOfSundaram(int n) {
+        BitSet s = new BitSet(n++), p = new BitSet(n);
+        for (int i = 3, l = (int)sqrt(n); i < l; i += 2)
+            for(int j = 3*i; j < n; j += 2*i)
+                s.set(j/2); // do p.clear??
+        for (int i = 0; 2*(i = s.nextClearBit(i+1)) < n; p.set(2*i+1));
+        p.set(2);
         return p;
     }
 
-    //fills an array with value, the type of value can ofcourse be changed
+    static BitSet sieveOfAtkin(int n) {
+        BitSet p = new BitSet(++n);
+        int l = (int)sqrt(n);
+
+        for(int x = 1; x <= l; x++)
+            for(int y = 1; y <= l; y++) {
+                int k = x*x, a = 3*k, b = y*y,
+                        n2 = a+b,
+                        n3 = a-b,
+                        n1 = n2+k,
+                        m2 = n2%12,
+                        m3 = n3%12,
+                        m1 = n1%12;
+
+                if(n1 < n && (m1 == 1 || m1 == 5))
+                    p.set(n1);
+                if(n2 < n && m2 == 7)
+                    p.set(n2);
+                if(n3 < n && x > y && m3 == 11)
+                    p.set(n3);
+            }
+
+        p.set(2);
+        p.set(3);
+    }
+
+        //fills an array with value, the type of value can ofcourse be changed
     void deepFill(Object array, long value)
     {
         if(array instanceof long[])
