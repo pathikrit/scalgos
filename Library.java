@@ -1684,3 +1684,207 @@ public class Library
         }
     }
 }
+
+
+chess
+        game net
+        chinese remainder theorem
+        def gcd(a: Int, b: Int): Int = if (b == 0) a else gcd(b, a%b)
+
+        slightly facter than euclid's aglorithm
+        * O((log_2 (ab)^2)
+        def binaryGcd(a: Int, b: Int): Int = (a, b) match {
+        case (0, _) => b
+        case (_, 0) => a
+        case _ => (a%2, b%2) match {
+        case (0, 0) => 2*binaryGcd(a/2, b/2)
+        case (0, 1) => binaryGcd(a/2, b)
+        case (1, 0) => binaryGcd(a, b/2)
+        case (1, 1) => if (a>b) binaryGcd(b, a-b) else binaryGcd(a, b-a)
+        }
+        }
+
+        package com.github.pathikrit.scalgos
+
+        import collection.{SortedMap, mutable}
+
+        object SandBox {
+
+        def subsetSums(s: Seq[Int]) = s.foldLeft(Set[Int](0))((possibleSums, i) => possibleSums map {_ + i})
+
+        // use double[][] because of Double.POSITIVE_INFINITY
+
+        def combineIntervals(intervals: Pair[Int, Int]*) = {
+        //   val combined = mutable.
+
+        }
+
+
+        def sieveOfEratosthenes(n: Int) = {
+        val isPrime = new mutable.BitSet(n)
+        }
+
+
+
+        def max2DSubArraySum(s: Seq[Seq[Int]]) = {
+        //   val rectSum =
+        }
+
+        }
+
+
+        Bhowmick scan :-
+        1) select one segment on convex hull
+        2) Discard all points in between
+        3) triangular converge
+
+        code style
+
+        code coverage
+
+        brfpt selection algo
+
+        mincost max flow
+
+        producer consumer
+
+        next greater element
+
+        range minimum query
+
+        check for todos/pending
+
+        shorten docs
+
+        minmax
+
+        TODO:
+        Each algorithm should have
+        1) One liner
+        2) O() and brief explanation why
+        3) Longer proof of correctness - or why it works
+
+        def topologicalSort(g: Graph) {
+        val starts = g.edges groupBy {_._2}
+
+
+
+        }
+
+
+        def searchGrid[A](g: Array[Array[A]], process: A => Unit) {
+
+        def apply(i: Int, j: Int) =
+        try {
+        process(g(i)(j))
+        true
+        } catch {
+        case _: ArrayIndexOutOfBoundsException => false
+        }
+
+        for {
+        x <- g.indices
+        y <- g(x).indices
+        dx <- -1 to 1
+        dy <- -1 to 1
+        dx != 0 || dy != 0
+        i <-
+
+        }
+
+        }
+
+
+        type Vertex = Int     // todo: rewrite Int in here to use vertex
+
+        minmax
+
+        def topologicalSort(g: Graph) = {
+        val temp = new Graph(graph.numberOfVertices)
+
+        g.edges foreach {(u,v) => temp(v->u) = g(u->v)} // invert edges
+
+        val processed = mutable.Set(g.vertices.all)
+        val inProcess = mutable.Set.empty[Int]
+
+        def dfs(u: Int, inProcess: Set[Int]) {
+        assert(!inProcess(u), s"Graph is not a DAG $u is in a cycle")
+        g neighbours u filter processed foreach {v =>
+        dfs(v, inProcess + v)
+        visited += v
+        }
+        }
+
+        val topsort = mutable.Seq.empty[Int]
+
+        while(!univisted.isEmpty) {
+        val u = processed.head
+        processed -= u
+
+
+        }
+
+        }
+
+
+        def explore[T](g: Array[Array[T]]) {
+
+        def get(x: Int, y: Int) = try { Some(g(x)(y)) } catch { case _: ArrayIndexOutOfBoundsException => None }
+
+        for {
+        x <- g.indices
+        y <- g(x).indices
+        dx <- -1 to 1
+        dy <- -1 to 1
+        if dx != 0 && dy != 0
+        i <- 0 to 1000
+        v = get(x + i*dx, y + i*dy)
+        if v.isDefined
+        } println(v)
+        }
+
+
+
+        // a(0)x + a(1)*x ...
+        def evaluateFunction(a: Seq[Double], x: Double) = a match {
+        case None => 0
+        case t :: ts =>  t + x*evaluateFunction(ts, x)
+        }
+
+        // example package
+        - a web server
+
+        val page =
+<html>
+{ header }
+<body>
+{ people.toXHTML }
+</body>
+</html>;
+
+multiline strings using """"""
+
+        - file read/write
+        - producer consumer
+        - connect to db
+        - parrlelization/actors
+        - cluster/hadoop
+
+
+        def download(url: String) = Source.fromURL(url).mkString
+
+        def cmd(s: String) = cmd !!
+
+
+
+
+
+        scala actors
+
+        erdos-gallai
+
+        prims vs kruskal
+
+        use Streams.scala in lazy way
+        def sieve(s: Stream[Int] = Stream from 2): Stream[Int] = Stream.cons(s.head, sieve(s.tail filter {_ % s.head != 0}))
+
