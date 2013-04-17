@@ -628,22 +628,6 @@ public class Library
             perm[l-1-i] = start.remove((int)(n/fact[i]));
         return perm;
     }
-
-    //nthCombination is simple n in base 2
-
-    //call with sorted in ascending order a and do-while
-    boolean nextPermutation(int a[])
-    {
-        for(int n = a.length-1, i = n, j; i > 0;)
-            if(a[i--] > a[i])
-            {
-                for(j = n; a[j] <= a[i]; j--);
-                a[j] ^= a[i]^(a[i] = a[j]);
-                for(j = i, i = n+i>>1; ++j <= i; a[j] ^= a[n]^(a[n--] = a[j]));
-                return true;
-            }
-        return false;
-    }
     
     /*
      * Different from next_permutation

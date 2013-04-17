@@ -7,9 +7,9 @@ import Combinatorics._
 class CombinatoricsSpec extends Specification {
 
   "combinations" should {
-    "match the bitmask version" in todo
-
     "work for 0 or 1 length" in todo
+
+    "match the bitmask version" in todo
 
     "work for arbitrary input" in {
       val s = Seq(1, 2, 3)
@@ -19,4 +19,21 @@ class CombinatoricsSpec extends Specification {
     }
   }
 
+  "nextPermutation" should {
+
+    "work for 0 or 1 length" in todo
+
+    "match the standard library version" in todo
+
+    "work with duplicate items" in todo
+
+    "operate in lexicographic order" in {
+      var s: Option[Seq[Int]] = Some(Seq(1,2,3,4))
+      do {
+        val permutation = s.get
+        //println(permutation mkString " ")
+        s = nextPermutation(permutation)
+      } while(s.isDefined)
+    }
+  }
 }
