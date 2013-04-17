@@ -14,8 +14,6 @@ import java.io.*;
 
 public class Library
 {
-    public final static int INF = (int)1E9;
-    public final static double EPS = 1E-9;
 
     public static void main(String cmdLine[])
     {
@@ -570,14 +568,6 @@ public class Library
         for(int i = 0; i < coins.length; i++)
             ans = min(ans, 1+minChange(coins, change-coins[i], cache));
         return cache[change] = ans;
-    }
-
-    // iterating from i = 0 to 1<<n is also possible - change this to bitset
-    boolean nextCombination(boolean b[])
-    {
-        int i = b.length;
-        while(i-- > 0 && !(b[i]=!b[i]));
-        return i>=0;
     }
 
     /* b = boxes, a.length = biscuits*/
