@@ -16,7 +16,6 @@ object Combinatorics {
    */
   def combinations[A,B](s: Seq[A], f: Seq[A] => B) = for {i <- 0 to s.length; j <- s combinations i} yield f(j)
 
-
   /**
    * Find next permutation of s
    * O(n)
@@ -34,4 +33,24 @@ object Combinatorics {
     }
   }
 
+  /**
+   * @return n!
+   */
+  def factorial(n: Int): BigInt = if (n == 0) 1 else n * factorial(n-1)
+
+  /**
+   * Fibonacci number calculator
+   * O(n) - each number is calculated once in O(1) time
+   *
+   * @return memoized function to calculate nth fibonacci number
+   */
+  val fibonacci: Memo[Int, BigInt] = Memo {n => if (n <= 1) n else fibonacci(n-1) + fibonacci(n-2)}
+
+  /**
+   * Calculate catalan number
+   * O(n*n) - each recursive step takes O(n) time
+   *
+   * @return memoized function to calculate nth catalan number
+   */
+  val catalan: Memo[Int, BigInt] = Memo {n => if (n == 0) 1 else (0 until n) map {i => catalan(i) * catalan(n-i-1)} sum}
 }

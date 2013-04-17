@@ -754,15 +754,6 @@ public class Library
         return n > 0 ? (4*n+2)*catalan(n-1)/(n+2) : 1;
     }
 
-    //overflow at n = 37, best we can do with 64-bit signed integers
-    long catalan(int n, long cache[])
-    {
-        if(n == 0) return 1;
-        if(cache[n] > 0) return cache[n];
-        for(int i = 0; i < n; cache[n] += catalan(i)*catalan(n-++i));
-        return cache[n];
-    }
-
     /*
      * Stirling numbers of the second kind
      * S(n,k) = number of ways to partition a set of n elements into k non-empty sets
@@ -775,17 +766,6 @@ public class Library
         if(k == 0) return 0;
         if(S[n][k] > 0) return S[n][k];
         return S[n][k] = k*stirling2(n-1, k, S) + stirling2(n-1, k-1, S);
-    }
-
-    //for long overflow at n > 92, for int overflow at n > 46
-    long fibonacci(int n)
-    {
-        if(n == 0)
-            return 0;
-        long f[] = new long[n+1];
-        f[1] = 1;
-        for(int i = 1; ++i <= n; f[i] = f[i-1] + f[i-2]);
-        return f[n];
     }
 
     //returns number of positive integers less than n that are coprime to n
@@ -802,14 +782,6 @@ public class Library
                     phi = phi/i * (i-1);
             }
         return phi;
-    }
-
-    //overflows after P(20, 20) i.e n >= 21
-    long P(int n, int r)
-    {
-        long p = 1;
-        for(int i = n-r; i < n; p *= ++i);
-        return p;
     }
 
     //overflows after n = 20, alrite at n = 20
