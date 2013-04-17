@@ -19,7 +19,7 @@ class DynamicProgrammingSpec extends Specification {
 
     "match catalan numbers" in {
       for (i <- 0 to 10) {
-        validBrackets(i).length must be equalTo NumberTheory.catalan(i).intValue
+        validBrackets(i).length must be equalTo Combinatorics.catalan(i).intValue
       }
     }
   }
