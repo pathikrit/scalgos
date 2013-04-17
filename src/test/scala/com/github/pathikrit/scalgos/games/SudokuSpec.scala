@@ -10,7 +10,7 @@ class SudokuSpec extends Specification {
     "fail on boards that are not 9x9" in todo
     "fail on boards that contain anything other than 0-9" in todo
     "false on invalid solved boards" in todo
-    "false on insolvable boards" in todo
+    "false and input not modified on insolvable boards" in todo
     "solve a normal solution" in todo
     "find multiple solutions" in todo
 

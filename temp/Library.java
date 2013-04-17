@@ -656,6 +656,85 @@ public class Library
         return r;
     }
 
+    /*
+    * Different from next_permutation
+    * Faster than nextPermuation for most cases
+    * But always generate n! repetitions irrespective of repetitions and starting point
+    */
+    private static void permute(int[] a, int n) {
+        if (n > 0) {
+            for (int i = 0; i < n; i++) {
+                permute(a, n-1);
+                swap(a, n%2 == 1 ? 0 : i, n-1);
+            }
+            return;
+        }
+        // Main algorithm here
+        System.out.println(Arrays.toString(a));
+    }
+
+    private static void swap(int a[], int p1, int p2) {
+        a[p1] ^= a[p2]^(a[p2] = a[p1]);
+    }
+
+    // for(long c = (1<<k)-1; c != 0; c = nextChooseK(n, c)) { print(Long.toBinaryString(c))}
+    // http://stackoverflow.com/questions/1851134/generate-all-binary-strings-of-length-n-with-k-bits-set
+    static long nextChooseK(int n, long c) {
+        long u = -c&c, v = c + u;
+        return (c = v + (v^c)/u/4)>>n == 0 ? c : 0;
+    }
+
+
+    /**
+     * Generates all permutations of [0..n-1]
+     * each permutation differ from previous by one adjacent-swap only - x,y where y = x+-1
+     * Steinhaus–Johnson–Trotter algorithm - with Even's speedup
+     * swaps involving highest element are O(1) - otherwise O(N)
+     * Since the latter occurs <1/N times - each is O(1) ammortized
+     */
+    static void swapPermute(int N) {
+        int[] a = new int[N], d = new int[N];
+
+        for(int i = 1; i < N; i++) {
+            a[i] = i;
+            d[i] = -1;
+        }
+
+        for (int x = N-1, c = 1, y; d[x] != 0;c++) {
+            y = x + d[x];
+
+            {
+                // code goes here
+                System.out.print(c + ": [");
+                for(int i = 0; i < N; i++) {
+                    System.out.print(d[i] > 0 ? ">" : d[i] < 0 ? "<" : "");
+                    System.out.print(a[i] + " ");
+                }
+                System.out.println("] " + a[x]);
+            }
+
+            swap(a, x, y);
+            swap(d, x, y);
+
+            x = y;
+
+            if (x == 0 || x == N-1 || a[x + d[x]] > a[x]) {
+                d[x] = 0;
+            } else if(a[x] == N-1) {
+                continue;
+            }
+
+            for(int i = 0; i < N; i++) {
+                if (a[i] > a[y]) {
+                    d[i] = i<y ? 1 : -1;
+                }
+                if(d[i] != 0 && (a[i] > a[x] || d[x] == 0)) {
+                    x = i;
+                }
+            }
+        }
+    }
+
 	/**
 	 * e.g. doPermute(new ArrayDeque<Integer>(), new boolean[3], 1, 2, 3);
 	 * TODO: Use bitset for used
@@ -1243,6 +1322,60 @@ public class Library
             }            
         }
         return values[N][target];
+    }
+
+    /*
+	 * returns a subset of set such that sum of its elements is target
+	 * if no such subset exits, returns null
+	 * O(2^n) where n = |set|
+	 */
+    ArrayList<Integer> bruteforce_subsetSum(ArrayList<Integer> set, int target) {
+        if(set.size() == 0)
+            return target == 0 ? set : null;
+        ArrayList<Integer> temp = new ArrayList(set), ans = null;
+        int x = temp.remove(0);
+        if((ans = bruteforce_subsetSum(temp, target)) != null)
+            return ans;
+        if((ans = bruteforce_subsetSum(temp, target - x)) != null)
+            ans.add(x);
+        return ans;
+    }
+
+    /*
+     * returns a true iff there exists a subset of set s.t. sum of elements is target
+     * O(Cn + n log n) where n = |set|, c = target
+     * uses max O( max(c, n) ) space
+     */
+    boolean subsetSum(int set[], int target) {
+        final int n = set.length;
+        sort(set);
+        HashSet<Integer> doable = new HashSet();
+        doable.add(0);
+
+        int[] maxFromRest = new int[n+1], minFromRest = new int[n+1];
+        for(int i = n-1; i >= 0; i--) {
+            maxFromRest[i] = maxFromRest[i+1] + max(0, set[i]);
+            minFromRest[i] = minFromRest[i+1] + min(0, set[i]);
+        }
+
+        System.out.println(Arrays.toString(set));
+        System.out.println(Arrays.toString(maxFromRest));
+        System.out.println(Arrays.toString(minFromRest));
+
+        for(int i = 0; i < n; i++) {
+            HashSet<Integer> next = new HashSet();
+
+            //figure out max that can be added from rest of array and dont put j s.t j + max <= target
+            for(int j : doable) {
+                next.add(j + set[i]);
+                if(j + minFromRest[i] <= target && j + maxFromRest[i] >= target)
+                    next.add(j);
+
+            }
+            doable = next;
+            System.out.println(set[i] + " " + doable);
+        }
+        return doable.contains(target);
     }
 
     /*

@@ -108,3 +108,87 @@ def topologicalSort(g: Graph) {
 
 
   type Vertex = Int     // todo: rewrite Int in here to use vertex
+
+  minmax
+
+  def topologicalSort(g: Graph) = {
+  	val temp = new Graph(graph.numberOfVertices)
+
+  	g.edges foreach {(u,v) => temp(v->u) = g(u->v)} // invert edges
+
+  	val processed = mutable.Set(g.vertices.all)
+  	val inProcess = mutable.Set.empty[Int]
+
+   	def dfs(u: Int, inProcess: Set[Int]) {
+  	 	assert(!inProcess(u), s"Graph is not a DAG $u is in a cycle")
+  	 	g neighbours u filter processed foreach {v =>
+  			dfs(v, inProcess + v)
+  			visited += v
+  		}
+   	}
+
+  	val topsort = mutable.Seq.empty[Int]
+
+  	while(!univisted.isEmpty) {
+  		val u = processed.head
+  		processed -= u
+
+
+  	}
+
+  }
+
+
+  def explore[T](g: Array[Array[T]]) {
+
+  	def get(x: Int, y: Int) = try { Some(g(x)(y)) } catch { case _: ArrayIndexOutOfBoundsException => None }
+
+  	for {
+  		x <- g.indices
+  		y <- g(x).indices
+  		dx <- -1 to 1
+  		dy <- -1 to 1
+  		if dx != 0 && dy != 0
+  		i <- 0 to 1000
+  		v = get(x + i*dx, y + i*dy)
+  		if v.isDefined
+  	} println(v)
+  }
+
+
+
+  // a(0)x + a(1)*x ...
+  def evaluateFunction(a: Seq[Double], x: Double) = a match {
+  	case None => 0
+  	case t :: ts =>  t + x*evaluateFunction(ts, x)
+  }
+
+  // example package
+   - a web server
+
+   val page =
+   <html>
+     { header }
+     <body>
+      { people.toXHTML }
+     </body>
+   </html>;
+
+   multiline strings using """"""
+
+   - file read/write
+   - producer consumer
+   - connect to db
+   - parrlelization/actors
+   - cluster/hadoop
+
+
+   def download(url: String) = Source.fromURL(url).mkString
+
+   def cmd(s: String) = cmd !!
+
+
+
+
+
+  scala actors

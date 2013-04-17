@@ -45,7 +45,6 @@ object Sudoku {
    */
   def isSolution(sudoku: Board) = true
 
-
   /**
    * @return pretty print sudoku board
    */
