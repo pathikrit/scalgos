@@ -192,3 +192,7 @@ def topologicalSort(g: Graph) {
 
 
   scala actors
+
+  erdos-gallai
+
+  prims vs kruskal
