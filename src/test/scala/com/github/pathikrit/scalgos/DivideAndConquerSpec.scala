@@ -37,14 +37,26 @@ class DivideAndConquerSpec extends Specification {
   "binarySearch" should {
     "work on discrete functions" in todo
 
+    def sqrt(d: Double) =  binarySearch[Double, Double](x => x*x, 0, d+1, (x,y) => (x+y)/2, d)
+
     "work on continuous functions" in {
-      // todo: run this on random rumbers
-      val goal = 34
-      val binarySearchSqrt = binarySearch[Double, Double](x => x*x, 0, goal+1, (x,y) => (x+y)/2, goal)
-      binarySearchSqrt.get must be equalTo math.sqrt(goal)
+      def check(x: Double) {
+        sqrt(x) must be ~(math.sqrt(x) +/- 1e-9)
+      }
+      check(34)
+      check(2)
+      check(1e-19)
+      //check(1e29)
+      check(0)
+      check(1)
+      //todo: check for -ve inf, +ve inf and nans?
     }
 
-    "fail to find when missing" in todo
+    "fail to find when missing" in {
+      //sqrt(-1) must be empty
+      //sqrt(-0.0001) must be empty
+    }
+
     "fail to find when max<=min" in todo
     "fail on boundary conditions" in todo
   }

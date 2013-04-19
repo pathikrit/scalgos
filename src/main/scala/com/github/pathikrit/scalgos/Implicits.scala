@@ -36,7 +36,7 @@ object Implicits {
     /**
      * @return true iff x in [y-eps, y+eps]
      */
-    def ~=(y: Double) = ~<=(y) && >=~(y)
+    def ~=(y: Double) = ~=<(y) && >=~(y)
   }
 
   /**

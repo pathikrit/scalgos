@@ -22,28 +22,28 @@ object DivideAndConquer {
   }
 
   /**
-   * Generic binary search in (min,max) f to achieve target goal
+   * Generic binary search in [min,max] f to achieve target goal
    * O(log n)
    *
    * @param f the function to binary search over - most be monotonically increasing
-   * @param min starting minimum guess (must be exclusive)
-   * @param max starting maximum guess (must be exclusive)
+   * @param min starting minimum guess
+   * @param max starting maximum guess
    * @param avg mid function usually (min+max)/2
    * @param goal target to achieve
    * @tparam A input type of f
    * @tparam B output type of f
-   * @return Some(x) such that f(x) is goal else None
+   * @return x such that f(x) is as close to goal as possible
    */
-  def binarySearch[A: Ordering, B: Ordering](f: A => B, min: A, max: A, avg: (A, A) => A, goal: B): Option[A] = {
-    if (min >= max) {
-      None
-    } else {
-      val mid = avg(min, max)
+  def binarySearch[A: Ordering, B: Ordering](f: A => B, min: A, max: A, avg: (A, A) => A, goal: B): A = {
+    val mid = avg(min, max)
+    if (min < mid && mid < max) {
       f(mid) compare goal match {
         case  1 => binarySearch(f, min, mid, avg, goal)
         case -1 => binarySearch(f, mid, max, avg, goal)
-        case  0 => Some(mid)
+        case  0 => mid
       }
+    } else {
+      mid
     }
   }
 }

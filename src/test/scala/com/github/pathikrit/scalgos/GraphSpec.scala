@@ -59,7 +59,7 @@ class GraphSpec extends Specification {
       } else {
         val Some(Result(distance, path)) = d
         (path.head -> path.last) must be equalTo (i -> j)
-        distance must be ~ (f(i)(j) +/- 1e-9)
+        distance must be ~(f(i)(j) +/- 1e-9)
       }
     }
   }
