@@ -76,6 +76,7 @@ object DynamicProgramming {
     /**
      * Find i such that (best(i) :: a) is a valid increasing sequence where start <= i <= end
      * O(log n) since we binary search
+     * TODO: use the DivideAndConquer.binarySearch
      *
      * @param a element to be inserted
      * @param start start index of best
