@@ -33,4 +33,19 @@ class DivideAndConquerSpec extends Specification {
       maxRectangleInHistogram(heights) must be equalTo MaxRectangleInHistogram(heights map {(_, 1)})
     }
   }
+
+  "binarySearch" should {
+    "work on discrete functions" in todo
+
+    "work on continuous functions" in {
+      // todo: run this on random rumbers
+      val goal = 34
+      val binarySearchSqrt = binarySearch[Double, Double](x => x*x, 0, goal+1, (x,y) => (x+y)/2, goal)
+      binarySearchSqrt.get must be equalTo math.sqrt(goal)
+    }
+
+    "fail to find when missing" in todo
+    "fail to find when max<=min" in todo
+    "fail on boundary conditions" in todo
+  }
 }
