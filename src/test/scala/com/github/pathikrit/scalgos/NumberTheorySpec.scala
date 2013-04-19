@@ -11,7 +11,7 @@ class NumberTheorySpec extends Specification {
 
     "work for n = 0,1,2,3" in todo
 
-    "match the lazy haskell algorithm" in {
+    "match actual isPrime check" in {
       val n = 100000
       val primeSet = sieveOfEratosthenes(n)
       for (i <- 1 to n) {

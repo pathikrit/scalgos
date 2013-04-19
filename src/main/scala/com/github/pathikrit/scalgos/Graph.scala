@@ -249,11 +249,12 @@ object Graph {
    * @param f Apply f to each vertex in dfs order from source
    * @return If f is true at a vertex v, return Some(v) else None
    */
-  def dfs(g: Graph, u: Int, f: Int => Boolean, seen: Set[Int] = Set.empty[Int]): Option[Int] =
+  def dfs(g: Graph, u: Int, f: Int => Boolean, seen: Set[Int] = Set.empty[Int]): Option[Int] = {
     if(f(u)) {
       Some(u)
     } else {
       g neighbours u filterNot seen find {v => dfs(g, u, f, seen + u).isDefined}
     }
+  }
 }
 
