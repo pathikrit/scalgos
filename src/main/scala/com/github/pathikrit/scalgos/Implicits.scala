@@ -8,6 +8,38 @@ import collection.mutable
 object Implicits {
 
   /**
+   * Better floating point comparison with a tolerance of eps = 1e-9
+   * @param x treats x as a range [x-eps, x+eps]
+   */
+  implicit class FuzzyDouble(x: Double)(implicit eps: Double = 1e-9) {
+
+    /**
+     * @return true iff x > y+eps
+     */
+    def >~(y: Double) = x > y+eps
+
+    /**
+     * @return true iff x >= y-eps
+     */
+    def >=~(y: Double) = x >= y-eps
+
+    /**
+     * @return true iff x < y-eps
+     */
+    def ~<(y: Double) = x < y-eps
+
+    /**
+     * @return true iff x <= y+eps
+     */
+    def ~=<(y: Double) = x <= y+eps
+
+    /**
+     * @return true iff x in [y-eps, y+eps]
+     */
+    def ~=(y: Double) = ~<=(y) && >=~(y)
+  }
+
+  /**
    * Let's you use X instead of double for-loops
    */
   implicit class Crossable[X](xs: Traversable[X]) {
