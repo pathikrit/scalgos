@@ -1,6 +1,6 @@
 package com.github.pathikrit.scalgos
 
-import scala.math.Ordered._
+import math.Ordered._
 
 /**
  * Collection of divide and conquer algorithms

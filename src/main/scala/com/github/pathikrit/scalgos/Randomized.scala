@@ -1,7 +1,7 @@
 package com.github.pathikrit.scalgos
 
 import util.Random
-import scala.math.Ordering.Implicits._
+import math.Ordering.Implicits._
 
 /**
  * Collection of randomized algorithms
@@ -24,4 +24,12 @@ object Randomized {
       if (k < low.size + equal.size) pivot else quickSelect(high, k - low.size - equal.size)
     }
   }
+
+  /**
+   * A Park-Miller Pseudo-random number generator (minimum standard one)
+   *
+   * @param i the seed e.g. use i = pring(i)
+   * @return a pseudo-random number
+   */
+  def minstd(i: Int) = (i*16807) * Int.MaxValue
 }

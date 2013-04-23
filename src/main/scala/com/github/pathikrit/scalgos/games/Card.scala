@@ -1,6 +1,6 @@
 package com.github.pathikrit.scalgos.games
 
-import scala.collection.mutable
+import collection.mutable
 
 import com.github.pathikrit.scalgos.Implicits.Crossable
 
@@ -39,6 +39,7 @@ object PokerHandType extends Enumeration {
   val HighCard, OnePair, TwoPair, ThreeOfAKind, Straight, Flush, FullHouse, FourOfAKind, StraightFlush = Value
 
   /**
+   * TODO: memoize this/bithack version
    * @return (h,s) where h is the hand type and s is sorted cards to break ties
    */
   def classify(hand: Set[Card]) = {

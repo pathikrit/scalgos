@@ -1,6 +1,6 @@
 package com.github.pathikrit.scalgos
 
-import scala.math.Ordering.Implicits._
+import math.Ordering.Implicits._
 
 import collection.mutable
 

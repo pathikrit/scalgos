@@ -2,7 +2,7 @@ package com.github.pathikrit.scalgos
 
 import org.specs2.mutable.Specification
 
-import MaxRectangleInHistogram.apply
+import MaxRectangleInHistogram._
 
 class MaxAreaInHistogramSpec extends Specification {
 

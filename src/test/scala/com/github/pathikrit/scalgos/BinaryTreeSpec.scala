@@ -1,9 +1,10 @@
 package com.github.pathikrit.scalgos
 
+import util.Random
+
 import org.specs2.mutable._
 
 import BinaryTree._
-import util.Random
 
 class BinaryTreeSpec extends Specification {
 

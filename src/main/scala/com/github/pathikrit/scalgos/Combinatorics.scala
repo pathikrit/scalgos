@@ -1,6 +1,6 @@
 package com.github.pathikrit.scalgos
 
-import scala.math.Ordering.Implicits._
+import math.Ordering.Implicits._
 
 /**
  * collection of algorithms related to combinatorics
@@ -34,9 +34,9 @@ object Combinatorics {
   }
 
   /**
-   * @return n!
+   * @return memoized function to calculate n!
    */
-  def factorial(n: Int): BigInt = if (n == 0) 1 else n * factorial(n-1)
+  val factorial: Memo[Int, BigInt] = Memo {n => if (n == 0) 1 else n * factorial(n-1)}
 
   /**
    * Fibonacci number calculator
@@ -49,6 +49,7 @@ object Combinatorics {
   /**
    * Calculate catalan number
    * O(n*n) - each recursive step takes O(n) time
+   * A faster relation exists : c(n) = (4n+2)*c(n-1)/(n+2)
    *
    * @return memoized function to calculate nth catalan number
    */
