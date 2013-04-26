@@ -35,6 +35,8 @@ class CombinatoricsSpec extends Specification {
         s = nextPermutation(permutation)
       } while(s.isDefined)
     }
+
+    "should match combinations(k) when called with 0,1 and k bits sets" in todo
   }
 
   "factorial" should {

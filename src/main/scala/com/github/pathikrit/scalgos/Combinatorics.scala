@@ -18,6 +18,7 @@ object Combinatorics {
 
   /**
    * Find next permutation of s
+   * Call with Seq(0,0,0,0,1,1) for example to 4C2
    * O(n)
    *
    * @return Some(p) if next permutation exists or None if s is already in decreasing order

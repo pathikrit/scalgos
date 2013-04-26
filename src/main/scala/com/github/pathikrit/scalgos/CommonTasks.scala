@@ -29,13 +29,13 @@ object CommonTasks {
   /**
    * Print arbitrary number of things
    */
-  def debug(t: Any*) = print(t mkString ("DEBUG: [", "], [", "]"))
+  def debug(t: Any*) = println(t mkString ("DEBUG: [", "], [", "]"))
 
   /**
    * An LRU cache
    * @param maxEntries maximum number of entries to retain
    */
   def lruCache[A,B](maxEntries: Int): mutable.Map[A,B] = new java.util.LinkedHashMap[A,B]() {
-    override def removeEldestEntry(eldest: java.util.Map.Entry[A,B]): Boolean = this.size > maxEntries
+    override def removeEldestEntry(eldest: java.util.Map.Entry[A,B]) = this.size > maxEntries
   }
 }

@@ -31,5 +31,5 @@ object Randomized {
    * @param i the seed e.g. use i = pring(i)
    * @return a pseudo-random number
    */
-  def minstd(i: Int) = (i*16807) * Int.MaxValue
+  def minstd(i: Int) = (i*16807) % Int.MaxValue
 }
