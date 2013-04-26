@@ -40,6 +40,16 @@ object Implicits {
   }
 
   /**
+   * Extensions to Ints
+   */
+  implicit class IntExtensions(x: Int) {
+    /**
+     * @return m = x mod y such that we preserve the relation (x/y)*y + m == x
+     */
+    def mod(y: Int) = x - (x/y)*y
+  }
+
+  /**
    * Let's you use X instead of double for-loops
    */
   implicit class Crossable[X](xs: Traversable[X]) {
