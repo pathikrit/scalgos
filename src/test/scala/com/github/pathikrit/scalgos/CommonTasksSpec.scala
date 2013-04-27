@@ -11,10 +11,6 @@ class CommonTasksSpec extends Specification {
     "work" in todo
   }
 
-  "debug" should {
-    "work" in todo
-  }
-
   "lruCache" should {
     "work" in todo
   }

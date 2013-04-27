@@ -27,6 +27,7 @@ class BitHacksSpec extends Specification {
         noTempSwap(v) must be equalTo v.swap
       }
     }
-  }
 
+    "work for Int.MaxValue & Int.MinValue" in todo
+  }
 }

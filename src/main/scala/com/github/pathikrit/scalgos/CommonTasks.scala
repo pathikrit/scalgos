@@ -27,11 +27,6 @@ object CommonTasks {
   def download(url: String) = Source.fromURL(url).mkString
 
   /**
-   * Print arbitrary number of things
-   */
-  def debug(t: Any*) = println(t mkString ("DEBUG: [", "], [", "]"))
-
-  /**
    * An LRU cache
    * @param maxEntries maximum number of entries to retain
    */
