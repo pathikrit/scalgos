@@ -13,7 +13,7 @@ class CombinatoricsSpec extends Specification {
 
     "work for arbitrary input" in {
       val s = Seq(1, 2, 3)
-      val result = combinations(s, (i: Seq[Int]) => i mkString ("[", ",", "]"))
+      val result = combinations(s) map {_ mkString ("[", ",", "]")}
       result.length must be equalTo 1<<s.length
       result mkString " " must be equalTo "[] [1] [2] [3] [1,2] [1,3] [2,3] [1,2,3]"
     }

@@ -12,10 +12,9 @@ object Combinatorics {
    * Iterate over all 2^n combinations
    *
    * @param s sequence to do combination over
-   * @param f applied to each possible combination
-   * @return result of applied to
+   * @return all 2^n ways of choosing elements from s
    */
-  def combinations[A,B](s: Seq[A], f: Seq[A] => B) = for {i <- 0 to s.length; j <- s combinations i} yield f(j)
+  def combinations[A](s: Seq[A]) = for {i <- 0 to s.length; j <- s combinations i} yield j
 
   /**
    * Combinations with repeats e.g. (2, Set(A,B,C)) -> AA, AB, AC, BA, BB, BC, CA, CB, CC
