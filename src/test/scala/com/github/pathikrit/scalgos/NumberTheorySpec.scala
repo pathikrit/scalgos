@@ -38,4 +38,10 @@ class NumberTheorySpec extends Specification {
 
     "work for Int.MaxValue and Int.MinValue" in todo
   }
+
+  "lcm" should {
+    "match brute force" in todo
+    "work for (0,0)" in todo
+    "work for Int.MaxValue & Int.MinValue" in todo
+  }
 }
