@@ -59,10 +59,10 @@ object Combinatorics {
 
   /**
    * Calculate catalan number
-   * O(n*n) - each recursive step takes O(n) time
-   * A faster relation exists : c(n) = (4n+2)*c(n-1)/(n+2)
+   * O(n)
+   * A slower relation exists: c(n) = (0 until n) map {i => c(i) * c(n-i-1)} sum
    *
    * @return memoized function to calculate nth catalan number
    */
-  val catalan: Memo[Int, BigInt] = Memo {n => if (n == 0) 1 else (0 until n) map {i => catalan(i) * catalan(n-i-1)} sum}
+  val catalan: Memo[Int, BigInt] = Memo {n => if (n == 0) 1 else (4*n-2)*catalan(n-1)/(n+1)}
 }
