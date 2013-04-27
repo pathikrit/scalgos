@@ -28,4 +28,15 @@ object NumberTheory {
    */
   def isPrime(n: Int) = BigInt(n) isProbablePrime 100
 
+  /**
+   * Euclid's algorithm to calculate gcd
+   * O(log(max(a,b))
+   *
+   * @return largest number g such that a%g == 0 and b%g == 0
+   */
+  def gcd(a: Int, b: Int): Int =
+    if (a < 0) gcd(-a, b)
+    else if(b < 0) gcd(a, -b)
+    else if (b == 0) {assume(a!=0); a}
+    else gcd(b, a%b)
 }
