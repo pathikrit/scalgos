@@ -1,6 +1,7 @@
 package com.github.pathikrit.scalgos
 
 import math.Ordering.Implicits._
+import Implicits.Crossable
 
 /**
  * collection of algorithms related to combinatorics
@@ -15,6 +16,16 @@ object Combinatorics {
    * @return result of applied to
    */
   def combinations[A,B](s: Seq[A], f: Seq[A] => B) = for {i <- 0 to s.length; j <- s combinations i} yield f(j)
+
+  /**
+   * Combinations with repeats e.g. (2, Set(A,B,C)) -> AA, AB, AC, BA, BB, BC, CA, CB, CC
+   *
+   * @return all s.length^n combinations
+   */
+  def repeatedCombinations[A](n: Int, s: Set[A]) : Traversable[List[A]] = n match {
+    case 0 => List(Nil)
+    case _ => for {(x,xs) <- s X repeatedCombinations(n-1, s)} yield x :: xs
+  }
 
   /**
    * Find next permutation of s

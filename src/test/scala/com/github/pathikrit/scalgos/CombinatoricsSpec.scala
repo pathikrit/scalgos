@@ -19,6 +19,19 @@ class CombinatoricsSpec extends Specification {
     }
   }
 
+  "repeatedCombinations" should {
+    "work with n = 0, 1 etc" in todo
+
+    "fail for n<0" in todo
+
+    "work for empty lists" in todo
+
+    "work for arbitrary case" in todo
+//    {
+//      repeatedCombinations(2, "abc".toSet) must be equalTo List("aa", "ab", "ac", "ba", "bb", "bc", "ca", "cc", "cc")
+//    }
+  }
+
   "nextPermutation" should {
 
     "work for 0 or 1 length" in todo
@@ -27,14 +40,16 @@ class CombinatoricsSpec extends Specification {
 
     "work with duplicate items" in todo
 
-    "operate in lexicographic order" in {
-      var s: Option[Seq[Int]] = Some(Seq(1,2,3,4))
-      do {
-        val permutation = s.get
-        //println(permutation mkString " ")
-        s = nextPermutation(permutation)
-      } while(s.isDefined)
-    }
+    "operate in lexicographic order" in todo
+
+//    {
+//      var s: Option[Seq[Int]] = Some(Seq(1,2,3,4))
+//      do {
+//        val permutation = s.get
+//        //println(permutation mkString " ")
+//        s = nextPermutation(permutation)
+//      } while(s.isDefined)
+//    }
 
     "should match combinations(k) when called with 0,1 and k bits sets" in todo
   }
