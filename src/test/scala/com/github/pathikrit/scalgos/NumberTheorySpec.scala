@@ -39,23 +39,6 @@ class NumberTheorySpec extends Specification {
     "work for Int.MaxValue and Int.MinValue" in todo
   }
 
-  "binaryGcd" should {
-    "match Euclid's gcd" in {
-      for ((x,y) <- (-100 to 100) X (-100 to 100) if x!=0 || y!=0) {
-        val g = binaryGcd(x,y)
-        x%g must be equalTo 0
-        y%g must be equalTo 0
-        g must be equalTo gcd(x,y)
-      }
-    }
-
-    "fail for (0,0)" in {
-      binaryGcd(0,0) must throwA[IllegalArgumentException]
-    }
-
-    "work for Int.MaxValue and Int.MinValue" in todo
-  }
-
   "lcm" should {
     "match brute force" in todo
     "work for (0,0)" in todo

@@ -18,7 +18,7 @@ class DynamicProgrammingSpec extends Specification {
 
     "match brute force check" in {
       def bruteForceCheck(s: Seq[Int], t: Int) = Combinatorics.combinations(s) filter {_.sum == t}
-      def normalized(sums: Seq[Seq[Int]]) = sums map {_.sorted} toSet
+      def normalized(sums: Seq[Seq[Int]]) = sums map {_.sorted} toSet       //todo: why toSet?
 
       for (i <- (-50 to 50)) {
         val nums = RandomData.seq(length = 10)
