@@ -54,6 +54,17 @@ class CombinatoricsSpec extends Specification {
     "should match combinations(k) when called with 0,1 and k bits sets" in todo
   }
 
+  "c" should {
+    "fail if either n or r is negative" in todo
+    "always 1 if r>n" in todo
+
+    "match formula" in {
+      for {n <- 0 to 50; r <- 0 to n} {
+        c(n, r) must be equalTo factorial(n)/(factorial(n-r) * factorial(r))
+      }
+    }
+  }
+
   "factorial" should {
     "fail for negative numbers" in todo
 

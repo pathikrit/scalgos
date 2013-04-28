@@ -45,9 +45,21 @@ object Combinatorics {
   }
 
   /**
+   * @ return memoized function to calculate C(n,r)
+   */
+  val c: Memo[(Int, Int), BigInt] = Memo {
+    case (_, 0) => 1
+    case (n, r) if r > n/2 => c(n, n-r)
+    case (n, r) => c(n-1, r-1) + c(n-1, r)
+  }
+
+  /**
    * @return memoized function to calculate n!
    */
-  val factorial: Memo[Int, BigInt] = Memo {n => if (n == 0) 1 else n * factorial(n-1)}
+  val factorial: Memo[Int, BigInt] = Memo {
+    case 0 => 1
+    case n => n * factorial(n-1)
+  }
 
   /**
    * Fibonacci number calculator
@@ -55,7 +67,11 @@ object Combinatorics {
    *
    * @return memoized function to calculate nth fibonacci number
    */
-  val fibonacci: Memo[Int, BigInt] = Memo {n => if (n <= 1) n else fibonacci(n-1) + fibonacci(n-2)}
+  val fibonacci: Memo[Int, BigInt] = Memo {
+    case 0 => 0
+    case 1 => 1
+    case n => fibonacci(n-1) + fibonacci(n-2)
+  }
 
   /**
    * Calculate catalan number
@@ -64,5 +80,8 @@ object Combinatorics {
    *
    * @return memoized function to calculate nth catalan number
    */
-  val catalan: Memo[Int, BigInt] = Memo {n => if (n == 0) 1 else (4*n-2)*catalan(n-1)/(n+1)}
+  val catalan: Memo[Int, BigInt] = Memo {
+    case 0 => 1
+    case n => (4*n-2)*catalan(n-1)/(n+1)
+  }
 }
