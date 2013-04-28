@@ -14,6 +14,27 @@ class DynamicProgrammingSpec extends Specification {
 
     "work for only negative numbers" in todo
 
+    "always work for sum == 0" in todo
+
+    "match brute force check" in {
+      def bruteForceCheck(s: Seq[Int], t: Int) = Combinatorics.combinations(s) filter {_.sum == t}
+      def normalized(sums: Seq[Seq[Int]]) = sums map {_.sorted} toSet
+
+      for (i <- (-50 to 50)) {
+        val nums = RandomData.seq(length = 10)
+        normalized(subsetSum(nums, i)) must be equalTo normalized(bruteForceCheck(nums, i))
+      }
+    }
+  }
+
+  "isSubsetSumAchievable" should {
+
+    "work for empty set" in todo
+
+    "work for only postive numbers" in todo
+
+    "work for only negative numbers" in todo
+
     "always true for sum == 0" in todo
 
     "match brute force check" in {

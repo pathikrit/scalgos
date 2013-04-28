@@ -45,6 +45,28 @@ object DynamicProgramming {
   }
 
   /**
+   * Subset sum algorithm - How can we achieve sum t using elements from s?
+   * O(s.map(abs).sum * s.length)
+   *
+   * @param s set of integers
+   * @param t target
+   * @return all subsets of s that sum to t
+   */
+  def subsetSum(s: Seq[Int], t: Int) = {
+    val max = s.scanLeft(0)((sum, i) => (sum + i) max sum)
+    val min = s.scanLeft(0)((sum, i) => (sum + i) min sum)
+
+    lazy val dp: Memo[(Int, Int), Seq[Seq[Int]]] = Memo {
+      case (0, 0) => Seq(Nil)
+      case (0, _) => Nil
+      case (i, x) if min(i) <= x && x <= max(i) => (dp(i-1, x - s(i-1)) map {_ :+ s(i-1)}) ++ dp(i-1, x)
+      case _ => Nil
+    }
+
+    dp(s.length, t)
+  }
+
+  /**
    * Calculate edit distance between 2 sequences
    * O(s1.length * s2.length)
    *
