@@ -60,4 +60,11 @@ class DivideAndConquerSpec extends Specification {
     "fail to find when max<=min" in todo
     "fail on boundary conditions" in todo
   }
+
+  "ternarySearch" should {
+    "find minima" in todo
+    "find maxima" in todo
+    "fail if f is not unimodal" in todo
+    "fail if right < left" in todo
+  }
 }

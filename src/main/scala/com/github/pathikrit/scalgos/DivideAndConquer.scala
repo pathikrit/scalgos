@@ -2,6 +2,8 @@ package com.github.pathikrit.scalgos
 
 import math.Ordered._
 
+import Implicits.FuzzyDouble
+
 /**
  * Collection of divide and conquer algorithms
  */
@@ -44,6 +46,26 @@ object DivideAndConquer {
       }
     } else {
       mid
+    }
+  }
+
+  /**
+   * Ternary search for maxima/minima of f in (left,right)
+   * O (log n)
+   * f must be U (or upside-down U) between left and right
+   *
+   * @param max true if search for maxima i.e. f is U else false
+   * @return x such that f(x) is maximum (or minimum) in f assuming f is unimodal on [left,right]
+   */
+  def ternarySearch[A: Ordering](left: Double, right: Double, f: Double => A, max: Boolean = true): Double = {
+    assume(right >~ left)
+    val (l, r) = ((2*left+right)/3, (left+2*right)/3)
+    if (l ~= r) {
+      (l+r)/2
+    } else if (f(l) > f(r) ^ max) {
+      ternarySearch(l, right, f)
+    } else {
+      ternarySearch(left, r, f)
     }
   }
 }
