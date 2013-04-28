@@ -1,8 +1,9 @@
 package com.github.pathikrit.scalgos
 
 import math.Ordering.Implicits._
-
 import collection.mutable
+
+import Implicits._
 
 /**
  * Generic way to create memoized functions (even recursive ones)
@@ -22,6 +23,30 @@ case class Memo[A,B](f: A => B) extends (A => B) {
 object DynamicProgramming {
 
   /**
+   * Subset sum algorithm - can we achieve sum t using elements from s?
+   * O(s.map(abs).sum * s.length)
+   *
+   * @param s set of integers
+   * @param t target
+   * @return true iff there exists a subset of s that sums to t
+   */
+  def subsetSum(s: Seq[Int], t: Int): Boolean = {
+    val max = s.scanLeft(0)((sum, i) => (sum + i) max sum)
+    val min = s.scanLeft(0)((sum, i) => (sum + i) min sum)
+
+    val cache = mutable.Map.empty[(Int, Int), Boolean]
+
+    def dp(i: Int, x: Int): Boolean = (i, x) match {
+      case (_, 0) => true
+      case (0, _) => false
+      case _ => cache getOrElseUpdate ((i, x), min(i) <= x && x <= max(i) && (dp(i-1, x - s(i-1)) || dp(i-1, x)))
+    }
+
+    dp(s.length, t)
+  }
+
+
+  /**
    * Generate all possible valid brackets
    * O(C(n)) = O(4^n / n^1.5)
    * Number of brackets = C(n) i.e. the n-th Catalan number
@@ -29,10 +54,11 @@ object DynamicProgramming {
    *
    * @return memoized function to generate all possible valid n-pair bracket strings
    */
-  val validBrackets: Memo[Int, Seq[String]] = Memo {n => if (n == 0) Seq("") else for {
+  val validBrackets: Memo[Int, Seq[String]] = Memo {
+    case 0 => Seq("")
+    case n => for {
       i <- 0 until n
-      a <- validBrackets(i)
-      b <- validBrackets(n-i-1)
+      (a,b) <- validBrackets(i) X validBrackets(n-i-1)
     } yield '(' + a  + ')' + b
   }
 

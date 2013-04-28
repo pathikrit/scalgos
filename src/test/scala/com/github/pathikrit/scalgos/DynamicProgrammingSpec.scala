@@ -6,6 +6,17 @@ import DynamicProgramming._
 
 class DynamicProgrammingSpec extends Specification {
 
+  "subsetSum" should {
+
+    "match brute force check" in {
+      def bruteForceCheck(s: Seq[Int], t: Int) = Combinatorics.combinations(s) exists {_.sum == t}
+      for (i <- (-50 to 50)) {
+        val nums = RandomData.seq(length = 10)
+        subsetSum(nums, i) must be equalTo bruteForceCheck(nums, i)
+      }
+    }
+  }
+
   "validBrackets" should {
     "be list containing empty string for 0" in {
       validBrackets(0) must be equalTo Seq("")
