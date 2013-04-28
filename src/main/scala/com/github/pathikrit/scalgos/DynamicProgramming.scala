@@ -6,7 +6,7 @@ import collection.mutable
 import Implicits._
 
 /**
- * Generic way to create memoized functions (even recursive ones)
+ * Generic way to create memoized functions (even recursive and multiple-arg ones)
  *
  * @param f the function to memoize
  * @tparam A input
@@ -30,14 +30,15 @@ object DynamicProgramming {
    * @param t target
    * @return true iff there exists a subset of s that sums to t
    */
-  def subsetSum(s: Seq[Int], t: Int): Boolean = {
+  def isSubsetSumAchievable(s: Seq[Int], t: Int) = {
     val max = s.scanLeft(0)((sum, i) => (sum + i) max sum)  //max(i) =  largest sum achievable from first i elements
     val min = s.scanLeft(0)((sum, i) => (sum + i) min sum)  //min(i) = smallest sum achievable from first i elements
 
     lazy val dp: Memo[(Int, Int), Boolean] = Memo {         // dp(i,x) = can we achieve x using the first i elements?
       case (_, 0) => true        // 0 can always be achieved using empty set
       case (0, _) => false       // if empty set, non-zero cannot be achieved
-      case (i, x) => min(i) <= x && x <= max(i) && (dp(i-1, x - s(i-1)) || dp(i-1, x))
+      case (i, x) if min(i) <= x && x <= max(i) => dp(i-1, x - s(i-1)) || dp(i-1, x)  // try with/without s(i-1)
+      case _ => false            // outside range otherwise
     }
 
     dp(s.length, t)
@@ -95,6 +96,7 @@ object DynamicProgramming {
       case (x, y) if a(x-1) == b(y-1) => dp(x-1, y-1) :+ a(x-1)
       case (x, y) => Seq(dp(x-1, y), dp(x, y-1)) maxBy {_.length}
     }
+
     dp(a.length, b.length)
   }
 
@@ -107,10 +109,11 @@ object DynamicProgramming {
    * @return return longest increasing subsequence of a
    */
   def longestIncreasingSubsequence[T: Ordering](s: Seq[T]) = {
-    val best = mutable.Map(0 -> Seq.empty[T]) // best(i) is longest sequence of length i
+    val cache = mutable.Map(0 -> Seq.empty[T]) // cache(i) is longest increasing sequence of length i
+    def longest = cache.size - 1
 
     /**
-     * Find i such that (best(i) :: a) is a valid increasing sequence where start <= i <= end
+     * Find i such that (cache(i) :: a) is a valid increasing sequence where start <= i <= end
      * O(log n) since we binary search
      * TODO: use the DivideAndConquer.binarySearch
      *
@@ -119,27 +122,23 @@ object DynamicProgramming {
      * @param end end index of best
      * @return the longest item from best[start..end] where a can be appended to
      */
-    def findCandidate(a: T, start: Int = 0, end: Int = best.size - 1): Int = {
+    def findCandidate(a: T, start: Int = 0, end: Int = longest): Int = {
       if (start == end) {
         start
       } else {
         assert(end > start)
         val mid = (start + end + 1)/2       // bias towards right to handle 0,1 case since best(0).last is invalid
-        if (best(mid).last < a) {
-          findCandidate(a, mid, end)
-        } else {
-          findCandidate(a, start, mid-1)
-        }
+        if (cache(mid).last < a) findCandidate(a, mid, end) else findCandidate(a, start, mid-1)
       }
     }
 
     for (item <- s) {
       // Fredman-Knuth speedup: Quickly check if we can extend current best before doing binary search
-      val position = if (best.size > 1 && best(best.size-1).last < item) best.size-1 else findCandidate(item)
-      best(position+1) = best(position) :+ item   // end element of smaller list < end elements of larger lists
+      val position = if (cache.size > 1 && cache(longest).last < item) longest else findCandidate(item)
+      cache(position+1) = cache(position) :+ item   // end element of smaller list < end elements of larger lists
     }
 
-    best(best.size - 1)
+    cache(longest)
   }
 
   /**

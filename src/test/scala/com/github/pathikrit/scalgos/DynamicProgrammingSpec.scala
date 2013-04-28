@@ -20,13 +20,13 @@ class DynamicProgrammingSpec extends Specification {
       def bruteForceCheck(s: Seq[Int], t: Int) = Combinatorics.combinations(s) exists {_.sum == t}
       for (i <- (-50 to 50)) {
         val nums = RandomData.seq(length = 10)
-        subsetSum(nums, i) must be equalTo bruteForceCheck(nums, i)
+        isSubsetSumAchievable(nums, i) must be equalTo bruteForceCheck(nums, i)
       }
     }
   }
 
   "editDistance" should {
-    "work when either or both sequence is empty"
+    "work when either or both sequence is empty" in todo
     "work for completely mismtached sequences" in todo
     "work for arbitrary input" in todo
   }
