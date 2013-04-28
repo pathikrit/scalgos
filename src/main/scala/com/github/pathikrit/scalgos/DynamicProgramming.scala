@@ -34,18 +34,14 @@ object DynamicProgramming {
     val max = s.scanLeft(0)((sum, i) => (sum + i) max sum)  //max(i) =  largest sum achievable from first i elements
     val min = s.scanLeft(0)((sum, i) => (sum + i) min sum)  //min(i) = smallest sum achievable from first i elements
 
-    val cache = mutable.Map.empty[(Int, Int), Boolean]
-
-    // dp(i,x) = can we achieve x using the first i elements?
-    def dp(i: Int, x: Int): Boolean = (i, x) match {
+    lazy val dp: Memo[(Int, Int), Boolean] = Memo {         // dp(i,x) = can we achieve x using the first i elements?
       case (_, 0) => true        // 0 can always be achieved using empty set
       case (0, _) => false       // if empty set, non-zero cannot be achieved
-      case _ => cache getOrElseUpdate ((i, x), min(i) <= x && x <= max(i) && (dp(i-1, x - s(i-1)) || dp(i-1, x)))
+      case (i, x) => min(i) <= x && x <= max(i) && (dp(i-1, x - s(i-1)) || dp(i-1, x))
     }
 
     dp(s.length, t)
   }
-
 
   /**
    * Calculate edit distance between 2 sequences
@@ -56,23 +52,16 @@ object DynamicProgramming {
    * @param replace cost of replace operation
    * @return Minimum cost to convert s1 into s2 using delete, insert and replace operations
    */
-  def editDistance[A](s1: List[A], s2: List[A], delete: Int = 1, insert: Int = 1, replace: Int = 1) = {
-    val cache = mutable.Map.empty[(Int, Int), Int]
-
-    def dp(a: List[A], b: List[A]): Int = (a,b) match {
-      case (_, Nil) => a.length * (delete min insert)
-      case (Nil, _) => b.length * (delete min insert)
-      case (x::xs, y::ys) => cache getOrElseUpdate((a.length, b.length),
-        if (x == y) {
-          dp(xs, ys)
-        } else {
-          (delete + dp(a, ys)) min (insert + dp(xs, b)) min (replace + dp(xs,ys))
-        })
+  def editDistance[A](s1: Seq[A], s2: Seq[A], delete: Int = 1, insert: Int = 1, replace: Int = 1) = {
+    lazy val dp: Memo[(Int, Int), Int] = Memo {   // dp(a,b) = edit distance of s1.substring(0,a) and s2.substring(0,b)
+      case (a, 0) => a * (delete min insert)
+      case (0, b) => b * (delete min insert)
+      case (a, b) if (s1(s1.length - a) == s2(s2.length - b)) => dp(a-1, b-1)
+      case (a, b) => (delete + dp(a, b-1)) min (insert + dp(a-1, b)) min (replace + dp(a-1, b-1))
     }
 
-    dp(s1,s2)
+    dp(s1.length, s2.length)
   }
-
 
   /**
    * Generate all possible valid brackets
@@ -96,23 +85,17 @@ object DynamicProgramming {
    *
    * @param a first sequence
    * @param b second sequence
-   * @return longest common subsequence of a and b
+   * @return a longest common subsequence of a and b
+   *         if multiple possible lcs, return the one that is "earliest" in a
    */
   def longestCommonSubsequence[T](a: Seq[T], b: Seq[T]) = {
-    val (x, y) = (a.length, b.length)
-    val lcs = Array.ofDim[Seq[T]](x+1,y+1)
-
-    for (i <- 0 to x; j <- 0 to y) lcs(i)(j) = {
-      if (i == 0 || j == 0)
-        Nil
-      else if (a(i-1) == b(j-1))
-        lcs(i-1)(j-1) :+ a(i-1)
-      else if (lcs(i-1)(j).length > lcs(i)(j-1).length)
-        lcs(i-1)(j)
-      else
-        lcs(i)(j-1)
+    lazy val dp: Memo[(Int, Int), Seq[T]] = Memo {    //dp(x,y) - lcs of a[0..x) and b[0..y)
+      case (_, 0) => Nil
+      case (0, _) => Nil
+      case (x, y) if a(x-1) == b(y-1) => dp(x-1, y-1) :+ a(x-1)
+      case (x, y) => Seq(dp(x-1, y), dp(x, y-1)) maxBy {_.length}
     }
-    lcs(x)(y)
+    dp(a.length, b.length)
   }
 
   /**
@@ -124,8 +107,7 @@ object DynamicProgramming {
    * @return return longest increasing subsequence of a
    */
   def longestIncreasingSubsequence[T: Ordering](s: Seq[T]) = {
-    val best = mutable.Map.empty[Int, Seq[T]] // best(i) is longest sequence of length i
-    best(0) = Nil
+    val best = mutable.Map(0 -> Seq.empty[T]) // best(i) is longest sequence of length i
 
     /**
      * Find i such that (best(i) :: a) is a valid increasing sequence where start <= i <= end

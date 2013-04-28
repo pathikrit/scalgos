@@ -61,7 +61,7 @@ class DynamicProgrammingSpec extends Specification {
     }
 
     "work for arbitrary input" in {
-      longestCommonSubsequence("patrick", "pathikrit") must be equalTo "patik"
+      longestCommonSubsequence("patrick", "pathikrit") must be equalTo "patri"
     }
   }
 
@@ -81,7 +81,9 @@ class DynamicProgrammingSpec extends Specification {
 
     "be same same as longestCommonSubsequence with sorted input" in {
       val s = RandomData.seq().distinct // TODO: What happens when duplicates?
-      longestIncreasingSubsequence(s) must be equalTo longestCommonSubsequence(s, s.sorted)
+      val lis = longestIncreasingSubsequence(s)
+      lis must be equalTo longestCommonSubsequence(s.sorted, s)              // bias towards "earlier" sequence
+      lis.length must be equalTo longestCommonSubsequence(s, s.sorted).length
     }
   }
 
