@@ -12,6 +12,7 @@ Building
 0. Install scala (`brew install scala`) & [sbt](http://www.scala-sbt.org/release/docs/Getting-Started/Setup.html)
 1. Build and run tests: cd into scalgos directory and `sbt test`
 2. Importing into IntelliJ:
-    1. Install scala & sbt plugin
+    0. Install scala & sbt plugin
+    1. Save [this][https://github.com/yuanw/scalgos/blob/master/project/plugins.sbt] to `~/.sbt/plugins/build.sbt`
     2. Do `sbt gen-idea`
     3. "Open Project" and select the scalgos directory
