@@ -25,6 +25,12 @@ class DynamicProgrammingSpec extends Specification {
     }
   }
 
+  "editDistance" should {
+    "work when either or both sequence is empty"
+    "work for completely mismtached sequences" in todo
+    "work for arbitrary input" in todo
+  }
+
   "validBrackets" should {
     "be list containing empty string for 0" in {
       validBrackets(0) must be equalTo Seq("")

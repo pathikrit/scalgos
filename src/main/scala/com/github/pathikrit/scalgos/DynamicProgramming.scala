@@ -48,6 +48,33 @@ object DynamicProgramming {
 
 
   /**
+   * Calculate edit distance between 2 sequences
+   * O(s1.length * s2.length)
+   *
+   * @param delete cost of delete operation
+   * @param insert cost of insert operation
+   * @param replace cost of replace operation
+   * @return Minimum cost to convert s1 into s2 using delete, insert and replace operations
+   */
+  def editDistance[A](s1: List[A], s2: List[A], delete: Int = 1, insert: Int = 1, replace: Int = 1) = {
+    val cache = mutable.Map.empty[(Int, Int), Int]
+
+    def dp(a: List[A], b: List[A]): Int = (a,b) match {
+      case (_, Nil) => a.length * (delete min insert)
+      case (Nil, _) => b.length * (delete min insert)
+      case (x::xs, y::ys) => cache getOrElseUpdate((a.length, b.length),
+        if (x == y) {
+          dp(xs, ys)
+        } else {
+          (delete + dp(a, ys)) min (insert + dp(xs, b)) min (replace + dp(xs,ys))
+        })
+    }
+
+    dp(s1,s2)
+  }
+
+
+  /**
    * Generate all possible valid brackets
    * O(C(n)) = O(4^n / n^1.5)
    * Number of brackets = C(n) i.e. the n-th Catalan number
