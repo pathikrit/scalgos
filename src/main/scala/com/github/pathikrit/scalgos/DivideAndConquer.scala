@@ -37,7 +37,6 @@ object DivideAndConquer {
   def binarySearch[A: Ordering, B: Ordering](f: A => B, min: A, max: A, avg: (A, A) => A, goal: B): A = {
     val mid = avg(min, max)
     if (min < mid && mid < max) {
-      assert(max > min)
       f(mid) compare goal match {
         case  1 => binarySearch(f, min, mid, avg, goal)
         case -1 => binarySearch(f, mid, max, avg, goal)

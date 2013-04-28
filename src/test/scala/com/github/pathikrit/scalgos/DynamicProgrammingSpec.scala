@@ -8,6 +8,14 @@ class DynamicProgrammingSpec extends Specification {
 
   "subsetSum" should {
 
+    "work for empty set" in todo
+
+    "work for only postive numbers" in todo
+
+    "work for only negative numbers" in todo
+
+    "always true for sum == 0" in todo
+
     "match brute force check" in {
       def bruteForceCheck(s: Seq[Int], t: Int) = Combinatorics.combinations(s) exists {_.sum == t}
       for (i <- (-50 to 50)) {

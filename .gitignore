@@ -5,6 +5,7 @@
 *.ipr
 *.iws
 .idea/
+.idea_modules/
 atlassian-ide-plugin.xml
 
 # OSX files #
@@ -15,8 +16,4 @@ atlassian-ide-plugin.xml
 # sbt stuff #
 target/
 lib_managed/
-project/boot/
-project/build/target/
-project/plugins/target/
-project/plugins/lib_managed/
-project/plugins/src_managed/
+project/

@@ -41,7 +41,7 @@ object NumberTheory {
     else gcd(b, a%b)
 
   /**
-   * Uses's Euclid's GCD algorithm
+   * Uses Euclid's GCD algorithm
    * O(log(max(a,b))
    *
    * @return least common (non-negative) multiple of a,b

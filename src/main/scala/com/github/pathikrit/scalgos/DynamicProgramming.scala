@@ -31,14 +31,15 @@ object DynamicProgramming {
    * @return true iff there exists a subset of s that sums to t
    */
   def subsetSum(s: Seq[Int], t: Int): Boolean = {
-    val max = s.scanLeft(0)((sum, i) => (sum + i) max sum)
-    val min = s.scanLeft(0)((sum, i) => (sum + i) min sum)
+    val max = s.scanLeft(0)((sum, i) => (sum + i) max sum)  //max(i) =  largest sum achievable from first i elements
+    val min = s.scanLeft(0)((sum, i) => (sum + i) min sum)  //min(i) = smallest sum achievable from first i elements
 
     val cache = mutable.Map.empty[(Int, Int), Boolean]
 
+    // dp(i,x) = can we achieve x using the first i elements?
     def dp(i: Int, x: Int): Boolean = (i, x) match {
-      case (_, 0) => true
-      case (0, _) => false
+      case (_, 0) => true        // 0 can always be achieved using empty set
+      case (0, _) => false       // if empty set, non-zero cannot be achieved
       case _ => cache getOrElseUpdate ((i, x), min(i) <= x && x <= max(i) && (dp(i-1, x - s(i-1)) || dp(i-1, x)))
     }
 
