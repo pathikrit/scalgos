@@ -6,6 +6,33 @@ package com.github.pathikrit.scalgos
 object BitHacks {
 
   /**
+   * Temporary solution to increase precision for +,-,* (not /) to 30 decimal digits (100 bits)
+   * by doing calculations in both double & longs
+   * double (first 13 digits correct) and longs (last 18 digits correct because calculation is mod 2^64)
+   * When the digits on the border of long and double are ..99999... or ...00000..., it may fail (e.g. 10^30 fails)
+   */
+  implicit class ExtendedArithmetic(a: Long) {
+
+    def +~(b: Long) = combine(a.toDouble + b, a+b)
+
+    def -~(b: Long) = combine(a.toDouble - b, a-b)
+
+    def *~(b: Long) = combine(a.toDouble * b, a*b)
+
+    private def combine(x: Double, y: Long) = {
+      val l = 18
+      val sx = "%.0f" format x
+      if (sx.length <= l) {
+        y.toString
+      } else {
+        var sl = sx.substring(0, sx.length()-l).scanLeft(0l)((i, c) => 10*i + c - '0').last
+        for (i <- 1 to l) sl *= 10
+        sx + (s"%0${l}d" format y - sl)
+      }
+    }
+  }
+
+  /**
    * @return toggle case of c
    */
   def toggleCase(c: Char) = (c^32).toChar

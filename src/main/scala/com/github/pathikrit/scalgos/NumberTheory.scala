@@ -1,7 +1,5 @@
 package com.github.pathikrit.scalgos
 
-import Implicits._
-
 /**
  * Collection of number theory algorithms
  */

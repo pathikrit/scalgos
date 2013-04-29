@@ -1,6 +1,7 @@
 package com.github.pathikrit.scalgos
 
 import collection.mutable
+
 import Implicits.Updateable
 
 /**

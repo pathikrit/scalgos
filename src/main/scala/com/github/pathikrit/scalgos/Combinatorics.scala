@@ -1,6 +1,7 @@
 package com.github.pathikrit.scalgos
 
 import math.Ordering.Implicits._
+
 import Implicits.Crossable
 
 /**
@@ -45,7 +46,7 @@ object Combinatorics {
   }
 
   /**
-   * @ return memoized function to calculate C(n,r)
+   * @return memoized function to calculate C(n,r)
    */
   val c: Memo[(Int, Int), BigInt] = Memo {
     case (_, 0) => 1

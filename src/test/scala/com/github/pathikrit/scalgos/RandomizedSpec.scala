@@ -1,6 +1,7 @@
 package com.github.pathikrit.scalgos
 
 import org.specs2.mutable._
+
 import Randomized._
 
 class RandomizedSpec extends Specification {

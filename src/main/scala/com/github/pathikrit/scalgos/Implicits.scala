@@ -52,8 +52,8 @@ object Implicits {
   /**
    * Let's you use X instead of double for-loops
    */
-  implicit class Crossable[X](xs: Traversable[X]) {
-    def X[Y](ys: Traversable[Y]) = for ( x <- xs; y <- ys ) yield (x, y)
+  implicit class Crossable[A](as: Traversable[A]) {
+    def X[B](bs: Traversable[B]) = for {a <- as; b <- bs} yield (a, b)
   }
 
   /**
