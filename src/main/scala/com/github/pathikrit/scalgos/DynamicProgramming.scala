@@ -35,10 +35,9 @@ object DynamicProgramming {
     val min = s.scanLeft(0)((sum, i) => (sum + i) min sum)  //min(i) = smallest sum achievable from first i elements
 
     lazy val dp: Memo[(Int, Int), Boolean] = Memo {         // dp(i,x) = can we achieve x using the first i elements?
-      case (_, 0) => true        // 0 can always be achieved using empty set
-      case (0, _) => false       // if empty set, non-zero cannot be achieved
-      case (i, x) if min(i) <= x && x <= max(i) => dp(i-1, x - s(i-1)) || dp(i-1, x)  // try with/without s(i-1)
-      case _ => false            // outside range otherwise
+      case (_, 0) => true                                   // 0 can always be achieved using empty set
+      case (i, x) if x < min(i) || max(i) < x => false      // outside range
+      case (i, x) => dp(i-1, x - s(i-1)) || dp(i-1, x)      // try with/without s(i-1)
     }
 
     dp(s.length, t)
@@ -47,6 +46,7 @@ object DynamicProgramming {
   /**
    * Subset sum algorithm - How can we achieve sum t using elements from s?
    * O(s.map(abs).sum * s.length)
+   * Can be modified to for simple without replacement coin change problem
    *
    * @param s set of integers
    * @param t target
@@ -58,9 +58,8 @@ object DynamicProgramming {
 
     lazy val dp: Memo[(Int, Int), Seq[Seq[Int]]] = Memo {
       case (0, 0) => Seq(Nil)
-      case (0, _) => Nil
-      case (i, x) if min(i) <= x && x <= max(i) => (dp(i-1, x - s(i-1)) map {_ :+ s(i-1)}) ++ dp(i-1, x)
-      case _ => Nil
+      case (i, x) if x < min(i) || max(i) < x => Nil
+      case (i, x) => (dp(i-1, x - s(i-1)) map {_ :+ s(i-1)}) ++ dp(i-1, x)
     }
 
     dp(s.length, t)

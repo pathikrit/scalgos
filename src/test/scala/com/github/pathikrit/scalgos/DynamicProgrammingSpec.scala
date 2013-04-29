@@ -46,6 +46,12 @@ class DynamicProgrammingSpec extends Specification {
     }
   }
 
+  "minimumChange" should {
+    "fail for negative numbers" in todo
+    "work for empty coin list" in todo
+    "match brute force search" in todo
+  }
+
   "editDistance" should {
     "work when either or both sequence is empty" in todo
     "work for completely mismtached sequences" in todo
