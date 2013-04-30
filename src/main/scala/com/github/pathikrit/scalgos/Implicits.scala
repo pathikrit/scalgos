@@ -47,6 +47,8 @@ object Implicits {
      * @return m = x mod y such that we preserve the relation (x/y)*y + m == x
      */
     def mod(y: Int) = x - (x/y)*y
+
+    def ! = Combinatorics.factorial(x)
   }
 
   /**

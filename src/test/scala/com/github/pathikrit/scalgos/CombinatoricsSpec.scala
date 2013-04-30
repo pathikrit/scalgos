@@ -2,6 +2,7 @@ package com.github.pathikrit.scalgos
 
 import org.specs2.mutable.Specification
 
+import Implicits._
 import Combinatorics._
 
 class CombinatoricsSpec extends Specification {
@@ -60,7 +61,7 @@ class CombinatoricsSpec extends Specification {
 
     "match formula" in {
       for {n <- 0 to 50; r <- 0 to n} {
-        c(n, r) must be equalTo factorial(n)/(factorial(n-r) * factorial(r))
+        c(n, r) must be equalTo (n!)/(((n-r)!) * (r!))
       }
     }
   }
