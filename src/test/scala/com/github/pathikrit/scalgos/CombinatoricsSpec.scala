@@ -29,8 +29,29 @@ class CombinatoricsSpec extends Specification {
 
     "work for arbitrary case" in todo
 //    {
-//      repeatedCombinations(2, "abc".toSet) must be equalTo List("aa", "ab", "ac", "ba", "bb", "bc", "ca", "cc", "cc")
+//      repeatedCombinations("abc".toSet, 2) must be equalTo List("aa", "ab", "ac", "ba", "bb", "bc", "ca", "cc", "cc")
 //    }
+  }
+
+  "nextCombination" should {
+    "fail for n < 0" in todo
+    "fail when s has elements not in [0,n)" in todo
+
+    "work for s.length = 0, n = 0" in todo
+    "work for s.length = 0, n = 1" in todo
+    "work for s.length = 1, n = 0" in todo
+    "work for s.length = 1, n = 1" in todo
+
+    "n = 2 should match bit masking" in todo
+//    {
+//      var s = List.fill(5)(0)
+//      do {
+//        println(s)
+//        s = nextCombination(s, 2)
+//      } while (s exists {_ != 0})
+//    }
+
+    "work for arbitrary input" in todo
   }
 
   "nextPermutation" should {

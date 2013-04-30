@@ -22,9 +22,25 @@ object Combinatorics {
    *
    * @return all s.length^n combinations
    */
-  def repeatedCombinations[A](n: Int, s: Set[A]) : Traversable[List[A]] = n match {
+  def repeatedCombinations[A](s: Set[A], n: Int) : Traversable[List[A]] = n match {
     case 0 => List(Nil)
-    case _ => for {(x,xs) <- s X repeatedCombinations(n-1, s)} yield x :: xs
+    case _ => for {(x,xs) <- s X repeatedCombinations(s, n-1)} yield x :: xs
+  }
+
+  /**
+   * Generates all n^s.length combinations
+   * O(n)
+   * Think of as instead of boolean (2 states), we have n states for each cell in s
+   * Also, equivalent to adding 1 in base n
+   * Call with initially all zeroes in s
+   *
+   * @return next combination of n
+   */
+  def nextCombination(s: List[Int], n: Int): List[Int] = s match {
+    case Nil => Nil
+    case x :: xs if x < 0 || x >= n => throw new IllegalArgumentException
+    case x :: xs if x == (n-1) => 0 :: nextCombination(xs, n)
+    case x :: xs => (x+1) :: xs
   }
 
   /**
