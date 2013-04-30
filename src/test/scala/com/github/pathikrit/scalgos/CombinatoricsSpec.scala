@@ -111,4 +111,21 @@ class CombinatoricsSpec extends Specification {
       ((0 to 10) map catalan).toList must be equalTo expected
     }
   }
+
+  "dearrangements" should {
+    "fail for negative numbers" in todo
+    "match the recurrence relation" in {
+
+      lazy val d: Memo[Int, BigInt] = Memo {
+        case n if n < 0 => throw new IllegalArgumentException
+        case 0 => 1
+        case 1 => 0
+        case n => (n-1) * (d(n-1) + d(n-2))
+      }
+
+      for (i <- 0 to 100) {
+        derangement(i) must be equalTo d(i)
+      }
+    }
+  }
 }

@@ -101,4 +101,18 @@ object Combinatorics {
     case 0 => 1
     case n => (4*n-2)*catalan(n-1)/(n+1)
   }
+
+  /**
+   * Number of ways of selecting (1 to n) items such that none of the items are in its own position
+   * TODO: Proof
+   * TODO: nextDearrangement
+   * O(n)
+   *
+   * @return memoized function to count dearangements
+   */
+  val derangement: Memo[Int, BigInt] = Memo {
+    case n if n%2 == 0 => n*derangement(n-1) + 1
+    case n if n%2 == 1 => n*derangement(n-1) - 1
+    case _ => 0     // negative n
+  }
 }
