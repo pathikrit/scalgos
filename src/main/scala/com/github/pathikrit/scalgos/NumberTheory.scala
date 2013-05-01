@@ -34,11 +34,12 @@ object NumberTheory {
    *
    * @return largest number g such that a%g == 0 and b%g == 0
    */
-  def gcd(a: Int, b: Int): Int =
-    if (a < 0) gcd(-a, b)
-    else if(b < 0) gcd(a, -b)
-    else if (b == 0) {assume(a!=0); a}
-    else gcd(b, a%b)
+  def gcd(a: Int, b: Int): Int = (a, b) match {
+    case _ if a < 0 => gcd(-a, b)
+    case _ if b < 0 => gcd(a, -b)
+    case (_, 0) => assume(a!=0); a
+    case _ => gcd(b, a%b)
+  }
 
   /**
    * Uses Euclid's GCD algorithm
@@ -47,4 +48,17 @@ object NumberTheory {
    * @return least common (non-negative) multiple of a,b
    */
   def lcm(a: Int, b: Int) = a/gcd(a,b) * b
+
+  /**
+   * Extended Euclidean algorithm to calculate Bézout's identity
+   * @return (x,y) such that ax + by = gcd(a,b)
+   */
+  def extendedEuclidean(a: Int, b: Int): (Int, Int) = (a,b) match {
+    case _ if a < 0 => extendedEuclidean(-a, b)
+    case _ if b < 0 => extendedEuclidean(a, -b)
+    case (_, 0) => assume(a != 0); (1, 0)
+    case _ =>
+      val (x,y) = extendedEuclidean(b, a%b)
+      (y, x - (a/b) * y)
+  }
 }

@@ -39,6 +39,22 @@ class NumberTheorySpec extends Specification {
     "work for Int.MaxValue and Int.MinValue" in todo
   }
 
+  "extendedEuclidean algorithm" should {
+    "match Bézout's identity" in {
+      for ((a,b) <- (-100 to 100) X (-100 to 100) if a!=0 || b!=0) {
+        val (x,y) = extendedEuclidean(a,b)
+        // todo: do we really need abs here?
+        a.abs*x + b.abs*y must be equalTo gcd(a,b)
+      }
+    }
+
+    "fail for (0,0)" in {
+      extendedEuclidean(0,0) must throwA[AssertionError]
+    }
+
+    "work for Int.MaxValue and Int.MinValue" in todo
+  }
+
   "lcm" should {
     "match brute force" in todo
     "work for (0,0)" in todo
