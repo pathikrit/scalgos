@@ -105,14 +105,19 @@ object Combinatorics {
   /**
    * Number of ways of selecting (1 to n) items such that none of the items are in its own position
    * TODO: Proof
-   * TODO: nextDearrangement
+   * TODO: nextPartialDerangement
    * O(n)
    *
-   * @return memoized function to count dearangements
+   * @return memoized function to count derangements
    */
   val derangement: Memo[Int, BigInt] = Memo {
     case n if n%2 == 0 => n*derangement(n-1) + 1
     case n if n%2 == 1 => n*derangement(n-1) - 1
     case _ => 0     // negative n
   }
+
+  /**
+   * @return Number of ways to arrange [1 to n] such that exactly k of them are in own position
+   */
+  def partialDerangement(n: Int, k: Int) = c(n,k) * derangement(n-k)
 }

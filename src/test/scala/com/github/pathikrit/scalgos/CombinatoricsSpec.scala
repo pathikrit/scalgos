@@ -112,7 +112,7 @@ class CombinatoricsSpec extends Specification {
     }
   }
 
-  "dearrangements" should {
+  "derangements" should {
     "fail for negative numbers" in todo
     "match the recurrence relation" in {
 
@@ -127,5 +127,11 @@ class CombinatoricsSpec extends Specification {
         derangement(i) must be equalTo d(i)
       }
     }
+  }
+
+  "partialDerangement" should {
+    "fail for negative numbers" in todo
+    "match known sequence" in todo
+    "be same as derangement for k = 0" in todo
   }
 }
