@@ -60,4 +60,25 @@ class NumberTheorySpec extends Specification {
     "work for (0,0)" in todo
     "work for Int.MaxValue & Int.MinValue" in todo
   }
+
+  "numberOfMultiples" should {
+    "fail for invalid inputs (c = 0 or a>b)" in todo
+
+    "match brute force" in {
+      val n = 100
+      for {
+        c <- -n to n
+        a <- -n to n
+        b <- -n to n
+      } if (a > b || c == 0) {
+        numberOfMultiples(a,b,c) must throwA[AssertionError]
+      } else {
+        val (actual, expected) = (numberOfMultiples(a,b,c), (a to b) count {_ % c == 0})
+        actual must be equalTo expected
+      }
+    }
+
+    "works for -2^31 to 2^31-1" in todo
+
+  }
 }

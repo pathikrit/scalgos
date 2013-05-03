@@ -1,5 +1,7 @@
 package com.github.pathikrit.scalgos
 
+import Implicits._
+
 /**
  * Collection of number theory algorithms
  */
@@ -58,7 +60,19 @@ object NumberTheory {
     case _ if b < 0 => extendedEuclidean(a, -b)
     case (_, 0) => assume(a != 0); (1, 0)
     case _ =>
-      val (x,y) = extendedEuclidean(b, a%b)
-      (y, x - (a/b) * y)
+      val (x, y) = extendedEuclidean(b, a%b)
+      (y, x - (a/b)*y)
+  }
+
+  /**
+   * Count multiples - surprisingly non trivial
+   * O(n)
+   * @return number of multiples of c in [a,b]
+   */
+  def numberOfMultiples(a: Int, b: Int, c: Int): Int = if(c < 0) {
+    numberOfMultiples(a,b,-c)
+  } else {
+    assume(b >= a && c > 0)
+    (b + (b<0))/c - (a - (a>0))/c + (a <= 0 && b >= 0)
   }
 }

@@ -8,6 +8,11 @@ import collection.mutable
 object Implicits {
 
   /**
+   * Sometimes its convenient to map true to 1 and false to 0
+   */
+  implicit def toInt(x: Boolean) = if (x) 1 else 0
+
+  /**
    * Better floating point comparison with a tolerance of eps = 1e-9
    * @param x treats x as a range [x-eps, x+eps]
    */
