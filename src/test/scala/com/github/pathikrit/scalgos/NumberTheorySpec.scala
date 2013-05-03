@@ -71,7 +71,7 @@ class NumberTheorySpec extends Specification {
         a <- -n to n
         b <- -n to n
       } if (a > b || c == 0) {
-        numberOfMultiples(a,b,c) must throwA[AssertionError]
+        numberOfMultiples(a,b,c) must throwA[IllegalArgumentException]
       } else {
         val (actual, expected) = (numberOfMultiples(a,b,c), (a to b) count {_ % c == 0})
         actual must be equalTo expected

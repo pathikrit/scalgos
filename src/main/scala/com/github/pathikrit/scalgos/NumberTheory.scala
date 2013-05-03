@@ -67,12 +67,13 @@ object NumberTheory {
   /**
    * Count multiples - surprisingly non trivial
    * O(n)
+   * TODO: Proof
+   *
    * @return number of multiples of c in [a,b]
    */
-  def numberOfMultiples(a: Int, b: Int, c: Int): Int = if(c < 0) {
-    numberOfMultiples(a,b,-c)
-  } else {
-    assume(b >= a && c > 0)
-    (b + (b<0))/c - (a - (a>0))/c + (a <= 0 && b >= 0)
+  def numberOfMultiples(a: Int, b: Int, c: Int): Int = c.signum match {
+    case -1 => numberOfMultiples(a, b, -c)
+    case 1 if b >= a => (b + (b<0))/c - (a - (a>0))/c + (a <= 0 && b >= 0)
+    case _ => throw new IllegalArgumentException
   }
 }
