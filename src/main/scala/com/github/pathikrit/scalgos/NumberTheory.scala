@@ -18,10 +18,18 @@ object NumberTheory {
     val numbers = 2 to n
     val sieve = collection.mutable.BitSet(numbers: _*)
     for (p <- numbers takeWhile (i => i*i <= n) if sieve(p)) {
-      sieve --= p * p to n by p
+      sieve --= p*p to n by p
     }
     sieve.toImmutable
   }
+
+  /**
+   * Euler's Totient Function or phi function
+   * O(n log n)
+   *
+   * @return positive integers <= n that are co-prime to n
+   */
+  def phi(n: Int) = sieveOfEratosthenes(n).foldLeft(n)((phi,p) => if (phi%p == 0) phi - phi/p else phi)
 
   /**
    * O(c = 100) primality check

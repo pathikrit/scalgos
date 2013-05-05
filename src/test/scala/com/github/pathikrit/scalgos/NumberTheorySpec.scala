@@ -21,6 +21,16 @@ class NumberTheorySpec extends Specification {
     }
   }
 
+  "phi" should {
+    "fail for negative/zero inputs" in todo
+
+    "match brute force" in {
+      for (i <- 1 to 100) {
+        phi(i) must be equalTo ((1 to i) count {gcd(i, _) == 1})
+      }
+    }
+  }
+
   "gcd" should {
     "match brute force" in {
       def commonMultiples(a: Int, b: Int) = {(1 to (a.abs max b.abs)) filter (g => a%g == 0 && b%g == 0)}
@@ -73,12 +83,10 @@ class NumberTheorySpec extends Specification {
       } if (a > b || c == 0) {
         numberOfMultiples(a,b,c) must throwA[IllegalArgumentException]
       } else {
-        val (actual, expected) = (numberOfMultiples(a,b,c), (a to b) count {_ % c == 0})
-        actual must be equalTo expected
+        numberOfMultiples(a,b,c) must be equalTo ((a to b) count {_ % c == 0})
       }
     }
 
     "works for -2^31 to 2^31-1" in todo
-
   }
 }
