@@ -2,7 +2,7 @@ package com.github.pathikrit.scalgos
 
 import math.Ordering.Implicits._
 
-import Implicits.Crossable
+import Implicits._
 
 /**
  * collection of algorithms related to combinatorics
@@ -68,6 +68,20 @@ object Combinatorics {
     case (_, 0) => 1
     case (n, r) if r > n/2 => c(n, n-r)
     case (n, r) => c(n-1, r-1) + c(n-1, r)
+  }
+
+  /**
+   * Number of ways to permute n objects which has r.length kinds of items
+   * O(n*r)
+   *
+   * @param r r(i) is number of types of item i
+   *
+   * @return n!/(r0! * r1! * ....) * (n - r.sum)!
+   */
+  def choose(n: Int, r: Seq[Int]): BigInt = r match {
+    case Nil => 1
+    case x :: Nil => c(n, x)
+    case x :: y :: z => c(x+y, y) * choose(n, (x+y) :: z)
   }
 
   /**

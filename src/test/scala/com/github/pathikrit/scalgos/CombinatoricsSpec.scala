@@ -87,6 +87,21 @@ class CombinatoricsSpec extends Specification {
     }
   }
 
+  "choose" should {
+    "fail when n or one of rs is negative" in todo
+    "fail when r.sum > n" in todo
+    "work for empty r" in todo
+    "work when r = 0 or 1" in todo
+    "r.length = 1 must be same as c(n,r)" in todo
+    "match formula" in {
+      // todo for n <- 0 to 100, partitions <- 1 to n, randomly generate p n/p numbers
+      // todo - what if n != r.sum?
+      val n = 10
+      val r = Seq(1,2,3,4)
+      choose(n, r) must be equalTo(factorial(n)/((r map factorial).product))
+    }
+  }
+
   "factorial" should {
     "fail for negative numbers" in todo
 
