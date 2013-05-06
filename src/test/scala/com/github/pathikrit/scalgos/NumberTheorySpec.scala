@@ -4,6 +4,8 @@ import org.specs2.mutable._
 
 import Implicits.Crossable
 import NumberTheory._
+import collection.mutable
+import collection.immutable.BitSet
 
 class NumberTheorySpec extends Specification {
 
@@ -12,6 +14,8 @@ class NumberTheorySpec extends Specification {
 
     "work for n = 0,1,2,3" in todo
 
+    "include n when n is a prime" in todo
+
     "match actual isPrime check" in {
       val n = 100000
       val primeSet = sieveOfEratosthenes(n)
@@ -19,6 +23,17 @@ class NumberTheorySpec extends Specification {
         primeSet(i) must be equalTo isPrime(i)
       }
     }
+  }
+
+  "sieveOfSundaram" should {
+    "not work for negative numbers" in todo
+
+    "match the sieveOfEratosthenes" in todo
+//    {
+//      for (i <- 3 to 1000) {
+//        BitSet(sieveOfSundaram(i): _*) must be equalTo (sieveOfEratosthenes(i) - 2)
+//      }
+//    }
   }
 
   "phi" should {

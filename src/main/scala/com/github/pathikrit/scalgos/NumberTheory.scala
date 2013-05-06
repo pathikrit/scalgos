@@ -1,5 +1,7 @@
 package com.github.pathikrit.scalgos
 
+import collection.mutable
+
 import Implicits._
 
 /**
@@ -8,19 +10,34 @@ import Implicits._
 object NumberTheory {
 
   /**
-   * Run's sieve of Eratosthenes
-   * O(n log n)
+   * Runs sieve of Eratosthenes
+   * O(n log n) - TODO: why?
    *
    * @param n number upto (inclusive) to run the sieve
-   * @return bitset p such that p(x) is true iff x is prime
+   * @return bitset p s.t. p(x) <=> x is prime
    */
   def sieveOfEratosthenes(n: Int) = {
     val numbers = 2 to n
-    val sieve = collection.mutable.BitSet(numbers: _*)
+    val sieve = mutable.BitSet(numbers: _*)
     for (p <- numbers takeWhile (i => i*i <= n) if sieve(p)) {
       sieve --= p*p to n by p
     }
     sieve.toImmutable
+  }
+
+  /**
+   * Runs sieve of Sundaram
+   * O(n log n) - TODO: why?
+   *
+   * @return all *odd* primes in [1,n]
+   */
+  def sieveOfSundaram(n: Int) = {
+    val s = mutable.BitSet(1 to n/2 : _*)
+    for {
+      i <- 1 to n/6
+      j <- 1 to (n-2*i)/(4*i+1)   // j s.t. i + j + 2ij <= n/2  todo: we go from j <- i to (2i+1)j?
+    } s -= i + j + 2*i*j          // all odd composites are of form (2i+1)(2j+1) = 2(i + j + 2ij) + 1
+    s.toSeq.map(2*_ + 1)
   }
 
   /**
