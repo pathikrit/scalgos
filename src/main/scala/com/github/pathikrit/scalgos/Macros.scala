@@ -8,7 +8,7 @@ import collection.JavaConversions._
 /**
  * Collection of code snippets that do common tasks such as profiling, downloading a webpage etc
  */
-object CommonTasks {
+object Macros {
 
   /**
    * Profile a block of code
