@@ -41,6 +41,9 @@ object Macros {
    */
   def debug(params: Any*) = macro debugImpl
 
+  /**
+   * Implementation of the debug macro
+   */
   def debugImpl(c: Context)(params: c.Expr[Any]*) = {
     import c.universe._
 
