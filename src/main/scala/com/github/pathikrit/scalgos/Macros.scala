@@ -4,7 +4,6 @@ import System.{currentTimeMillis => time}
 import io.Source
 import collection.mutable
 import collection.JavaConversions._
-import language.experimental.macros
 import reflect.macros.Context
 
 /**
