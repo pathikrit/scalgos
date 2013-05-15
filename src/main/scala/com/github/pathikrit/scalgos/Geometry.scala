@@ -1,6 +1,7 @@
 package com.github.pathikrit.scalgos
 
 import collection.mutable
+import java.lang.Math._
 
 /**
  * Collection of geometrical algorithms
@@ -18,9 +19,10 @@ object Geometry {
   /**
    * Represents a vector between a and b
    */
-  implicit class Vector(ends: Pair[Point, Point]) {
-    val Pair(a,b) = ends
+  implicit class Vector(ends: (Point, Point)) {
+    val (a,b) = ends
     def X(c: Point) = crossProduct(a, b, c)
+    def length = sqrt((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y))
   }
 
   /**
@@ -41,7 +43,7 @@ object Geometry {
 
   /**
    * Cross product of Segment(a, b) and Segment(a, c)
-   * Signed area of triangle formed by (a,b,c) i.e. if 0 then collinear
+   * Twice the signed area of triangle formed by (a,b,c) i.e. if 0 then collinear
    * if <0 counter-clockwise turn from (a,b) to (a,c) and vice-versa
    * determinant | a.x  a.y  a.z |
    *             | b.x  b.y  b.z |
@@ -49,6 +51,11 @@ object Geometry {
    * @return cross product of segment(a,b) and segment(a,c)
    */
   def crossProduct(a: Point, b: Point, c: Point) = (b.x - a.x) * (c.y - a.y) - (c.x - a.x) * (b.y - a.y)
+
+  /**
+   * @return Area of triangle a,b,c
+   */
+  def areaOfTriangle(a: Point, b: Point, c: Point) = crossProduct(a,b,c).abs/2
 
   /**
    * Check if 2 segments intersect
