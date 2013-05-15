@@ -1,10 +1,10 @@
 package com.github.pathikrit.scalgos
 
-import org.specs2.mutable._
+import org.specs2.mutable.Specification
 
 import RandomData.Graphs
-import Implicits.Crossable
 import Graph._
+import Implicits._
 
 class GraphSpec extends Specification {
 

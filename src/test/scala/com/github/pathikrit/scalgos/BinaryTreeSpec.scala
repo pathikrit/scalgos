@@ -1,8 +1,7 @@
 package com.github.pathikrit.scalgos
 
 import util.Random
-
-import org.specs2.mutable._
+import org.specs2.mutable.Specification
 
 import BinaryTree._
 

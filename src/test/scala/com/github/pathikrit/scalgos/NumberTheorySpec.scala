@@ -1,11 +1,11 @@
 package com.github.pathikrit.scalgos
 
 import org.specs2.mutable._
+import collection.mutable
+import collection.immutable.BitSet
 
 import Implicits.Crossable
 import NumberTheory._
-import collection.mutable
-import collection.immutable.BitSet
 
 class NumberTheorySpec extends Specification {
 
