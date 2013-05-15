@@ -7,8 +7,18 @@ import Macros._
 import java.io.{ByteArrayOutputStream, PrintStream}
 
 class MacrosSpec extends Specification {
+
   "profile" should {
-    "work" in todo
+    "work" in {
+      val (result, time, memory) = profile {
+        val x = 20
+        def fib(n: Int): Int = if (n <= 1) n else fib(n-1) + fib(n-2)
+        fib(x)
+      }
+      result must be equalTo 6765
+      time must be greaterThan 0
+      memory must be greaterThan 32
+    }
   }
 
   "download" should {
@@ -27,10 +37,9 @@ class MacrosSpec extends Specification {
       stream.toString
     }
 
-    "work for 0 inputs" in todo
-//    {
-//      captureOutput {Macros.debug()} must be equalTo "\n"
-//    }
+    "work for 0 inputs" in {
+      captureOutput {Macros.debug()} must be equalTo "\n"
+    }.pendingUntilFixed
 
     "work for 1 input" in {
       captureOutput {

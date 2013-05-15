@@ -1,13 +1,12 @@
 package com.github.pathikrit.scalgos
 
-import System.{currentTimeMillis => time}
 import io.Source
 import collection.mutable
 import collection.JavaConversions._
 import reflect.macros.Context
 
 /**
- * Collection of code snippets that do common tasks such as profiling, downloading a webpage etc
+ * Collection of code snippets that do common tasks such as profiling, downloading a webpage, debugging variables etc
  */
 object Macros {
 
@@ -16,11 +15,14 @@ object Macros {
    * e.g. use val (result, time, mem) = profile { ... code ... }
    *
    * @param code the block of code to profile
-   * @param t by default is the current time
    * @tparam R return type of
-   * @return (res, time, mem) where res is result of profiled code, time is time used in s and mem is memory used in KB
+   * @return (res, time, mem) where res is result of profiled code, time is time used in ms and mem is memory used in MB
    */
-  def profile[R](code: => R, t: Long = time) = (code, (time - t)/1000, Runtime.getRuntime.totalMemory>>10)
+  def profile[R](code: => R) = {
+    import System.{currentTimeMillis => time}
+    val t = time
+    (code, time - t, Runtime.getRuntime.totalMemory>>20)
+  }
 
   /**
    * @return the contents of url (usually html)
@@ -46,13 +48,13 @@ object Macros {
   def debugImpl(c: Context)(params: c.Expr[Any]*) = {
     import c.universe._
 
-    val trees = params map {param => param.tree match {
-        case Literal(Constant(const)) => reify { print(param.splice) }.tree
+    val trees = params map {param => (param.tree match {
+        case Literal(Constant(_)) => reify { print(param.splice) }
         case _ => reify {
           val variable = c.Expr[String](Literal(Constant(show(param.tree)))).splice
-          print(variable + " = " + param.splice)
-        }.tree
-      }
+          print(s"$variable = ${param.splice}")
+        }
+      }).tree
     }
 
     val separators = (1 until trees.size).map(_ => (reify { print(", ") }).tree) :+ (reify { println() }).tree
