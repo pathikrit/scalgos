@@ -51,13 +51,12 @@ object Combinatorics {
    * @return Some(p) if next permutation exists or None if s is already in decreasing order
    */
   def nextPermutation[A : Ordering](s: Seq[A]): Option[Seq[A]] = {
-    val pivot = s zip s.tail lastIndexWhere {case (first, second) => first < second}
-    if (pivot < 0) {
-      None
-    } else {
-      val next = s lastIndexWhere {_ > s(pivot)}
-      // swap the pivot and next, and then reverse the portion of the array to the right of where the pivot was found
-      Some(((s take pivot) :+ s(next)) ++ ((s.slice(pivot+1, next):+ s(pivot)) ++ (s drop next+1)).reverse)
+    s zip s.tail lastIndexWhere {case (first, second) => first < second} match {
+      case pivot if pivot < 0 => None
+      case pivot =>
+        val next = s lastIndexWhere {s(pivot) < _}
+        // swap the pivot and next, and then reverse the portion of the array to the right of where the pivot was found
+        Some(((s take pivot) :+ s(next)) ++ ((s.slice(pivot+1, next):+ s(pivot)) ++ (s drop next+1)).reverse)
     }
   }
 
