@@ -11,13 +11,13 @@ import collection.mutable
  */
 class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
 
-  private val adjacencyList = Array.fill(numberOfVertices)(mutable.Map.empty[Int, Double])
+  private val adjacencyList = Array.fill(numberOfVertices)(mutable.Map.empty[Int, Double] withDefaultValue Double.PositiveInfinity)
 
   private type EndPoints = Pair[Int, Int]
 
   private implicit class Edge(points: EndPoints) {
-    val (u,v) = points
-    require(hasVertices(u, v))
+    val (u, v) = points
+    assume(hasVertices(u, v))
   }
 
   /**
@@ -27,7 +27,7 @@ class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
    * @param points (from,to)
    * @return edge value (else 0 if from==to or +infinity if from and to has no edge)
    */
-  def apply(points: EndPoints) = adjacencyList(points.u) getOrElse (points.v, if (points.u == points.v) 0 else Double.PositiveInfinity)
+  def apply(points: EndPoints) = if (points.u == points.v) 0.0 else adjacencyList(points.u)(points.v)
 
   /**
    * Check if edge exists
@@ -64,7 +64,12 @@ class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
    * Delete an edge between (from,to)
    * @param points (from,to)
    */
-  def -=(points: EndPoints) = adjacencyList(points.u) -= points.v
+  def -=(points: EndPoints) {
+    adjacencyList(points.u) -= points.v
+    if (!isDirected) {
+      adjacencyList(points.v) -= (points.u)
+    }
+  }
 
   /**
    * @return vertices in graph
@@ -171,11 +176,11 @@ object Graph {
       }
     }
 
+    //todo: g.vertices filterNot index.contains foreach dfs
     for {
       u <- g.vertices
       if (!(index contains u))
     } dfs(u)
-
     sccs.toSeq
   }
 
