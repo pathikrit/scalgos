@@ -37,7 +37,8 @@ class DivideAndConquerSpec extends Specification {
   "binarySearch" should {
     "work on discrete functions" in todo
 
-    def sqrt(d: Double) =  binarySearch[Double, Double](x => x*x, 0, d+1, (x,y) => (x+y)/2, d)
+    def avg(x: Double, y: Double) = (x+y)/2
+    def sqrt(d: Double) =  binarySearch[Double, Double](x => x*x, 0, d+1, avg, d)
 
     "work on continuous functions" in {
       def check(x: Double) {

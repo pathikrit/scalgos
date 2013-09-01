@@ -18,5 +18,4 @@ class SudokuSpec extends Specification {
       solve(Array.fill(9, 9)(0)) must beTrue
     }
   }
-
 }
