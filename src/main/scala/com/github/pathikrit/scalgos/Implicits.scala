@@ -101,4 +101,11 @@ object Implicits {
       queue += node
     }
   }
+
+  /**
+   * Mimic's F#'s forward pipe operator
+   */
+  implicit class PipedFunctions[A](x: => A) {
+    def |>[B](f: A => B) = f(x)
+  }
 }

@@ -21,4 +21,8 @@ class ImplicitsSpec extends Specification {
       }
     }
   }
+
+  "ForwardPipe" should {
+    "work" in todo
+  }
 }
