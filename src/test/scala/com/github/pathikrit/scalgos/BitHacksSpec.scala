@@ -22,9 +22,11 @@ class BitHacksSpec extends Specification {
 
   "swap" should {
     "work" in {
-      for (v <- (-100 to 100) X (-100 to 100)) {
-        xorSwap(v) must be equalTo v.swap
-        noTempSwap(v) must be equalTo v.swap
+      examplesBlock {
+        for (v <- (-100 to 100) X (-100 to 100)) {
+          xorSwap(v) must be equalTo v.swap
+          noTempSwap(v) must be equalTo v.swap
+        }
       }
     }
 
@@ -33,11 +35,13 @@ class BitHacksSpec extends Specification {
 
   "gcd" should {
     "match euclid's algorithm" in {
-      for ((x,y) <- (-100 to 100) X (-100 to 100) if x!=0 || y!=0) {
-        val g = gcd(x,y)
-        x%g must be equalTo 0
-        y%g must be equalTo 0
-        g must be equalTo NumberTheory.gcd(x,y)
+      examplesBlock {
+        for ((x,y) <- (-100 to 100) X (-100 to 100) if x!=0 || y!=0) {
+          val g = gcd(x,y)
+          x%g must be equalTo 0
+          y%g must be equalTo 0
+          g must be equalTo NumberTheory.gcd(x,y)
+        }
       }
     }
 

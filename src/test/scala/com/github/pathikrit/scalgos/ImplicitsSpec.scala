@@ -11,13 +11,15 @@ class ImplicitsSpec extends Specification {
 
   "IntExtenshions" should {
     "have correct mod" in {
-      for {
-        (x,y) <- (-100 to 100) X (-100 to 100)
-        if y != 0
-        m = x mod y
-      } {
-        ((x/y)*y + m) must be equalTo x
-        (x-m)%y must be equalTo 0
+      examplesBlock {
+        for {
+          (x,y) <- (-100 to 100) X (-100 to 100)
+          if y != 0
+          m = x mod y
+        } {
+          ((x/y)*y + m) must be equalTo x
+          (x-m)%y must be equalTo 0
+        }
       }
     }
   }

@@ -41,9 +41,7 @@ class DivideAndConquerSpec extends Specification {
     def sqrt(d: Double) =  binarySearch[Double, Double](x => x*x, 0, d+1, avg, d)
 
     "work on continuous functions" in {
-      def check(x: Double) {
-        sqrt(x) must be ~(math.sqrt(x) +/- 1e-9)
-      }
+      def check(x: Double) = sqrt(x) must be ~(math.sqrt(x) +/- 1e-9)
       check(34)
       check(2)
       check(1e-19)
@@ -56,6 +54,7 @@ class DivideAndConquerSpec extends Specification {
     "fail to find when missing" in {
       //sqrt(-1) must be empty
       //sqrt(-0.0001) must be empty
+      todo
     }
 
     "fail to find when max<=min" in todo

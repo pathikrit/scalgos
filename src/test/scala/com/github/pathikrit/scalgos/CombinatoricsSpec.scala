@@ -81,8 +81,10 @@ class CombinatoricsSpec extends Specification {
     "always 1 if r>n" in todo
 
     "match formula" in {
-      for {n <- 0 to 50; r <- 0 to n} {
-        c(n, r) must be equalTo (n!)/(((n-r)!) * (r!))
+      examplesBlock {
+        for {n <- 0 to 50; r <- 0 to n} {
+          c(n, r) must be equalTo (n!)/(((n-r)!) * (r!))
+        }
       }
     }
   }
@@ -138,8 +140,10 @@ class CombinatoricsSpec extends Specification {
         case n => (n-1) * (d(n-1) + d(n-2))
       }
 
-      for (i <- 0 to 100) {
-        derangement(i) must be equalTo d(i)
+      examplesBlock {
+        for (i <- 0 to 100) {
+          derangement(i) must be equalTo d(i)
+        }
       }
     }
   }

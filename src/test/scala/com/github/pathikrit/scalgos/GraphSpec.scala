@@ -23,15 +23,17 @@ class GraphSpec extends Specification {
 
     "work for graphs with no edges" in {
       val g = Graphs.noEdges
-      for {
-        (u, v) <- g.vertices X g.vertices
-      } dijkstra(g, u, v) match {
-        case Some(Result(cost, path)) =>
-          cost must be equalTo 0
-          u must be equalTo v
+      examplesBlock {
+        for {
+          (u, v) <- g.vertices X g.vertices
+        } dijkstra(g, u, v) match {
+          case Some(Result(cost, path)) =>
+            cost must be equalTo 0
+            u must be equalTo v
 
-        case None =>
-          u must be not equalTo(v)
+          case None =>
+            u mustNotEqual v
+        }
       }
     }
 
@@ -51,15 +53,17 @@ class GraphSpec extends Specification {
     "match floyd-warshall" in {
       val g = RandomData.graph()
       val f = floydWarshall(g)
-      for {
-        (i, j) <- (g.vertices X g.vertices)
-        d = dijkstra(g, i, j)
-      } if (f(i)(j) isPosInfinity) {
-        d must beNone
-      } else {
-        val Some(Result(distance, path)) = d
-        (path.head -> path.last) must be equalTo (i -> j)
-        distance must be ~(f(i)(j) +/- 1e-9)
+      examplesBlock {
+        for {
+          (i, j) <- (g.vertices X g.vertices)
+          d = dijkstra(g, i, j)
+        } if (f(i)(j) isPosInfinity) {
+          d must beNone
+        } else {
+          val Some(Result(distance, path)) = d
+          (path.head -> path.last) must be equalTo (i -> j)
+          distance must be ~(f(i)(j) +/- 1e-9)
+        }
       }
     }
   }
@@ -121,7 +125,7 @@ class GraphSpec extends Specification {
 
       val sccs = stronglyConnectedComponents(g)
       checkCoverage(g, sccs)
-      sccs foreach checkCycle
+      examplesBlock {sccs foreach checkCycle}
     }
   }
 
@@ -137,18 +141,20 @@ class GraphSpec extends Specification {
       def trace(parents: Seq[Int], v: Int): Seq[Int] = if(parents(v) < 0) Seq(v) else (trace(parents, parents(v)) :+ v)
 
       val g = RandomData.graph()
-      for {
-        u <- g.vertices
-        (distances, parents) = bellmanFord(g, u)
-        v <- g.vertices
-      } dijkstra(g, u, v) match {
-        case None =>
-          distances(v).isPosInfinity must beTrue
+      examplesBlock {
+        for {
+          u <- g.vertices
+          (distances, parents) = bellmanFord(g, u)
+          v <- g.vertices
+        } dijkstra(g, u, v) match {
+          case None =>
+            distances(v).isPosInfinity must beTrue
           // TODO: no path to parent or loop here
 
-        case Some(Result(distance, path)) =>
-          distances(v) must be ~(distance +/- 1e-9)
-          trace(parents, v) must be equalTo path  // might be different paths with same cost - random chance of failure!
+          case Some(Result(distance, path)) =>
+            distances(v) must be ~(distance +/- 1e-9)
+            trace(parents, v) must be equalTo path  // might be different paths with same cost - random chance of failure!
+        }
       }
     }
   }

@@ -19,8 +19,10 @@ class NumberTheorySpec extends Specification {
     "match actual isPrime check" in {
       val n = 100000
       val primeSet = sieveOfEratosthenes(n)
-      for (i <- 1 to n) {
-        primeSet(i) must be equalTo isPrime(i)
+      examplesBlock {
+        for (i <- 1 to n) {
+          primeSet(i) must be equalTo isPrime(i)
+        }
       }
     }
   }
@@ -40,8 +42,10 @@ class NumberTheorySpec extends Specification {
     "fail for negative/zero inputs" in todo
 
     "match brute force" in {
-      for (i <- 1 to 100) {
-        phi(i) must be equalTo ((1 to i) count {gcd(i, _) == 1})
+      examplesBlock {
+        for (i <- 1 to 100) {
+          phi(i) must be equalTo ((1 to i) count {gcd(i, _) == 1})
+        }
       }
     }
   }
@@ -49,11 +53,13 @@ class NumberTheorySpec extends Specification {
   "gcd" should {
     "match brute force" in {
       def commonMultiples(a: Int, b: Int) = {(1 to (a.abs max b.abs)) filter (g => a%g == 0 && b%g == 0)}
-      for ((x,y) <- (-100 to 100) X (-100 to 100) if x!=0 || y!=0) {
-        val g = gcd(x,y)
-        x%g must be equalTo 0
-        y%g must be equalTo 0
-        g must be equalTo commonMultiples(x,y).max
+      examplesBlock {
+        for ((x,y) <- (-100 to 100) X (-100 to 100) if x!=0 || y!=0) {
+          val g = gcd(x,y)
+          x%g must be equalTo 0
+          y%g must be equalTo 0
+          g must be equalTo commonMultiples(x,y).max
+        }
       }
     }
 
@@ -66,10 +72,12 @@ class NumberTheorySpec extends Specification {
 
   "extendedEuclidean algorithm" should {
     "match Bézout's identity" in {
-      for ((a,b) <- (-100 to 100) X (-100 to 100) if a!=0 || b!=0) {
-        val (x,y) = extendedEuclidean(a,b)
-        // todo: do we really need abs here?
-        a.abs*x + b.abs*y must be equalTo gcd(a,b)
+      examplesBlock {
+        for ((a,b) <- (-100 to 100) X (-100 to 100) if a!=0 || b!=0) {
+          val (x,y) = extendedEuclidean(a,b)
+          // todo: do we really need abs here?
+          a.abs*x + b.abs*y must be equalTo gcd(a,b)
+        }
       }
     }
 
@@ -91,14 +99,16 @@ class NumberTheorySpec extends Specification {
 
     "match brute force" in {
       val n = 100
-      for {
-        c <- -n to n
-        a <- -n to n
-        b <- -n to n
-      } if (a > b || c == 0) {
-        numberOfMultiples(a,b,c) must throwA[IllegalArgumentException]
-      } else {
-        numberOfMultiples(a,b,c) must be equalTo ((a to b) count {_ % c == 0})
+      examplesBlock {
+        for {
+          c <- -n to n
+          a <- -n to n
+          b <- -n to n
+        } if (a > b || c == 0) {
+          numberOfMultiples(a,b,c) must throwA[IllegalArgumentException]
+        } else {
+          numberOfMultiples(a,b,c) must be equalTo ((a to b) count {_ % c == 0})
+        }
       }
     }
 

@@ -20,9 +20,11 @@ class DynamicProgrammingSpec extends Specification {
       def bruteForceCheck(s: Seq[Int], t: Int) = Combinatorics.combinations(s) filter {_.sum == t}
       def normalized(sums: Seq[Seq[Int]]) = sums map {_.sorted} toSet       //todo: why toSet?
 
-      for (i <- (-50 to 50)) {
-        val nums = RandomData.seq(length = 10)
-        normalized(subsetSum(nums, i)) must be equalTo normalized(bruteForceCheck(nums, i))
+      examplesBlock {
+        for (i <- (-50 to 50)) {
+          val nums = RandomData.seq(length = 10)
+          normalized(subsetSum(nums, i)) must be equalTo normalized(bruteForceCheck(nums, i))
+        }
       }
     }
   }
@@ -39,9 +41,11 @@ class DynamicProgrammingSpec extends Specification {
 
     "match brute force check" in {
       def bruteForceCheck(s: Seq[Int], t: Int) = Combinatorics.combinations(s) exists {_.sum == t}
-      for (i <- (-50 to 50)) {
-        val nums = RandomData.seq(length = 10)
-        isSubsetSumAchievable(nums, i) must be equalTo bruteForceCheck(nums, i)
+      examplesBlock {
+        for (i <- (-50 to 50)) {
+          val nums = RandomData.seq(length = 10)
+          isSubsetSumAchievable(nums, i) must be equalTo bruteForceCheck(nums, i)
+        }
       }
     }
   }
@@ -65,13 +69,15 @@ class DynamicProgrammingSpec extends Specification {
 
     "work for arbitrary input" in {
       validBrackets(1) must be equalTo Seq("()")
-      validBrackets(2) must contain("()()", "(())").only
-      validBrackets(3) must contain("()()()", "()(())", "(())()", "((()))", "(()())").only
+      validBrackets(2) must contain(exactly("()()", "(())"))
+      validBrackets(3) must contain(exactly("()()()", "()(())", "(())()", "((()))", "(()())"))
     }
 
     "match catalan numbers" in {
-      for (i <- 0 to 10) {
-        validBrackets(i).length must be equalTo Combinatorics.catalan(i).intValue
+      examplesBlock {
+        for (i <- 0 to 10) {
+          validBrackets(i).length must be equalTo Combinatorics.catalan(i).intValue
+        }
       }
     }
   }
@@ -103,7 +109,7 @@ class DynamicProgrammingSpec extends Specification {
 
     "work for arbitrary input" in {
       val input = Seq(0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15)
-      longestIncreasingSubsequence(input) must contain(0, 2, 6, 9, 11, 15).only.inOrder
+      longestIncreasingSubsequence(input) must be equalTo Seq(0, 2, 6, 9, 11, 15)
     }
 
     "be same same as longestCommonSubsequence with sorted input" in {
