@@ -14,20 +14,20 @@ class DynamicTypeSpec extends Specification {
       x.someOtherField = "hello world!"
       x.someField must be equalTo "is a string now!"
       x.someOtherField must be equalTo "hello world!"
-      x.aNonExistendField must throwA[NoSuchFieldError]
+      x.aNonExistentField must throwA[NoSuchFieldError]
     }
 
     "add dynamic methods" in {
       val x = new DynamicType
-      x.aMethodWithNoArg = () => "A method with no arg called"
+      x.aMethodWithNoArgs = () => "A method with no arg called"
       x.aMethodWithOneArg = (x: String) => s"A method called with arg1=$x"
       x.aMethodWithTwoArgs = (x: String, y: Int) => s"A method called with arg1(string)=$x and arg2(int)=$y"
 
-      x.aMethodWithNoArg must throwA[NoSuchFieldError]
-      x.aMethodWithNoArg() must be equalTo "A method with no arg called"
+      x.aMethodWithNoArgs must throwA[NoSuchFieldError]
+      x.aMethodWithNoArgs() must be equalTo "A method with no arg called"
       x.aMethodWithOneArg("hi") must be equalTo s"A method called with arg1=hi"
       x.aMethodWithTwoArgs("hello", 42) must be equalTo s"A method called with arg1(string)=hello and arg2(int)=42"
-      x.missingMethod() must throwA[NoSuchMethodError]
+      x.aMissingMethod() must throwA[NoSuchMethodError]
     }
 
     "support method overloading" in {

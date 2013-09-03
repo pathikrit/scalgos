@@ -2,14 +2,13 @@ name := "scalgos"
 
 version := "0.0.1"
 
-scalaVersion := "2.10.1-RC1"
+scalaVersion := "2.10.2"
 
 scalacOptions ++= Seq(
   "-unchecked", "-deprecation", "-feature",
   "-language:postfixOps", "-language:implicitConversions", "-language:experimental.macros", "-language:dynamics"
 )
 
-libraryDependencies ++= Seq(
-  "org.specs2" %% "specs2" % "1.13" % "test",
-  "org.scala-lang" % "scala-reflect" % "2.10.1-RC1"
-)
+libraryDependencies ++= Seq("org.specs2" % "specs2_2.10" % "2.1.1" % "test")
+
+libraryDependencies <+= scalaVersion("org.scala-lang" % "scala-reflect" % _)
