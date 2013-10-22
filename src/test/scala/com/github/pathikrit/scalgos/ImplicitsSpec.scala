@@ -27,4 +27,8 @@ class ImplicitsSpec extends Specification {
   "ForwardPipe" should {
     "work" in todo
   }
+
+  "RemovableList" should {
+    "work" in todo
+  }
 }

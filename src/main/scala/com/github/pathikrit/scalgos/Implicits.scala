@@ -103,6 +103,24 @@ object Implicits {
   }
 
   /**
+   * Support removal of items from list
+   */
+  implicit class RemovableList[A](s: List[A]) {
+
+    /**
+     * Remove 1 element
+     *
+     * @param elem element to remove
+     * @return a list with first occurrence of elem removed
+     */
+    def -(elem: A): List[A] = s match {
+      case Nil => Nil
+      case x :: xs if x == elem => xs
+      case x :: xs => x :: (xs - elem)
+    }
+  }
+
+  /**
    * Mimic's F#'s forward pipe operator
    */
   implicit class PipedFunctions[A](x: => A) {
