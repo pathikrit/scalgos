@@ -10,10 +10,9 @@ import collection.mutable
  * @param isDirected true iff a directed graph
  */
 class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
+  import Graph.EndPoints
 
   private val adjacencyList = Array.fill(numberOfVertices)(mutable.Map.empty[Int, Double] withDefaultValue Double.PositiveInfinity)
-
-  private type EndPoints = Pair[Int, Int]
 
   private implicit class Edge(points: EndPoints) {
     val (u, v) = points
@@ -27,14 +26,23 @@ class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
    * @param points (from,to)
    * @return edge value (else 0 if from==to or +infinity if from and to has no edge)
    */
-  def apply(points: EndPoints) = if (points.u == points.v) 0.0 else adjacencyList(points.u)(points.v)
+  def apply(points: EndPoints): Double = if (points.u == points.v) 0.0 else adjacencyList(points.u)(points.v)
+
+  /**
+   * curried alternative to @see apply(EndPoints)
+   *
+   * @param u from
+   * @param v to
+   * @return edge value of u->v
+   */
+  def apply(u: Int)(v: Int): Double = this(u->v)
 
   /**
    * Check if edge exists
    * @param points (from,to)
    * @return true iff from->to edge exists
    */
-  def has(points: EndPoints) = adjacencyList(points.u) contains (points.v)
+  def has(points: EndPoints) = adjacencyList(points.u) contains points.v
 
   /**
    * @return true iff all vertices in graph
@@ -92,6 +100,8 @@ class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
  */
 object Graph {
 
+  private type EndPoints = Pair[Int, Int]
+
   /**
    * Run Dijkstra's shortest path algorithm
    * Basically runs A* with heuristic=0
@@ -101,13 +111,11 @@ object Graph {
    * @param goal end vertex
    * @return result of A* search
    */
-  def dijkstra(g: Graph, start: Int, goal: Int) = {
+  def dijkstra(g: Graph, start: Int, goal: Int) = new AStar[Int] {
     assume(g hasVertices (start, goal))
-    new AStar[Int] {
-      def neighbors(n: Int) = g neighbours n
-      override def distance(from: Int, to: Int) = g(from -> to)
-    } run (start, _ == goal)
-  }
+    def neighbors(n: Int) = g neighbours n
+    override def distance(from: Int, to: Int) = g(from -> to)
+  } run (start, _ == goal)
 
   /**
    * Run Floyd-Warshall all pair shortest path algorithm on g
@@ -201,12 +209,12 @@ object Graph {
    *                    should either end in -1 or a loop if d(i) is positive infinity
    */
   def bellmanFord(g: Graph, source: Int) = {
-    val distance = Array.tabulate(g.numberOfVertices)(i => g(source->i))
+    val distance = Array.tabulate(g.numberOfVertices){g(source)}
     val parent = Array.fill(g.numberOfVertices)(-1)
 
     for {
       i <- 1 until g.numberOfVertices
-      (u,v) <- g.edges
+      (u, v) <- g.edges
       if distance(v) >= distance(u) + g(u->v)
     } {
       distance(v) = distance(u) + g(u->v)
@@ -254,11 +262,6 @@ object Graph {
    * @param f Apply f to each vertex in dfs order from source
    * @return If f is true at a vertex v, return Some(v) else None
    */
-  def dfs(g: Graph, u: Int, f: Int => Boolean, seen: Set[Int] = Set.empty[Int]): Option[Int] = {
-    if(f(u)) {
-      Some(u)
-    } else {
-      g neighbours u filterNot seen find {v => dfs(g, u, f, seen + u).isDefined}
-    }
-  }
+  def dfs(g: Graph, u: Int, f: Int => Boolean, seen: Set[Int] = Set.empty[Int]): Option[Int] =
+    if(f(u)) Some(u) else g neighbours u filterNot seen find {v => dfs(g, u, f, seen + u).isDefined}
 }
