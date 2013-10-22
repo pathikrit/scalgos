@@ -20,7 +20,7 @@ object DivideAndConquer {
    */
   def maxRectangleInHistogram(heights: Seq[Int]): Int = if (heights isEmpty) 0 else {
     val (left, smallest :: right) = heights splitAt (heights indexOf heights.min)
-    Seq(maxRectangleInHistogram(left), smallest * heights.length, maxRectangleInHistogram(right)).max
+    maxRectangleInHistogram(left) max smallest * heights.length max maxRectangleInHistogram(right)
   }
 
   /**

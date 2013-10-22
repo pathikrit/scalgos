@@ -78,7 +78,7 @@ object DynamicProgramming {
     lazy val dp: Memo[(Int, Int), Int] = Memo {   // dp(a,b) = edit distance of s1.substring(0,a) and s2.substring(0,b)
       case (a, 0) => a * (delete min insert)
       case (0, b) => b * (delete min insert)
-      case (a, b) if (s1(s1.length - a) == s2(s2.length - b)) => dp(a-1, b-1)
+      case (a, b) if s1(s1.length - a) == s2(s2.length - b) => dp(a-1, b-1)
       case (a, b) => (delete + dp(a, b-1)) min (insert + dp(a-1, b)) min (replace + dp(a-1, b-1))
     }
 

@@ -45,7 +45,7 @@ object BitHacks {
     x ^= y
     y ^= x
     x ^= y
-    (x,y)
+    (x, y)
   }
 
   /**
@@ -56,7 +56,7 @@ object BitHacks {
     x = x - y
     y = x + y
     x = y - x
-    (x,y)
+    (x, y)
   }
 
   /**

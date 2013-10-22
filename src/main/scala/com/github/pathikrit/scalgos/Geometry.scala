@@ -12,7 +12,7 @@ object Geometry {
    * Represents a point (x,y)
    */
   implicit class Point(tuple: (Double, Double)) {
-    val (x,y) = tuple
+    val (x, y) = tuple
     def manhattan = x+y
   }
 
@@ -20,7 +20,7 @@ object Geometry {
    * Represents a vector between a and b
    */
   implicit class Vector(ends: (Point, Point)) {
-    val (a,b) = ends
+    val (a, b) = ends
     def X(c: Point) = crossProduct(a, b, c)
     def length = sqrt((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y))
   }
