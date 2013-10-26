@@ -4,6 +4,7 @@ import util.Random._
 
 import Implicits.Crossable
 import Geometry.Point
+import LinearAlgebra.Matrix2D
 
 /**
  * Has utility methods for random data generation
@@ -27,14 +28,19 @@ object RandomData {
   }
 
   /**
-   * @return Random sequence of numbers in [min, max] of size = length
+   * @return Random list of numbers in [min, max] of size = length
    */
-  def seq(length: Int = 100, min: Int = -10, max: Int = 10) = Seq.fill(length)(integer(min, max))
+  def list(length: Int = 100, min: Int = -10, max: Int = 10) = List.fill(length)(integer(min, max))
 
   /**
-   * @return Random sequence of numbers in [0, max] of size = length
+   * @return Random IndexedSeq of numbers in [min, max] of size = length
    */
-  def positiveSeq(length: Int = 100, max: Int = 10) = seq(length, 0, max)
+  def seq(length: Int = 100, min: Int = -10, max: Int = 10) = IndexedSeq.fill(length)(integer(min, max))
+
+  /**
+   * @return Random list of numbers in [0, max] of size = length
+   */
+  def positiveList(length: Int = 100, max: Int = 10) = list(length, 0, max)
 
   /**
    * @return Atmost howMany unique points in in rectangle (minX, minY) - (maxX, maxY)
@@ -76,5 +82,19 @@ object RandomData {
     def two = graph(numberOfVertices = 2, edgeDensity = 1)
     def noEdges = graph(edgeDensity = 0)
     def clique = graph(edgeDensity = 1)
+  }
+
+  /**
+   * Generate random matrix
+   *
+   * @param r rows
+   * @param c columns
+   * @return a random matrix with r rows and c columns
+   */
+  def matrix(r: Int, c: Int): Matrix2D = Array.tabulate(r, c){(i, j) => number(-100, 100)}
+
+  object Matrices {
+    def square = matrix(10, 10)
+    def rectangle = matrix(15, 20)
   }
 }
