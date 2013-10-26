@@ -8,7 +8,7 @@ class RandomizedSpec extends Specification {
 
   "quickSelect" should {
     "match naive sort based algorithm" in {
-      val s = RandomData.seq()
+      val s = RandomData.list()
       val k = RandomData.integer(0, s.length-1)
       quickSelect(s, k) must be equalTo s.sorted.apply(k)
     }

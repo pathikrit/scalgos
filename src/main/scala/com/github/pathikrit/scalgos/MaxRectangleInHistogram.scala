@@ -65,9 +65,9 @@ object MaxRectangleInHistogram {
 
       // our goal here is to make sure x <= y <= z
       case (Some(a), Some(b)) => (a.height, height, b.height) match {
-        case (x,y,_) if x > y => merge(left)    // x and y itself in wrong order
-        case (x,_,z) if z < x => merge(left)    // z is smaller than even x
-        case (_,y,z) if z < y => merge(right)   // z is between (x,y)
+        case (x, y, _) if x > y => merge(left)    // x and y itself in wrong order
+        case (x, _, z) if z < x => merge(left)    // z is smaller than even x
+        case (_, y, z) if z < y => merge(right)   // z is between (x,y)
         case _ => b.collapse                    // everything in right order - proceed right
       }
     }

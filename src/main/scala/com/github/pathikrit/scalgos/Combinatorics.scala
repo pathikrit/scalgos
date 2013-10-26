@@ -36,7 +36,7 @@ object Combinatorics {
    *
    * @return next combination of n
    */
-  def nextCombination(s: List[Int], n: Int): List[Int] = s match {
+  def nextCombination(s: Seq[Int], n: Int): List[Int] = s match {
     case Nil => Nil
     case x :: xs if x < 0 || x >= n => throw new IllegalArgumentException
     case x :: xs if x == (n-1) => 0 :: nextCombination(xs, n)
@@ -50,9 +50,9 @@ object Combinatorics {
    *
    * @return Some(p) if next permutation exists or None if s is already in decreasing order
    */
-  def nextPermutation[A : Ordering](s: Seq[A]): Option[Seq[A]] = {
+  def nextPermutation[A : Ordering](s: IndexedSeq[A]): Option[Seq[A]] = {
     s zip s.tail lastIndexWhere {case (first, second) => first < second} match {
-      case pivot if pivot < 0 => None
+      case -1 => None
       case pivot =>
         val next = s lastIndexWhere {s(pivot) < _}
         // swap the pivot and next, and then reverse the portion of the array to the right of where the pivot was found

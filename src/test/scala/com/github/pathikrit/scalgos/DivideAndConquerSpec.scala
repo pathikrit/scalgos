@@ -29,7 +29,7 @@ class DivideAndConquerSpec extends Specification {
     "fail for negative inputs" in todo
 
     "match the rewrite algorithm" in {
-      val heights = RandomData.positiveSeq()
+      val heights = RandomData.positiveList()
       maxRectangleInHistogram(heights) must be equalTo MaxRectangleInHistogram(heights map {(_, 1)})
     }
   }

@@ -50,12 +50,12 @@ object Geometry {
    *             | c.x  c.y  c.z |
    * @return cross product of segment(a,b) and segment(a,c)
    */
-  def crossProduct(a: Point, b: Point, c: Point) = (b.x - a.x) * (c.y - a.y) - (c.x - a.x) * (b.y - a.y)
+  def crossProduct(a: Point, b: Point, c: Point) = (b.x - a.x)*(c.y - a.y) - (c.x - a.x)*(b.y - a.y)
 
   /**
    * @return Area of triangle a,b,c
    */
-  def areaOfTriangle(a: Point, b: Point, c: Point) = crossProduct(a,b,c).abs/2
+  def areaOfTriangle(a: Point, b: Point, c: Point) = crossProduct(a, b, c).abs/2
 
   /**
    * Check if 2 segments intersect

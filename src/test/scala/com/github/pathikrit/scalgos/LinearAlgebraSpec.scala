@@ -19,9 +19,9 @@ class LinearAlgebraSpec extends Specification {
       val c = Array.ofDim[Double](a.rows, b.cols)
 
       for {
-        i <- 0 to a.rows
-        j <- 0 to b.cols
-        k <- 0 to a.cols
+        i <- 0 until a.rows
+        j <- 0 until b.cols
+        k <- 0 until a.cols
       } c(i)(j) = c(i)(j) + a(i, k) * b(k, j)
 
       todo

@@ -42,9 +42,9 @@ object BinaryTree {
    * @param root the root of the tree
    * @return the pre-order traversal
    */
-  def preOrderTraversal[T](root: Tree[T]): Seq[T] = root match {
+  def preOrderTraversal[T](root: Tree[T]): List[T] = root match {
     case None => Nil
-    case Some(Node(left, entry, right)) => Seq(entry) ++ preOrderTraversal(left) ++ preOrderTraversal(right)
+    case Some(Node(left, entry, right)) => entry :: preOrderTraversal(left) ::: preOrderTraversal(right)
   }
 
   /**

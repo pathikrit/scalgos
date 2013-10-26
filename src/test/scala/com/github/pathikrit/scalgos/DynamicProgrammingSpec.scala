@@ -64,11 +64,11 @@ class DynamicProgrammingSpec extends Specification {
 
   "validBrackets" should {
     "be list containing empty string for 0" in {
-      validBrackets(0) must be equalTo Seq("")
+      validBrackets(0) must be equalTo IndexedSeq("")
     }
 
     "work for arbitrary input" in {
-      validBrackets(1) must be equalTo Seq("()")
+      validBrackets(1) must be equalTo IndexedSeq("()")
       validBrackets(2) must contain(exactly("()()", "(())"))
       validBrackets(3) must contain(exactly("()()()", "()(())", "(())()", "((()))", "(()())"))
     }
@@ -137,7 +137,7 @@ class DynamicProgrammingSpec extends Specification {
     }
 
     "match brute force algorithm" in {
-      val s = RandomData.seq()
+      val s = RandomData.list()
       val sums = for (start <- s.indices; end <- start to s.length) yield s.slice(start, end).sum
       maxSubArraySum(s) must be equalTo sums.max
     }

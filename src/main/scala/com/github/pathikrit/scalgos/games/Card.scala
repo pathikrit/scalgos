@@ -29,7 +29,7 @@ class Deck {
 
   def deal = cards dequeue
 
-  def remove(discards: Set[Card]) { discards foreach {card: Card => cards dequeueFirst (_ == card)} }
+  def remove(discards: Set[Card]) {discards foreach {card: Card => cards dequeueFirst {_ == card}}}
 }
 
 /**
@@ -43,11 +43,11 @@ object PokerHandType extends Enumeration {
    * @return (h,s) where h is the hand type and s is sorted cards to break ties
    */
   def classify(hand: Set[Card]) = {
-    def rankMatches(card: Card) = hand count (_.rank == card.rank)
+    def rankMatches(card: Card) = hand count {_.rank == card.rank}
     val groups = hand groupBy rankMatches mapValues {_.toList.sorted}
 
     val isFlush = (hand groupBy {_.suit}).size == 1
-    val isWheel = "A2345" forall {r => hand exists (_.rank == Card.ranks.indexOf(r))}   // A,2,3,4,5 straight
+    val isWheel = "A2345" forall {r => hand exists {_.rank == Card.ranks.indexOf(r)}}   // A,2,3,4,5 straight
     val isStraight = groups.size == 1 && (hand.max.rank - hand.min.rank) == 4 || isWheel
     val (isThreeOfAKind, isOnePair) = (groups contains 3, groups contains 2)
 

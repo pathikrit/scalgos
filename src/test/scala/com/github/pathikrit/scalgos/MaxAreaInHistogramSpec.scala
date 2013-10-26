@@ -27,7 +27,7 @@ class MaxAreaInHistogramSpec extends Specification {
     "fail for negative or zero widths inputs" in todo
 
     "match the divide and conquer algorithm" in {
-      val blocks = RandomData.seq(min = 1) zip RandomData.seq(min = 1)
+      val blocks = RandomData.list(min = 1) zip RandomData.list(min = 1)
       val bars = for {b <- blocks; i <- 1 to b._2} yield b._1  //break block of width w into w blocks of width 1
       val expectedArea = DivideAndConquer.maxRectangleInHistogram(bars)
       apply(blocks) must be equalTo expectedArea

@@ -12,7 +12,7 @@ import Implicits._
  * @tparam A input
  * @tparam B output
  */
-case class Memo[A,B](f: A => B) extends (A => B) {
+case class Memo[A, B](f: A => B) extends (A => B) {
   private val cache = mutable.Map.empty[A, B]
   def apply(x: A) = cache getOrElseUpdate (x, f(x))
 }
@@ -30,7 +30,7 @@ object DynamicProgramming {
    * @param t target
    * @return true iff there exists a subset of s that sums to t
    */
-  def isSubsetSumAchievable(s: Seq[Int], t: Int) = {
+  def isSubsetSumAchievable(s: IndexedSeq[Int], t: Int) = {
     val max = s.scanLeft(0)((sum, i) => (sum + i) max sum)  //max(i) =  largest sum achievable from first i elements
     val min = s.scanLeft(0)((sum, i) => (sum + i) min sum)  //min(i) = smallest sum achievable from first i elements
 
@@ -52,7 +52,7 @@ object DynamicProgramming {
    * @param t target
    * @return all subsets of s that sum to t
    */
-  def subsetSum(s: Seq[Int], t: Int) = {
+  def subsetSum(s: IndexedSeq[Int], t: Int) = {
     val max = s.scanLeft(0)((sum, i) => (sum + i) max sum)
     val min = s.scanLeft(0)((sum, i) => (sum + i) min sum)
 
@@ -74,7 +74,7 @@ object DynamicProgramming {
    * @param replace cost of replace operation
    * @return Minimum cost to convert s1 into s2 using delete, insert and replace operations
    */
-  def editDistance[A](s1: Seq[A], s2: Seq[A], delete: Int = 1, insert: Int = 1, replace: Int = 1) = {
+  def editDistance[A](s1: IndexedSeq[A], s2: IndexedSeq[A], delete: Int = 1, insert: Int = 1, replace: Int = 1) = {
     lazy val dp: Memo[(Int, Int), Int] = Memo {   // dp(a,b) = edit distance of s1.substring(0,a) and s2.substring(0,b)
       case (a, 0) => a * (delete min insert)
       case (0, b) => b * (delete min insert)
@@ -93,8 +93,8 @@ object DynamicProgramming {
    *
    * @return memoized function to generate all possible valid n-pair bracket strings
    */
-  val validBrackets: Memo[Int, Seq[String]] = Memo {
-    case 0 => Seq("")
+  val validBrackets: Memo[Int, IndexedSeq[String]] = Memo {
+    case 0 => IndexedSeq("")
     case n => for {
       i <- 0 until n
       (a,b) <- validBrackets(i) X validBrackets(n-i-1)
@@ -110,14 +110,14 @@ object DynamicProgramming {
    * @return a longest common subsequence of a and b
    *         if multiple possible lcs, return the one that is "earliest" in a
    */
-  def longestCommonSubsequence[T](a: Seq[T], b: Seq[T]) = {
+  def longestCommonSubsequence[T](a: IndexedSeq[T], b: IndexedSeq[T]) = {
+    val c = Ordering by {s: Seq[T] => s.length}
     lazy val dp: Memo[(Int, Int), Seq[T]] = Memo {    //dp(x,y) - lcs of a[0..x) and b[0..y)
       case (_, 0) => Nil
       case (0, _) => Nil
       case (x, y) if a(x-1) == b(y-1) => dp(x-1, y-1) :+ a(x-1)
-      case (x, y) => Seq(dp(x-1, y), dp(x, y-1)) maxBy {_.length}
+      case (x, y) => c.max(dp(x-1, y), dp(x, y-1))
     }
-
     dp(a.length, b.length)
   }
 
