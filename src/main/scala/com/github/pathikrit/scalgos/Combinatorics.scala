@@ -24,7 +24,7 @@ object Combinatorics {
    */
   def repeatedCombinations[A](s: Set[A], n: Int) : Traversable[List[A]] = n match {
     case 0 => List(Nil)
-    case _ => for {(x,xs) <- s X repeatedCombinations(s, n-1)} yield x :: xs
+    case _ => for ((x, xs) <- s X repeatedCombinations(s, n-1)) yield x :: xs
   }
 
   /**
@@ -39,19 +39,19 @@ object Combinatorics {
   def nextCombination(s: Seq[Int], n: Int): List[Int] = s match {
     case Nil => Nil
     case x :: xs if x < 0 || x >= n => throw new IllegalArgumentException
-    case x :: xs if x == (n-1) => 0 :: nextCombination(xs, n)
-    case x :: xs => (x+1) :: xs
+    case x :: xs if x == n-1 => 0 :: nextCombination(xs, n)
+    case x :: xs => x+1 :: xs
   }
 
   /**
    * Find next permutation of s
-   * Call with Seq(0,0,0,0,1,1) for example to 4C2
+   * Call with Seq(0,0,0,0,1,1) for example to 6C2
    * O(n)
    *
    * @return Some(p) if next permutation exists or None if s is already in decreasing order
    */
-  def nextPermutation[A : Ordering](s: IndexedSeq[A]): Option[Seq[A]] = {
-    s zip s.tail lastIndexWhere {case (first, second) => first < second} match {
+  def nextPermutation[A: Ordering](s: IndexedSeq[A]): Option[Seq[A]] = {
+    s zip s.tail lastIndexWhere {p => p._1 < p._2} match {
       case -1 => None
       case pivot =>
         val next = s lastIndexWhere {s(pivot) < _}
@@ -65,8 +65,8 @@ object Combinatorics {
    */
   val c: Memo[(Int, Int), BigInt] = Memo {
     case (_, 0) => 1
-    case (n, r) if r > n/2 => c(n, n-r)
-    case (n, r) => c(n-1, r-1) + c(n-1, r)
+    case (n, r) if r > n/2 => c(n, n - r)
+    case (n, r) => c(n - 1, r - 1) + c(n - 1, r)
   }
 
   /**
@@ -80,7 +80,7 @@ object Combinatorics {
   def choose(n: Int, r: Seq[Int]): BigInt = r match {
     case Nil => 1
     case x :: Nil => c(n, x)
-    case x :: y :: z => c(x+y, y) * choose(n, (x+y) :: z)
+    case x :: y :: z => c(x + y, y) * choose(n, (x + y) :: z)
   }
 
   /**
@@ -88,7 +88,7 @@ object Combinatorics {
    */
   val factorial: Memo[Int, BigInt] = Memo {
     case 0 => 1
-    case n => n * factorial(n-1)
+    case n => n * factorial(n - 1)
   }
 
   /**
@@ -100,7 +100,7 @@ object Combinatorics {
   val fibonacci: Memo[Int, BigInt] = Memo {
     case 0 => 0
     case 1 => 1
-    case n => fibonacci(n-1) + fibonacci(n-2)
+    case n => fibonacci(n - 1) + fibonacci(n - 2)
   }
 
   /**
@@ -112,7 +112,7 @@ object Combinatorics {
    */
   val catalan: Memo[Int, BigInt] = Memo {
     case 0 => 1
-    case n => (4*n-2)*catalan(n-1)/(n+1)
+    case n => (4*n - 2)*catalan(n - 1)/(n + 1)
   }
 
   /**
@@ -124,13 +124,13 @@ object Combinatorics {
    * @return memoized function to count derangements
    */
   val derangement: Memo[Int, BigInt] = Memo {
-    case n if n%2 == 0 => n*derangement(n-1) + 1
-    case n if n%2 == 1 => n*derangement(n-1) - 1
+    case n if n%2 == 0 => n*derangement(n - 1) + 1
+    case n if n%2 == 1 => n*derangement(n - 1) - 1
     case _ => 0     // negative n
   }
 
   /**
    * @return Number of ways to arrange [1 to n] such that exactly k of them are in own position
    */
-  def partialDerangement(n: Int, k: Int) = c(n,k) * derangement(n-k)
+  def partialDerangement(n: Int, k: Int) = c(n, k) * derangement(n - k)
 }
