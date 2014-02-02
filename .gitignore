@@ -16,4 +16,3 @@ atlassian-ide-plugin.xml
 # sbt #
 target/
 lib_managed/
-project/
