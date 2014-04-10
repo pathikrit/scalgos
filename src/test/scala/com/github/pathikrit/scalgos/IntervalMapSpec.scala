@@ -21,10 +21,46 @@ class IntervalMapSpec extends Specification {
       def clear(r: Interval) = r foreach segments.remove
 
       def toSeq = {
-        segments groupBy {_._2} mapValues {_.keys.toSeq.sorted}
+        //val valMap = segments groupBy {_._2} mapValues {_.keySet} mapValues meld
         Nil
       }
+
+      def meld(s: Set[Int]) = {
+        var intervals = Seq.empty[Interval]
+
+        val max = s.max
+        for (start <- s.min to max if intervals.isEmpty || start >= intervals.last.end) {
+          var end = 0
+          for(i <- start to max if s contains i) {
+            end = i
+          }
+          intervals = intervals :+ Interval(start, end)
+        }
+        intervals
+      }
     }
+    import RandomData._
+
+    val map1 = IntervalMap.empty[Int]
+    val map2 = new DumbIntervalMap[Int]
+    map1 must be equalTo map2
+
+    examplesBlock {
+      for (i <- 1 to 1000) {
+        val start = integer()
+        val end = integer(start = start)
+        if(number() < 0.8) {
+          val value = integer(20)
+          map1(start -> end) = value
+          map2(start -> end) = value
+        } else {
+          map1 clear (start -> end)
+          map2 clear (start -> end)
+        }
+        map1 must be equalTo map2
+      }
+    }
+
     todo
   }
 
