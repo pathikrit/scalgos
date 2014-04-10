@@ -53,7 +53,7 @@ object IntervalMap {
 
   /**
    * @return a new empty IntervalMap
-   *         all operations are O(n) or O(n log n) (where n is number of disjoint segments)
+   *         all operations are O(n) except toSeq which is O(n log n) (where n is number of disjoint segments)
    */
   def empty[A]: IntervalMap[A] = new SegmentedIntervalMap[A]
 
@@ -66,9 +66,6 @@ object IntervalMap {
 
   implicit def toInterval(r: (Int, Int)) = Interval(r._1, r._2)
 
-  import scala.math.Ordering.Implicits._
-  implicit val intervalOrder = Ordering by {i: Interval => (i.start, i.end)}
-
   private class SegmentedIntervalMap[A] extends IntervalMap[A] {
 
     private var segments = Map.empty[Interval, A]
@@ -77,16 +74,12 @@ object IntervalMap {
       clear(r)
 
       val a = segments flatMap {
-        case (k, v) if k.end == r.start && v == value =>
-          segments = segments - k
-          Some(k.start)
+        case (k, v) if k.end == r.start && v == value => dropAnd(k, Some(k.start))
         case _ => None
       }
 
       val b = segments flatMap {
-        case (k, v) if r.end == k.start && v == value =>
-          segments = segments - k
-          Some(k.end)
+        case (k, v) if r.end == k.start && v == value => dropAnd(k, Some(k.end))
         case _ => None
       }
 
@@ -99,17 +92,20 @@ object IntervalMap {
     def clear(r: Interval) = {
       segments = segments filterKeys {key => !(r overlaps key)}
 
-      segments find {_._1 contains r.start} foreach { case (k, v) =>
-        segments = segments - k
-        segments = segments + (Interval(k.start, r.start) -> v)
+      segments find {_._1 contains r.start} map {
+        case (k, v) => dropAnd(k, segments = segments + (Interval(k.start, r.start) -> v))
       }
 
-      segments find {_._1 contains r.end} foreach { case (k, v) =>
-        segments = segments - k
-        segments = segments + (Interval(r.end, k.end) -> v)
+      segments find {_._1 contains r.end} map {
+        case (k, v) => dropAnd(k, segments = segments + (Interval(r.end, k.end) -> v))
       }
     }
 
-    def toSeq = segments.toSeq sortBy {_._1}
+    private def dropAnd[B](toDrop: Interval, after: => B) = {
+      segments = segments - toDrop
+      after
+    }
+
+    def toSeq = segments.toSeq sortBy {_._1.start}
   }
 }
