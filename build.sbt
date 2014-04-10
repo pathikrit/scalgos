@@ -13,6 +13,6 @@ scalacOptions ++= Seq(
   "-language:postfixOps", "-language:implicitConversions", "-language:experimental.macros", "-language:dynamics"
 )
 
-libraryDependencies ++= Seq("org.specs2" % "specs2_2.10" % "2.1.1" % "test")
+libraryDependencies ++= Seq("org.specs2" % "specs2_2.10" % "2.3.11" % "test")
 
 libraryDependencies <+= scalaVersion("org.scala-lang" % "scala-reflect" % _)

@@ -1,6 +1,4 @@
-[![Build Status](https://travis-ci.org/pathikrit/scalgos.png)](http://travis-ci.org/pathikrit/scalgos)
-
-[![Coverage Status](https://coveralls.io/repos/pathikrit/scalgos/badge.png)](https://coveralls.io/r/pathikrit/scalgos)
+[![Build Status](https://travis-ci.org/pathikrit/scalgos.png)](http://travis-ci.org/pathikrit/scalgos) [![Coverage Status](https://coveralls.io/repos/pathikrit/scalgos/badge.png)](https://coveralls.io/r/pathikrit/scalgos)
 
 Goals
 =====
