@@ -58,9 +58,9 @@ object Counter {
   /**
    * Create new counter from given objects
    */
-  def apply[A](item: A*) = {
+  def apply[A](items: A*) = {
     val c = Counter.empty[A]
-    c += (item: _*)
+    c += (items: _*)
     c
   }
 }

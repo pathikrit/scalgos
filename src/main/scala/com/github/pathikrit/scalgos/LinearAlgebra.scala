@@ -31,7 +31,7 @@ object LinearAlgebra {
      * @param j col
      * @return valuw at ith row and jth column
      */
-    def apply(i: Int, j: Int): Double = a(i)(j)
+    def apply(i: Int, j: Int) = a(i)(j)
 
     /**
      * @return num rows in matrix
