@@ -65,6 +65,16 @@ object DynamicProgramming {
     dp(s.length, t)
   }
 
+
+  /**
+   * Partition a sequence into two partitions such that difference of their sum is minimum
+   * O(s.length * s.sum)
+   *
+   * @param s list to partition
+   * @return a partition of s into a and b s.t. |a.sum - b.sum| is minimum
+   */
+  def closestPartition(s: Seq[Int]) = ???            // TODO
+
   /**
    * Calculate edit distance between 2 sequences
    * O(s1.length * s2.length)

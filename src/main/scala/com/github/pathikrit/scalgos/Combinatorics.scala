@@ -9,6 +9,8 @@ import Implicits._
  */
 object Combinatorics {
 
+  // TODO: make these implicit methods .combinations, .combinations(n) etc
+
   /**
    * Iterate over all 2^n combinations
    *
