@@ -13,7 +13,7 @@ class Counter[A] extends mutable.Map[A, Int] {
   /**
    * Increment counter of kv._1 by kv._2
    */
-  def +=(kv: (A, Int)) = {
+  def +=(kv: (A, Int)): this.type = {
     delegate(kv._1) = delegate(kv._1) + kv._2
     this
   }
@@ -39,7 +39,7 @@ class Counter[A] extends mutable.Map[A, Int] {
   /**
    * Count each item in items
    */
-  def +=(items: A*) = {
+  def +=(items: A*): this.type = {
     items foreach {i => this += ((i, 1))}
     this
   }
