@@ -57,6 +57,9 @@ object IntervalMap {
    */
   def empty[A]: IntervalMap[A] = new SegmentedIntervalMap[A]
 
+  /**
+   * Models a half-closed interval [start, end)
+   */
   case class Interval(start: Int, end: Int) {
     require(start <= end)
     def overlaps(r: Interval) = start <= r.start && r.end <= end
@@ -64,7 +67,7 @@ object IntervalMap {
     override def toString = s"[$start, $end)"
   }
 
-  implicit def toInterval(r: (Int, Int)) = Interval(r._1, r._2)
+  implicit val toInterval = Interval.tupled
 
   private class SegmentedIntervalMap[A] extends IntervalMap[A] {
 
@@ -92,12 +95,13 @@ object IntervalMap {
     def clear(r: Interval) = {
       segments = segments filterKeys {key => !(r overlaps key)}
 
-      segments find {_._1 contains r.start} map {
-        case (k, v) => dropAnd(k, segments = segments + (Interval(k.start, r.start) -> v))
-      }
-
-      segments find {_._1 contains r.end} map {
-        case (k, v) => dropAnd(k, segments = segments + (Interval(r.end, k.end) -> v))
+      segments foreach {case (k, v)  =>
+        if (k contains r.start) {
+          dropAnd(k, segments = segments + (Interval(k.start, r.start) -> v))
+        }
+        if (k contains r.end) {
+          dropAnd(k, segments = segments + (Interval(r.end, k.end) -> v))
+        }
       }
     }
 

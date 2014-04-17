@@ -12,7 +12,7 @@ object Combinatorics {
   // TODO: make these implicit methods .combinations, .combinations(n) etc
 
   /**
-   * Iterate over all 2^n combinations
+   * Iterate over all 2^n combinations - do not use this, simply use the one from Scala collections library instead
    *
    * @param s sequence to do combination over
    * @return all 2^n ways of choosing elements from s
@@ -46,7 +46,7 @@ object Combinatorics {
   }
 
   /**
-   * Find next permutation of s
+   * Find next permutation of s - do not use this, simply use the one from Scala collections library instead
    * Call with Seq(0,0,0,0,1,1) for example to 6C2
    * O(n)
    *
