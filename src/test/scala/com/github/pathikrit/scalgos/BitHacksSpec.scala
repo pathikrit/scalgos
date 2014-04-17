@@ -46,7 +46,7 @@ class BitHacksSpec extends Specification {
     }
 
     "fail for (0,0)" in {
-      gcd(0,0) must throwA[IllegalArgumentException]
+      gcd(0, 0) must throwA[IllegalArgumentException]
     }
 
     "work for Int.MaxValue and Int.MinValue" in todo

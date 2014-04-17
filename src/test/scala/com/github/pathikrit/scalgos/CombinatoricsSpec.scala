@@ -111,7 +111,7 @@ class CombinatoricsSpec extends Specification {
   }
 
   "fibonacci" should {
-    "fail for engative numbers" in todo
+    "fail for negative numbers" in todo
 
     "match known sequence" in {
       val expected: List[BigInt] = List(0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55)
@@ -121,7 +121,7 @@ class CombinatoricsSpec extends Specification {
   }
 
   "catalan" should {
-    "fail for engative numbers" in todo
+    "fail for negative numbers" in todo
 
     "match known sequence" in {
       val expected: List[BigInt] = List(1, 1, 2, 5, 14, 42, 132, 429, 1430, 4862, 16796)

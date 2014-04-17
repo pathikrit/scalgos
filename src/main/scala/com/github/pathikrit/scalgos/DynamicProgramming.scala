@@ -13,7 +13,8 @@ import Implicits._
  * @tparam B output
  */
 case class Memo[A, B](f: A => B) extends (A => B) {
-  private val cache = mutable.Map.empty[A, B]
+  import collection.mutable.{Map => Dict}
+  private val cache = Dict.empty[A, B]
   def apply(x: A) = cache getOrElseUpdate (x, f(x))
 }
 
@@ -31,8 +32,8 @@ object DynamicProgramming {
    * @return true iff there exists a subset of s that sums to t
    */
   def isSubsetSumAchievable(s: IndexedSeq[Int], t: Int) = {
-    val max = s.scanLeft(0)((sum, i) => (sum + i) max sum)  //max(i) =  largest sum achievable from first i elements
-    val min = s.scanLeft(0)((sum, i) => (sum + i) min sum)  //min(i) = smallest sum achievable from first i elements
+    val max = s.scanLeft(0){(sum, i) => (sum + i) max sum}  //max(i) =  largest sum achievable from first i elements
+    val min = s.scanLeft(0){(sum, i) => (sum + i) min sum}  //min(i) = smallest sum achievable from first i elements
 
     lazy val dp: Memo[(Int, Int), Boolean] = Memo {         // dp(i,x) = can we achieve x using the first i elements?
       case (_, 0) => true                                   // 0 can always be achieved using empty set
@@ -53,8 +54,8 @@ object DynamicProgramming {
    * @return all subsets of s that sum to t
    */
   def subsetSum(s: IndexedSeq[Int], t: Int) = {
-    val max = s.scanLeft(0)((sum, i) => (sum + i) max sum)
-    val min = s.scanLeft(0)((sum, i) => (sum + i) min sum)
+    val max = s.scanLeft(0){(sum, i) => (sum + i) max sum}
+    val min = s.scanLeft(0){(sum, i) => (sum + i) min sum}
 
     lazy val dp: Memo[(Int, Int), Seq[Seq[Int]]] = Memo {
       case (0, 0) => Seq(Nil)
@@ -179,5 +180,5 @@ object DynamicProgramming {
    * @param s
    * @return the maximum contiguous sub array sum
    */
-  def maxSubArraySum(s: Seq[Int]) = s.scanLeft(0)((sum, i) => (sum + i) max 0).max
+  def maxSubArraySum(s: Seq[Int]) = s.scanLeft(0){(sum, i) => (sum + i) max 0}.max
 }

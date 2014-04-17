@@ -10,7 +10,7 @@ class DynamicProgrammingSpec extends Specification {
 
     "work for empty set" in todo
 
-    "work for only postive numbers" in todo
+    "work for only positive numbers" in todo
 
     "work for only negative numbers" in todo
 
@@ -21,7 +21,7 @@ class DynamicProgrammingSpec extends Specification {
       def normalized(sums: Seq[Seq[Int]]) = sums map {_.sorted} toSet       //todo: why toSet?
 
       examplesBlock {
-        for (i <- (-50 to 50)) {
+        for (i <- -50 to 50) {
           val nums = RandomData.seq(length = 10)
           normalized(subsetSum(nums, i)) must be equalTo normalized(bruteForceCheck(nums, i))
         }
@@ -33,7 +33,7 @@ class DynamicProgrammingSpec extends Specification {
 
     "work for empty set" in todo
 
-    "work for only postive numbers" in todo
+    "work for only positive numbers" in todo
 
     "work for only negative numbers" in todo
 
@@ -42,7 +42,7 @@ class DynamicProgrammingSpec extends Specification {
     "match brute force check" in {
       def bruteForceCheck(s: Seq[Int], t: Int) = Combinatorics.combinations(s) exists {_.sum == t}
       examplesBlock {
-        for (i <- (-50 to 50)) {
+        for (i <- -50 to 50) {
           val nums = RandomData.seq(length = 10)
           isSubsetSumAchievable(nums, i) must be equalTo bruteForceCheck(nums, i)
         }
@@ -58,7 +58,7 @@ class DynamicProgrammingSpec extends Specification {
 
   "editDistance" should {
     "work when either or both sequence is empty" in todo
-    "work for completely mismtached sequences" in todo
+    "work for completely mismatched sequences" in todo
     "work for arbitrary input" in todo
   }
 
@@ -122,7 +122,7 @@ class DynamicProgrammingSpec extends Specification {
 
   "maxSubArraySum" should {
     "work on empty sequences" in {
-      maxSubArraySum(Nil) must be equalTo(0)
+      maxSubArraySum(Nil) must be equalTo 0
     }
 
     "work on small sequences" in {

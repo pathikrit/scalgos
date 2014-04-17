@@ -8,4 +8,4 @@ env:
 
 after_script:
   - export COVERALLS_REPO_TOKEN=wNDkXDytLqD7jbgRsmnaWMgdEiY7szljz
-  - sbt $SBT_OPTS coveralls
+  - sbt coveralls

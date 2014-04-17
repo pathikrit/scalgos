@@ -65,9 +65,7 @@ object RandomData {
     val g = new Graph(numberOfVertices, isDirected)
 
     for {
-      (i, j) <- g.vertices X g.vertices
-      if i != j
-      if number() < edgeDensity
+      (i, j) <- g.vertices X g.vertices if i != j && number() < edgeDensity
     } g(i->j) = number(if (isPositiveEdges) 0 else -10, 10)
 
     g

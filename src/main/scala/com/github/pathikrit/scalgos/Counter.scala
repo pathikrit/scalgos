@@ -13,7 +13,7 @@ class Counter[A] extends mutable.Map[A, Int] {
   /**
    * Increment counter of kv._1 by kv._2
    */
-  def +=(kv: (A, Int)): this.type = {
+  def +=(kv: (A, Int)) = {
     delegate(kv._1) = delegate(kv._1) + kv._2
     this
   }
@@ -21,7 +21,7 @@ class Counter[A] extends mutable.Map[A, Int] {
   /**
    * Decrement the counter of key by 1
    */
-  def -=(key: A): this.type = {
+  def -=(key: A) = {
     delegate(key) = delegate(key) - 1
     this
   }
@@ -32,14 +32,14 @@ class Counter[A] extends mutable.Map[A, Int] {
    * @return Always returns Some(x) where x is occurrences of key.
    *         Some(0) is returned instead of None if key is not present or its count is zero
    */
-  def get(key: A): Option[Int] = Some(delegate(key))
+  def get(key: A) = Some(delegate(key))
 
-  def iterator: Iterator[(A, Int)] = delegate.iterator
+  def iterator = delegate.iterator
 
   /**
    * Count each item in items
    */
-  def +=(items: A*): this.type = {
+  def +=(items: A*) = {
     items foreach {i => this += ((i, 1))}
     this
   }

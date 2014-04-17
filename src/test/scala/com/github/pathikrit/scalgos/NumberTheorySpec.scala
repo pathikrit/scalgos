@@ -9,7 +9,7 @@ import NumberTheory._
 
 class NumberTheorySpec extends Specification {
 
-  "sieveOfEratostheses" should {
+  "sieveOfEratosthnes" should {
     "not work for negative numbers" in todo
 
     "work for n = 0,1,2,3" in todo

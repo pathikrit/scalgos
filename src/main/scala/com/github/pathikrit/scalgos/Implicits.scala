@@ -66,12 +66,12 @@ object Implicits {
   /**
    * Supports map inversions
    */
-  implicit class Invertible[K,V](map: collection.Map[K, V]) {
+  implicit class Invertible[K, V](map: collection.Map[K, V]) {
 
     /**
      * Invert a map[K,V] to map[V, Iterable[K]]
      */
-    def invert = map groupBy (_._2) mapValues {_ map (_._1)}
+    def invert = map groupBy {_._2} mapValues {_ map (_._1)}
   }
 
   /**
