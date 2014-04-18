@@ -56,7 +56,7 @@ object DynamicProgramming {
     val (max, min) = bounds(s)
 
     lazy val dp: Memo[(Int, Int), Seq[Seq[Int]]] = Memo {
-      case (_, 0) => Seq(Nil)
+      case (0, 0) => Seq(Nil)
       case (i, x) if x < min(i) || max(i) < x => Nil
       case (i, x) => (dp(i-1, x - s(i-1)) map {_ :+ s(i-1)}) ++ dp(i-1, x)
     }
