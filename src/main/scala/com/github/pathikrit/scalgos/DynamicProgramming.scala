@@ -32,8 +32,7 @@ object DynamicProgramming {
    * @return true iff there exists a subset of s that sums to t
    */
   def isSubsetSumAchievable(s: IndexedSeq[Int], t: Int) = {
-    val max = s.scanLeft(0){(sum, i) => (sum + i) max sum}  //max(i) =  largest sum achievable from first i elements
-    val min = s.scanLeft(0){(sum, i) => (sum + i) min sum}  //min(i) = smallest sum achievable from first i elements
+    val (max, min) = bounds(s)
 
     lazy val dp: Memo[(Int, Int), Boolean] = Memo {         // dp(i,x) = can we achieve x using the first i elements?
       case (_, 0) => true                                   // 0 can always be achieved using empty set
@@ -54,8 +53,7 @@ object DynamicProgramming {
    * @return all subsets of s that sum to t
    */
   def subsetSum(s: IndexedSeq[Int], t: Int) = {
-    val max = s.scanLeft(0){(sum, i) => (sum + i) max sum}
-    val min = s.scanLeft(0){(sum, i) => (sum + i) min sum}
+    val (max, min) = bounds(s)
 
     lazy val dp: Memo[(Int, Int), Seq[Seq[Int]]] = Memo {
       case (0, 0) => Seq(Nil)
@@ -66,15 +64,16 @@ object DynamicProgramming {
     dp(s.length, t)
   }
 
-
   /**
-   * Partition a sequence into two partitions such that difference of their sum is minimum
-   * O(s.length * s.sum)
-   *
-   * @param s list to partition
-   * @return a partition of s into a and b s.t. |a.sum - b.sum| is minimum
+   * @return  (max, min) such that
+   *          max(i) =  largest sum achievable from first i elements
+   *          min(i) = smallest sum achievable from first i elements
    */
-  def closestPartition(s: Seq[Int]) = ???            // TODO
+  def bounds(s: Seq[Int]) = {
+    val max = s.scanLeft(0){(sum, i) => (sum + i) max sum}
+    val min = s.scanLeft(0){(sum, i) => (sum + i) min sum}
+    (max, min)
+  }
 
   /**
    * Calculate edit distance between 2 sequences
