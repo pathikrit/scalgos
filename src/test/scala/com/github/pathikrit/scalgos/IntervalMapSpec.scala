@@ -34,6 +34,7 @@ class IntervalMapSpec extends Specification {
       for (i <- 1 to n) {
         val start = integer(-n, n)
         val end = integer(start, n+1)
+
         if(number() < p) {
           val value = integer(v)
           map1(start -> end) = value

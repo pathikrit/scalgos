@@ -31,9 +31,10 @@ class GeometrySpec extends Specification {
         val s = (ab + bc + ca)/2
         sqrt(s*(s-ab)*(s-bc)*(s-ca))
       }
-      val (a,b,c) = (RandomData.points(howMany = 1).head, RandomData.points(howMany = 1).head, RandomData.points(howMany = 1).head)
 
-      areaOfTriangle(a,b,c) must be ~(heronsFormula(a,b,c) +/- 1e-9)
+      def points = RandomData.points(howMany = 1).head
+      val (a,b,c) = (points, points, points)
+      areaOfTriangle(a, b, c) must be ~(heronsFormula(a, b, c) +/- 1e-9)
     }
   }
 

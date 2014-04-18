@@ -55,7 +55,7 @@ class GraphSpec extends Specification {
       val f = floydWarshall(g)
       examplesBlock {
         for {
-          (i, j) <- (g.vertices X g.vertices)
+          (i, j) <- g.vertices X g.vertices
           d = dijkstra(g, i, j)
         } if (f(i)(j) isPosInfinity) {
           d must beNone
@@ -85,8 +85,7 @@ class GraphSpec extends Specification {
      */
     def checkCoverage(g: Graph, sccs: Seq[Set[Int]]) {
       for {
-        (s1, s2) <- (sccs X sccs)
-        if (s1 != s2)
+        (s1, s2) <- sccs X sccs if s1 != s2
       } s1.intersect(s2) must be empty
 
       sccs.flatten must containTheSameElementsAs(g.vertices)
@@ -105,14 +104,14 @@ class GraphSpec extends Specification {
       val g = Graphs.noEdges
       val sccs = stronglyConnectedComponents(g)
       checkCoverage(g, sccs)
-      sccs must be length(g.numberOfVertices)
+      sccs must be length g.numberOfVertices
     }
 
     "work on a clique" in {
       val g = Graphs.clique
       val sccs = stronglyConnectedComponents(g)
       checkCoverage(g, sccs)
-      sccs must be length(1)
+      sccs must be length 1
     }
 
     "match floyd-warshall" in {
@@ -138,7 +137,7 @@ class GraphSpec extends Specification {
     "handle negative weight cycles" in todo
 
     "match dijkstra for positive graphs" in {
-      def trace(parents: Seq[Int], v: Int): Seq[Int] = if(parents(v) < 0) Seq(v) else (trace(parents, parents(v)) :+ v)
+      def trace(parents: Seq[Int], v: Int): Seq[Int] = if(parents(v) < 0) Seq(v) else trace(parents, parents(v)) :+ v
 
       val g = RandomData.graph()
       examplesBlock {

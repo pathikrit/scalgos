@@ -9,12 +9,11 @@ class ImplicitsSpec extends Specification {
     "work" in todo
   }
 
-  "IntExtenshions" should {
+  "IntExtensions" should {
     "have correct mod" in {
       examplesBlock {
         for {
-          (x,y) <- (-100 to 100) X (-100 to 100)
-          if y != 0
+          (x, y) <- (-100 to 100) X (-100 to 100) if y != 0
           m = x mod y
         } {
           ((x/y)*y + m) must be equalTo x
