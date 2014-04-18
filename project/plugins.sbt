@@ -5,6 +5,6 @@ resolvers ++= Seq(
 
 addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.1.5")
 
-addSbtPlugin("org.scoverage" %% "sbt-scoverage" % "0.98.1")
+addSbtPlugin("org.scoverage" %% "sbt-scoverage" % "0.98.2")
 
 addSbtPlugin("com.sksamuel.scoverage" %% "sbt-coveralls" % "0.0.5")
