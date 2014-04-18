@@ -11,9 +11,3 @@ Building
 ========
 * Install scala and sbt (`brew install scala sbt`)
 * Build and run tests: `sbt test` (in the project directory)
-
-IntelliJ Setup
-==============
-* Install scala & sbt plugin from IntelliJ plugin manager
-* Do `sbt gen-idea`
-* File -> Open in IntelliJ and select the scalgos directory

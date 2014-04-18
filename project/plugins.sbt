@@ -3,8 +3,8 @@ resolvers ++= Seq(
   "Sonatype snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
 )
 
-addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.6.0")
+addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.1.5")
 
-addSbtPlugin("org.scoverage" %% "sbt-scoverage" % "0.98.0")
+addSbtPlugin("org.scoverage" %% "sbt-scoverage" % "0.98.1")
 
 addSbtPlugin("com.sksamuel.scoverage" %% "sbt-coveralls" % "0.0.5")
