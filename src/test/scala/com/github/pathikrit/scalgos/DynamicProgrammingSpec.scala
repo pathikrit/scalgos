@@ -50,6 +50,30 @@ class DynamicProgrammingSpec extends Specification {
     }
   }
 
+  "closestPartition" should {
+    "work for trivial cases" in todo
+
+    "match brute force algorithm" in {
+      def closestDiff(s: Seq[Int]) = {
+        val total = s.sum
+        val sums = s.foldLeft(Set(0)){(p, i) => (p map {_ + i}) ++ p}
+        sums minBy {i => (total - 2*i).abs}
+      }
+
+      examplesBlock {
+        for(i <- 1 to 10000) {
+          val n = RandomData.integer(end = 20)
+          val nums = RandomData.seq(n)
+          val a = closestPartition(nums)
+          val b = nums diff a
+          val c = closestDiff(nums)
+          val d = nums.sum - c
+          (a.sum - b.sum).abs must be equalTo (c - d).abs
+        }
+      }
+    }
+  }
+
   "minimumChange" should {
     "fail for negative numbers" in todo
     "work for empty coin list" in todo

@@ -56,7 +56,7 @@ object DynamicProgramming {
     val (max, min) = bounds(s)
 
     lazy val dp: Memo[(Int, Int), Seq[Seq[Int]]] = Memo {
-      case (0, 0) => Seq(Nil)
+      case (_, 0) => Seq(Nil)
       case (i, x) if x < min(i) || max(i) < x => Nil
       case (i, x) => (dp(i-1, x - s(i-1)) map {_ :+ s(i-1)}) ++ dp(i-1, x)
     }
@@ -73,6 +73,28 @@ object DynamicProgramming {
     val max = s.scanLeft(0){(sum, i) => (sum + i) max sum}
     val min = s.scanLeft(0){(sum, i) => (sum + i) min sum}
     (max, min)
+  }
+
+  /**
+   * Partition a sequence into two partitions such that difference of their sum is minimum
+   * O(s.length * s.sum)
+   *
+   * @param s list to partition
+   * @return a partition of s into a and b s.t. |a.sum - b.sum| is minimum
+   */
+  def closestPartition(s: IndexedSeq[Int]): Seq[Int] = {
+    val (max, min) = bounds(s)
+
+    // dp(i, x) => A Some(a) from s[0..i) such that a.sum == x. If not possible, None
+    lazy val dp: Memo[(Int, Int), Option[Seq[Int]]] = Memo {
+      case (_, 0) => Some(Nil)                          // 0 can always be made by using a = []
+      case (i, x) if x < min(i) || max(i) < x => None   // x is out of bounds ... we can't make a partition
+      case (i, x) => dp(i-1, x - s(i-1)) map {_ :+ s(i-1)} orElse {dp(i-1, x)}  // try left or right
+    }
+
+    val target = s.sum/2
+    val range = target to 0 by (if (target < 0) 1 else -1)
+    range.collectFirst(Function.unlift(dp(s.length, _))).get
   }
 
   /**
