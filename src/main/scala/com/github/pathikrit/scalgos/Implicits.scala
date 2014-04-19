@@ -8,6 +8,17 @@ import collection.mutable
 object Implicits {
 
   /**
+   * Range utils
+   */
+  implicit class SmartRange(from: Int) {
+
+    /**
+     * @return range that goes forward or backward depending on from and to
+     */
+    def -->(to: Int) = from to to by (if (from < to) 1 else -1)
+  }
+
+  /**
    * Sometimes its convenient to map true to 1 and false to 0
    */
   implicit def toInt(x: Boolean) = if (x) 1 else 0

@@ -15,7 +15,7 @@ import Implicits._
 case class Memo[A, B](f: A => B) extends (A => B) {
   import collection.mutable.{Map => Dict}
   private val cache = Dict.empty[A, B]
-  def apply(x: A) = cache getOrElseUpdate (x, f(x))
+  override def apply(x: A) = cache getOrElseUpdate (x, f(x))
 }
 
 /**
@@ -91,10 +91,8 @@ object DynamicProgramming {
       case (i, x) if x < min(i) || max(i) < x => None   // x is out of bounds ... we can't make a partition
       case (i, x) => dp(i-1, x - s(i-1)) map {_ :+ s(i-1)} orElse {dp(i-1, x)}  // try left or right
     }
-
-    val target = s.sum/2
-    val range = target to 0 by (if (target < 0) 1 else -1)
-    range.collectFirst(Function.unlift(dp(s.length, _))).get
+    val f: PartialFunction[Int, Seq[Int]] = Function.unlift(dp(s.length, _))
+    ((s.sum/2 --> 0) collectFirst f).get      // always a solution since we check for 0
   }
 
   /**
@@ -129,7 +127,7 @@ object DynamicProgramming {
     case 0 => IndexedSeq("")
     case n => for {
       i <- 0 until n
-      (a,b) <- validBrackets(i) X validBrackets(n-i-1)
+      (a, b) <- validBrackets(i) X validBrackets(n-i-1)
     } yield '(' + a  + ')' + b
   }
 
