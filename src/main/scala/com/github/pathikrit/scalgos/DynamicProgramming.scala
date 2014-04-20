@@ -20,7 +20,7 @@ object DynamicProgramming {
    */
   def isSubsetSumAchievable(s: List[Int], t: Int) = {
     type DP = Memo[(List[Int], Int), (Int, Int), Boolean]
-    implicit def cacher(key: (List[Int], Int)) = (key._1.length, key._2)
+    implicit def encode(key: (List[Int], Int)) = (key._1.length, key._2)
 
     lazy val dp: DP = Memo {
       case (_, 0) => true         // 0 can always be achieved using empty list
@@ -42,7 +42,7 @@ object DynamicProgramming {
    */
   def subsetSum(s: List[Int], t: Int) = {
     type DP = Memo[(List[Int], Int), (Int, Int), Seq[Seq[Int]]]
-    implicit def cacher(key: (List[Int], Int)) = (key._1.length, key._2)
+    implicit def encode(key: (List[Int], Int)) = (key._1.length, key._2)
 
     lazy val dp: DP = Memo {
       case (Nil, 0) => Seq(Nil)
@@ -62,7 +62,7 @@ object DynamicProgramming {
    */
   def closestPartition(s: List[Int]) = {
     type DP = Memo[(List[Int], Int), (Int, Int), Option[Seq[Int]]]
-    implicit def cacher(key: (List[Int], Int)) = (key._1.length, key._2)
+    implicit def encode(key: (List[Int], Int)) = (key._1.length, key._2)
 
     lazy val dp: DP = Memo {
       case (_, 0) => Some(Nil)
@@ -87,7 +87,7 @@ object DynamicProgramming {
     assume(delete > 0 && insert > 0 && replace > 0)
 
     type DP = Memo[(Seq[A], Seq[A]), (Int, Int), Int]
-    implicit def cacher(key: (Seq[A], Seq[A])) = (key._1.length, key._2.length)
+    implicit def encode(key: (Seq[A], Seq[A])) = (key._1.length, key._2.length)
 
     lazy val dp: DP = Memo {
       case (a, Nil) => a.length * (delete min insert)
@@ -126,7 +126,7 @@ object DynamicProgramming {
    */
   def longestCommonSubsequence[T](a: List[T], b: List[T]) = {
     type DP = Memo[(List[T], List[T]), (Int, Int), List[T]]
-    implicit def cacher(key: (List[T], List[T])) = (key._1.length, key._2.length)
+    implicit def encode(key: (List[T], List[T])) = (key._1.length, key._2.length)
 
     implicit val c = Ordering by {s: List[T] => s.length}
 
@@ -179,6 +179,17 @@ object DynamicProgramming {
     }
 
     cache(longest)
+  }
+
+  /**
+   * @return  (max, min) such that
+   *          max(i) =  largest sum achievable from first i elements
+   *          min(i) = smallest sum achievable from first i elements
+   */
+  def bounds(s: Seq[Int]) = {
+    def f(comp: (Int, Int) => Int) = s.scanLeft(0){(sum, i) => comp(sum + i, sum)}
+    val order = Ordering[Int]
+    (f(order.max), f(order.min))
   }
 
   /**
