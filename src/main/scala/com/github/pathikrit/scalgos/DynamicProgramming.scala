@@ -18,16 +18,17 @@ object DynamicProgramming {
    * @param t target
    * @return true iff there exists a subset of s that sums to t
    */
-  def isSubsetSumAchievable(s: IndexedSeq[Int], t: Int) = {
-    val (max, min) = bounds(s)
+  def isSubsetSumAchievable(s: List[Int], t: Int) = {
+    type DP = Memo[(List[Int], Int), (Int, Int), Boolean]
+    implicit def cacher(key: (List[Int], Int)) = (key._1.length, key._2)
 
-    lazy val dp: Memo.F[(Int, Int), Boolean] = Memo {         // dp(i,x) = can we achieve x using the first i elements?
-      case (_, 0) => true                                   // 0 can always be achieved using empty set
-      case (i, x) if x < min(i) || max(i) < x => false      // outside range
-      case (i, x) => dp(i-1, x - s(i-1)) || dp(i-1, x)      // try with/without s(i-1)
+    lazy val dp: DP = Memo {
+      case (_, 0) => true         // 0 can always be achieved using empty list
+      case (Nil, _) => false      // we can never achieve non-zero if we have empty list
+      case (a :: as, x) => dp(as, x - a) || dp(as, x)      // try with/without a.head
     }
 
-    dp(s.length, t)
+    dp(s, t)
   }
 
   /**
@@ -39,27 +40,17 @@ object DynamicProgramming {
    * @param t target
    * @return all subsets of s that sum to t
    */
-  def subsetSum(s: IndexedSeq[Int], t: Int) = {
-    val (max, min) = bounds(s)
+  def subsetSum(s: List[Int], t: Int) = {
+    type DP = Memo[(List[Int], Int), (Int, Int), Seq[Seq[Int]]]
+    implicit def cacher(key: (List[Int], Int)) = (key._1.length, key._2)
 
-    lazy val dp: Memo.F[(Int, Int), Seq[Seq[Int]]] = Memo {
-      case (0, 0) => Seq(Nil)
-      case (i, x) if x < min(i) || max(i) < x => Nil
-      case (i, x) => (dp(i-1, x - s(i-1)) map {_ :+ s(i-1)}) ++ dp(i-1, x)
+    lazy val dp: DP = Memo {
+      case (Nil, 0) => Seq(Nil)
+      case (Nil, _) => Nil
+      case (a :: as, x) => (dp(as, x - a) map {_ :+ a}) ++ dp(as, x)
     }
 
-    dp(s.length, t)
-  }
-
-  /**
-   * @return  (max, min) such that
-   *          max(i) =  largest sum achievable from first i elements
-   *          min(i) = smallest sum achievable from first i elements
-   */
-  def bounds(s: Seq[Int]) = {
-    val max = s.scanLeft(0){(sum, i) => (sum + i) max sum}
-    val min = s.scanLeft(0){(sum, i) => (sum + i) min sum}
-    (max, min)
+    dp(s, t)
   }
 
   /**
@@ -69,17 +60,17 @@ object DynamicProgramming {
    * @param s list to partition
    * @return a partition of s into a and b s.t. |a.sum - b.sum| is minimum
    */
-  def closestPartition(s: IndexedSeq[Int]): Seq[Int] = {
-    val (max, min) = bounds(s)
+  def closestPartition(s: List[Int]) = {
+    type DP = Memo[(List[Int], Int), (Int, Int), Option[Seq[Int]]]
+    implicit def cacher(key: (List[Int], Int)) = (key._1.length, key._2)
 
-    // dp(i, x) => A Some(a) from s[0..i) such that a.sum == x. If not possible, None
-    lazy val dp: Memo.F[(Int, Int), Option[Seq[Int]]] = Memo {
-      case (_, 0) => Some(Nil)                          // 0 can always be made by using a = []
-      case (i, x) if x < min(i) || max(i) < x => None   // x is out of bounds ... we can't make a partition
-      case (i, x) => dp(i-1, x - s(i-1)) map {_ :+ s(i-1)} orElse {dp(i-1, x)}  // try left or right
+    lazy val dp: DP = Memo {
+      case (_, 0) => Some(Nil)
+      case (Nil, _) => None
+      case (a :: as, x) => dp(as, x - a) map {_ :+ a} orElse {dp(as, x)}
     }
 
-    val f = Function.unlift[Int, Seq[Int]](dp(s.length, _))     // check if _ can be created using all elements of s
+    val f = Function.unlift[Int, Seq[Int]](dp(s, _))     // check if _ can be created using all elements of s
     (s.sum/2 --> 0 collectFirst f).get   // find largest such x < s.sum/2 (always a solution at 0)
   }
 
@@ -92,7 +83,7 @@ object DynamicProgramming {
    * @param replace cost of replace operation
    * @return Minimum cost to convert s1 into s2 using delete, insert and replace operations
    */
-  def editDistance[A](s1: IndexedSeq[A], s2: IndexedSeq[A], delete: Int = 1, insert: Int = 1, replace: Int = 1) = {
+  def editDistance[A](s1: Seq[A], s2: Seq[A], delete: Int = 1, insert: Int = 1, replace: Int = 1) = {
     assume(delete > 0 && insert > 0 && replace > 0)
 
     type DP = Memo[(Seq[A], Seq[A]), (Int, Int), Int]

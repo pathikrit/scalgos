@@ -22,7 +22,7 @@ class DynamicProgrammingSpec extends Specification {
 
       examplesBlock {
         for (i <- -50 to 50) {
-          val nums = RandomData.seq(length = 10)
+          val nums = RandomData.list(length = 10)
           normalized(subsetSum(nums, i)) must be equalTo normalized(bruteForceCheck(nums, i))
         }
       }
@@ -43,7 +43,7 @@ class DynamicProgrammingSpec extends Specification {
       def bruteForceCheck(s: Seq[Int], t: Int) = Combinatorics.combinations(s) exists {_.sum == t}
       examplesBlock {
         for (i <- -50 to 50) {
-          val nums = RandomData.seq(length = 10)
+          val nums = RandomData.list(length = 10)
           isSubsetSumAchievable(nums, i) must be equalTo bruteForceCheck(nums, i)
         }
       }
@@ -63,7 +63,7 @@ class DynamicProgrammingSpec extends Specification {
       examplesBlock {
         for(i <- 1 to 10000) {
           val n = RandomData.integer(end = 20)
-          val nums = RandomData.seq(n)
+          val nums = RandomData.list(n)
           val a = closestPartition(nums)
           val b = nums diff a
           val c = closestDiff(nums)
