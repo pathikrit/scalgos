@@ -11,7 +11,7 @@ import collection.mutable.{Map => Dict}
  * @tparam B output of f
  */
 case class Memo[A1 <% A2, A2, B](f: A1 => B) extends (A1 => B) {
-  private val cache = Dict.empty[A2, B]
+  val cache = Dict.empty[A2, B]
   override def apply(x: A1) = cache getOrElseUpdate (x, f(x))
 }
 
