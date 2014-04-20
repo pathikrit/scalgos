@@ -128,7 +128,7 @@ class DynamicProgrammingSpec extends Specification {
     }
 
     "have 1 item for decreasing sequence" in {
-      longestIncreasingSubsequence(Seq(5, 4, 3, 2, 1)) must have length(1)
+      longestIncreasingSubsequence(Seq(5, 4, 3, 2, 1)) must have length 1
     }
 
     "work for arbitrary input" in {

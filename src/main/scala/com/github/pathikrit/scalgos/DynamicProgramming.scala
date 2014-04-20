@@ -93,14 +93,19 @@ object DynamicProgramming {
    * @return Minimum cost to convert s1 into s2 using delete, insert and replace operations
    */
   def editDistance[A](s1: IndexedSeq[A], s2: IndexedSeq[A], delete: Int = 1, insert: Int = 1, replace: Int = 1) = {
-    lazy val dp: Memo[(Int, Int), Int] = Memo {   // dp(a,b) = edit distance of s1.substring(0,a) and s2.substring(0,b)
-      case (a, 0) => a * (delete min insert)
-      case (0, b) => b * (delete min insert)
-      case (a, b) if s1(s1.length - a) == s2(s2.length - b) => dp(a-1, b-1)
-      case (a, b) => (delete + dp(a, b-1)) min (insert + dp(a-1, b)) min (replace + dp(a-1, b-1))
+    assume(delete > 0 && insert > 0 && replace > 0)
+
+    type DP = FMemo[(Seq[A], Seq[A]), (Int, Int), Int]
+    implicit def cacher(key: (Seq[A], Seq[A])) = (key._1.length, key._2.length)
+
+    lazy val dp: DP = FMemo {
+      case (a, Nil) => a.length * (delete min insert)
+      case (Nil, b) => b.length * (delete min insert)
+      case (a :: as, b :: bs) if a == b => dp(as, bs)
+      case (a, b) => (delete + dp(a, b.tail)) min (insert + dp(a.tail, b)) min (replace + dp(a.tail, b.tail))
     }
 
-    dp(s1.length, s2.length)
+    dp(s1, s2)
   }
 
   /**
