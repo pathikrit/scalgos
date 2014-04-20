@@ -15,7 +15,7 @@ object Implicits {
     /**
      * @return range that goes forward or backward depending on start and end
      */
-    def -->(end: Int) = start to end by (end - start).signum
+    def -->(end: Int) = start to end by (if (start < end) 1 else -1)
   }
 
   /**
