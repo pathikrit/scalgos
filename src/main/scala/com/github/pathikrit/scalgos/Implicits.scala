@@ -10,12 +10,12 @@ object Implicits {
   /**
    * Range utils
    */
-  implicit class SmartRange(from: Int) {
+  implicit class SmartRange(start: Int) {
 
     /**
-     * @return range that goes forward or backward depending on from and to
+     * @return range that goes forward or backward depending on start and end
      */
-    def -->(to: Int) = from to to by (if (from < to) 1 else -1)
+    def -->(end: Int) = start to end by (end - start).signum
   }
 
   /**

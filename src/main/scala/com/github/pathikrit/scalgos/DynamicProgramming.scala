@@ -91,8 +91,9 @@ object DynamicProgramming {
       case (i, x) if x < min(i) || max(i) < x => None   // x is out of bounds ... we can't make a partition
       case (i, x) => dp(i-1, x - s(i-1)) map {_ :+ s(i-1)} orElse {dp(i-1, x)}  // try left or right
     }
-    val f: PartialFunction[Int, Seq[Int]] = Function.unlift(dp(s.length, _))
-    ((s.sum/2 --> 0) collectFirst f).get      // always a solution since we check for 0
+
+    val f = Function.unlift[Int, Seq[Int]](dp(s.length, _))     // check if _ can be created using all elements of s
+    (s.sum/2 --> 0 collectFirst f).get   // find largest such x < s.sum/2 (always a solution at 0)
   }
 
   /**
