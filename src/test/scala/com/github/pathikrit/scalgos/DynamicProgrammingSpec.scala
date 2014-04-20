@@ -107,6 +107,8 @@ class DynamicProgrammingSpec extends Specification {
   }
 
   "longestCommonSubsequence" should {
+    implicit def toList(s: String) = s.toList
+
     "be empty if one of the input is empty" in {
       longestCommonSubsequence("hello", "") must beEmpty
       longestCommonSubsequence("", "nastenka") must beEmpty
@@ -118,7 +120,7 @@ class DynamicProgrammingSpec extends Specification {
     }
 
     "work for arbitrary input" in {
-      longestCommonSubsequence("patrick", "pathikrit") must be equalTo "patri"
+      longestCommonSubsequence("patrick", "pathikrit") must be equalTo "patik"  // TODO: patri?
     }
   }
 
@@ -137,7 +139,7 @@ class DynamicProgrammingSpec extends Specification {
     }
 
     "be same same as longestCommonSubsequence with sorted input" in {
-      val s = RandomData.seq().distinct // TODO: What happens when duplicates?
+      val s = RandomData.list().distinct // TODO: What happens when duplicates?
       val lis = longestIncreasingSubsequence(s)
       lis must be equalTo longestCommonSubsequence(s.sorted, s)              // bias towards "earlier" sequence
       lis.length must be equalTo longestCommonSubsequence(s, s.sorted).length

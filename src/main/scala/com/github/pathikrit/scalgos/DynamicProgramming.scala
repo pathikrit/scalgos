@@ -133,15 +133,20 @@ object DynamicProgramming {
    * @return a longest common subsequence of a and b
    *         if multiple possible lcs, return the one that is "earliest" in a
    */
-  def longestCommonSubsequence[T](a: IndexedSeq[T], b: IndexedSeq[T]) = {
-    val c = Ordering by {s: Seq[T] => s.length}
-    lazy val dp: Memo[(Int, Int), Seq[T]] = Memo {    //dp(x,y) - lcs of a[0..x) and b[0..y)
-      case (_, 0) => Nil
-      case (0, _) => Nil
-      case (x, y) if a(x-1) == b(y-1) => dp(x-1, y-1) :+ a(x-1)
-      case (x, y) => c.max(dp(x-1, y), dp(x, y-1))
+  def longestCommonSubsequence[T](a: List[T], b: List[T]) = {
+    type DP = FMemo[(List[T], List[T]), (Int, Int), List[T]]
+    implicit def cacher(key: (List[T], List[T])) = (key._1.length, key._2.length)
+
+    implicit val c = Ordering by {s: List[T] => s.length}
+
+    lazy val dp: DP = FMemo {
+      case (_, Nil) => Nil
+      case (Nil, _) => Nil
+      case (x :: xs, y :: ys) if x == y => x :: dp(xs, ys)
+      case (x, y) => c.max(dp(x.tail, y), dp(x, y.tail))
     }
-    dp(a.length, b.length)
+
+    dp(a, b)
   }
 
   /**
