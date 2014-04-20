@@ -65,7 +65,7 @@ object Combinatorics {
   /**
    * @return memoized function to calculate C(n,r)
    */
-  val c: Memo[(Int, Int), BigInt] = Memo {
+  val c: Memo.F[(Int, Int), BigInt] = Memo {
     case (_, 0) => 1
     case (n, r) if r > n/2 => c(n, n - r)
     case (n, r) => c(n - 1, r - 1) + c(n - 1, r)
@@ -88,7 +88,7 @@ object Combinatorics {
   /**
    * @return memoized function to calculate n!
    */
-  val factorial: Memo[Int, BigInt] = Memo {
+  val factorial: Memo.F[Int, BigInt] = Memo {
     case 0 => 1
     case n => n * factorial(n - 1)
   }
@@ -99,7 +99,7 @@ object Combinatorics {
    *
    * @return memoized function to calculate nth fibonacci number
    */
-  val fibonacci: Memo[Int, BigInt] = Memo {
+  val fibonacci: Memo.F[Int, BigInt] = Memo {
     case 0 => 0
     case 1 => 1
     case n => fibonacci(n - 1) + fibonacci(n - 2)
@@ -112,7 +112,7 @@ object Combinatorics {
    *
    * @return memoized function to calculate nth catalan number
    */
-  val catalan: Memo[Int, BigInt] = Memo {
+  val catalan: Memo.F[Int, BigInt] = Memo {
     case 0 => 1
     case n => (4*n - 2)*catalan(n - 1)/(n + 1)
   }
@@ -125,7 +125,7 @@ object Combinatorics {
    *
    * @return memoized function to count derangements
    */
-  val derangement: Memo[Int, BigInt] = Memo {
+  val derangement: Memo.F[Int, BigInt] = Memo {
     case n if n%2 == 0 => n*derangement(n - 1) + 1
     case n if n%2 == 1 => n*derangement(n - 1) - 1
     case _ => 0     // negative n

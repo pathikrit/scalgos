@@ -21,7 +21,7 @@ object DynamicProgramming {
   def isSubsetSumAchievable(s: IndexedSeq[Int], t: Int) = {
     val (max, min) = bounds(s)
 
-    lazy val dp: Memo[(Int, Int), Boolean] = Memo {         // dp(i,x) = can we achieve x using the first i elements?
+    lazy val dp: Memo.F[(Int, Int), Boolean] = Memo {         // dp(i,x) = can we achieve x using the first i elements?
       case (_, 0) => true                                   // 0 can always be achieved using empty set
       case (i, x) if x < min(i) || max(i) < x => false      // outside range
       case (i, x) => dp(i-1, x - s(i-1)) || dp(i-1, x)      // try with/without s(i-1)
@@ -42,7 +42,7 @@ object DynamicProgramming {
   def subsetSum(s: IndexedSeq[Int], t: Int) = {
     val (max, min) = bounds(s)
 
-    lazy val dp: Memo[(Int, Int), Seq[Seq[Int]]] = Memo {
+    lazy val dp: Memo.F[(Int, Int), Seq[Seq[Int]]] = Memo {
       case (0, 0) => Seq(Nil)
       case (i, x) if x < min(i) || max(i) < x => Nil
       case (i, x) => (dp(i-1, x - s(i-1)) map {_ :+ s(i-1)}) ++ dp(i-1, x)
@@ -73,7 +73,7 @@ object DynamicProgramming {
     val (max, min) = bounds(s)
 
     // dp(i, x) => A Some(a) from s[0..i) such that a.sum == x. If not possible, None
-    lazy val dp: Memo[(Int, Int), Option[Seq[Int]]] = Memo {
+    lazy val dp: Memo.F[(Int, Int), Option[Seq[Int]]] = Memo {
       case (_, 0) => Some(Nil)                          // 0 can always be made by using a = []
       case (i, x) if x < min(i) || max(i) < x => None   // x is out of bounds ... we can't make a partition
       case (i, x) => dp(i-1, x - s(i-1)) map {_ :+ s(i-1)} orElse {dp(i-1, x)}  // try left or right
@@ -95,10 +95,10 @@ object DynamicProgramming {
   def editDistance[A](s1: IndexedSeq[A], s2: IndexedSeq[A], delete: Int = 1, insert: Int = 1, replace: Int = 1) = {
     assume(delete > 0 && insert > 0 && replace > 0)
 
-    type DP = FMemo[(Seq[A], Seq[A]), (Int, Int), Int]
+    type DP = Memo[(Seq[A], Seq[A]), (Int, Int), Int]
     implicit def cacher(key: (Seq[A], Seq[A])) = (key._1.length, key._2.length)
 
-    lazy val dp: DP = FMemo {
+    lazy val dp: DP = Memo {
       case (a, Nil) => a.length * (delete min insert)
       case (Nil, b) => b.length * (delete min insert)
       case (a :: as, b :: bs) if a == b => dp(as, bs)
@@ -116,7 +116,7 @@ object DynamicProgramming {
    *
    * @return memoized function to generate all possible valid n-pair bracket strings
    */
-  val validBrackets: Memo[Int, IndexedSeq[String]] = Memo {
+  val validBrackets: Memo.F[Int, IndexedSeq[String]] = Memo {
     case 0 => IndexedSeq("")
     case n => for {
       i <- 0 until n
@@ -134,12 +134,12 @@ object DynamicProgramming {
    *         if multiple possible lcs, return the one that is "earliest" in a
    */
   def longestCommonSubsequence[T](a: List[T], b: List[T]) = {
-    type DP = FMemo[(List[T], List[T]), (Int, Int), List[T]]
+    type DP = Memo[(List[T], List[T]), (Int, Int), List[T]]
     implicit def cacher(key: (List[T], List[T])) = (key._1.length, key._2.length)
 
     implicit val c = Ordering by {s: List[T] => s.length}
 
-    lazy val dp: DP = FMemo {
+    lazy val dp: DP = Memo {
       case (_, Nil) => Nil
       case (Nil, _) => Nil
       case (x :: xs, y :: ys) if x == y => x :: dp(xs, ys)

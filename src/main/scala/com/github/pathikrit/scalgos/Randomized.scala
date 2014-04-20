@@ -28,7 +28,7 @@ object Randomized {
   /**
    * A Park-Miller Pseudo-random number generator (minimum standard one)
    *
-   * @param i the seed e.g. use i = pring(i)
+   * @param i the seed e.g. use i = minstd(i)
    * @return a pseudo-random number
    */
   def minstd(i: Int) = (i*16807) % Int.MaxValue
