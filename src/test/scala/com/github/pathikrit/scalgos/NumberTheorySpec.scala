@@ -123,7 +123,6 @@ class NumberTheorySpec extends Specification {
       val n = 1000
       val f = countFactors(n)
       (0 to n) forall {i => f(i) == slowCount(i)} must beTrue
-      todo
-    }
+    }.pendingUntilFixed
   }
 }
