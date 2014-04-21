@@ -4,19 +4,19 @@ package com.github.pathikrit.scalgos
  * Generic way to create memoized functions (even recursive and multiple-arg ones)
  *
  * @param f the function to memoize
- * @tparam I1 input to f
- * @tparam I2 the keys we should use in cache instead of I1
+ * @tparam I input to f
+ * @tparam K the keys we should use in cache instead of I
  * @tparam O output of f
  */
-case class Memo[I1 <% I2, I2, O](f: I1 => O) extends (I1 => O) {
+case class Memo[I <% K, K, O](f: I => O) extends (I => O) {
   import collection.mutable.{Map => Dict}
-  val cache = Dict.empty[I2, O]
-  override def apply(x: I1) = cache getOrElseUpdate (x, f(x))
+  val cache = Dict.empty[K, O]
+  override def apply(x: I) = cache getOrElseUpdate (x, f(x))
 }
 
 object Memo {
   /**
-   * Type of a simple memoized function e.g. when I1 = I2
+   * Type of a simple memoized function e.g. when I = K
    */
   type F[I, O] = Memo[I, I, O]
 }
