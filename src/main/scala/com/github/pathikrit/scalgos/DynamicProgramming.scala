@@ -70,7 +70,7 @@ object DynamicProgramming {
       case (a :: as, x) => dp(as, x - a) map {_ :+ a} orElse {dp(as, x)}
     }
 
-    val f = Function.unlift[Int, Seq[Int]](dp(s, _))     // check if _ can be created using all elements of s
+    val f = Function.unlift(dp(s, _: Int))     // check if _ can be created using all elements of s
     (s.sum/2 --> 0 collectFirst f).get   // find largest such x < s.sum/2 (always a solution at 0)
   }
 

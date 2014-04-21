@@ -16,7 +16,7 @@ case class Memo[I1 <% I2, I2, O](f: I1 => O) extends (I1 => O) {
 
 object Memo {
   /**
-   * Type of a simple memoized function e.g. when A1 = A2
+   * Type of a simple memoized function e.g. when I1 = I2
    */
   type F[I, O] = Memo[I, I, O]
 }
