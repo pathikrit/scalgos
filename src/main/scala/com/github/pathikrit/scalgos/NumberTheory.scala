@@ -101,4 +101,17 @@ object NumberTheory {
     case 1 if b >= a => (b + (b<0))/c - (a - (a>0))/c + (a <= 0 && b >= 0)
     case _ => throw new IllegalArgumentException
   }
+
+  /**
+   * Count factors of all numbers upto n
+   * @return f s.t. f(i) = number of factors of i (including 1 and i)
+   */
+  def countFactors(n: Int) = {
+    val f = Array[Int](n+1)
+    for {
+      i <- 1 to n
+      j <- i to n by i
+    } f(j) = f(j) + 1
+    f
+  }
 }

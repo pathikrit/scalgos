@@ -114,4 +114,16 @@ class NumberTheorySpec extends Specification {
 
     "works for -2^31 to 2^31-1" in todo
   }
+
+  "countFactors" should {
+    "fail for invalid inputs e.g. negative n" in todo
+
+    "match brute force in" in {
+      def slowCount(k: Int) = (1 to k/2) count {i => k%i == 0}
+      val n = 1000
+      val f = countFactors(n)
+      (0 to n) forall {i => f(i) == slowCount(i)} must beTrue
+      todo
+    }
+  }
 }
