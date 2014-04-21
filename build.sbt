@@ -6,7 +6,7 @@ scalaVersion := "2.10.4"
 
 ScoverageSbtPlugin.instrumentSettings
 
-//CoverallsPlugin.coverallsSettings
+CoverallsPlugin.coverallsSettings
 
 scalacOptions ++= Seq(
   "-unchecked", "-deprecation", "-feature",
