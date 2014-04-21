@@ -8,4 +8,5 @@ env:
 
 after_script:
   - export COVERALLS_REPO_TOKEN=wNDkXDytLqD7jbgRsmnaWMgdEiY7szljz
+  - sbt scoverage:test
   #- sbt coveralls
