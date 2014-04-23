@@ -41,7 +41,7 @@ object BitHacks {
    * @return the tuple swapped
    */
   def xorSwap(a: (Int, Int)) = {
-    var (x,y) = a
+    var (x, y) = a
     x ^= y
     y ^= x
     x ^= y

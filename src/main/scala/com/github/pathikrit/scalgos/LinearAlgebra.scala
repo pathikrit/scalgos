@@ -29,7 +29,7 @@ object LinearAlgebra {
      *
      * @param i row
      * @param j col
-     * @return valuw at ith row and jth column
+     * @return value at ith row and jth column
      */
     def apply(i: Int, j: Int) = a(i)(j)
 

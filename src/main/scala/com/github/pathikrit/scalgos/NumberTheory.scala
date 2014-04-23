@@ -80,7 +80,7 @@ object NumberTheory {
    * Extended Euclidean algorithm to calculate Bézout's identity
    * @return (x,y) such that ax + by = gcd(a,b)
    */
-  def extendedEuclidean(a: Int, b: Int): (Int, Int) = (a,b) match {
+  def extendedEuclidean(a: Int, b: Int): (Int, Int) = (a, b) match {
     case _ if a < 0 => extendedEuclidean(-a, b)
     case _ if b < 0 => extendedEuclidean(a, -b)
     case (_, 0) => assume(a != 0); (1, 0)

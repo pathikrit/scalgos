@@ -21,7 +21,7 @@ class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
 
   /**
    * Edge between points
-   * This is more readable alternative to traditional g(u,v) i.e. g(u->v)
+   * This is more readable alternative to traditional g(u)(v) i.e. g(u->v)
    *
    * @param points (from,to)
    * @return edge value (else 0 if from==to or +infinity if from and to has no edge)
@@ -75,7 +75,7 @@ class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
   def -=(points: EndPoints) {
     adjacencyList(points.u) -= points.v
     if (!isDirected) {
-      adjacencyList(points.v) -= (points.u)
+      adjacencyList(points.v) -= points.u
     }
   }
 
@@ -186,8 +186,7 @@ object Graph {
 
     //todo: g.vertices filterNot index.contains foreach dfs
     for {
-      u <- g.vertices
-      if (!(index contains u))
+      u <- g.vertices if !(index contains u)
     } dfs(u)
     sccs.toSeq
   }
