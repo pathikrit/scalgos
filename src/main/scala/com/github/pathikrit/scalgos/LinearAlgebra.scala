@@ -1,7 +1,7 @@
 package com.github.pathikrit.scalgos
 
 /**
- * Algorithms related to linerar algebra
+ * Algorithms related to linear algebra
  */
 object LinearAlgebra {
 
