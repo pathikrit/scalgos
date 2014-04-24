@@ -26,7 +26,7 @@ object Combinatorics {
    */
   def repeatedCombinations[A](s: Set[A], n: Int) : Traversable[List[A]] = n match {
     case 0 => List(Nil)
-    case _ => for ((x, xs) <- s X repeatedCombinations(s, n-1)) yield x :: xs
+    case _ => for {(x, xs) <- s X repeatedCombinations(s, n-1)} yield x :: xs
   }
 
   /**
@@ -70,6 +70,16 @@ object Combinatorics {
     case (n, r) if r > n/2 => c(n, n - r)
     case (n, r) => c(n - 1, r - 1) + c(n - 1, r)
   }
+
+  /**
+   * @return a stream of longs such that k bits of it are set and max total bits = n
+   */
+  def choose(n: Int, k: Int) = ((1L<<k) - 1) ~ { c =>
+    val u = -c&c
+    val v = c + u
+    val k = v + (c^v)/u/4
+    if ((k>>n) == 0) k else 0
+  } takeWhile {_ != 0}
 
   /**
    * Number of ways to permute n objects which has r.length kinds of items

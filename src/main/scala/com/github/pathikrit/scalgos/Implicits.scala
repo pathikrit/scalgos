@@ -68,6 +68,16 @@ object Implicits {
   }
 
   /**
+   * Extensions to Longs
+   */
+  implicit class LongExtensions(x: Long) {
+    /**
+     * count set bits
+     */
+    def bitCount = java.lang.Long.bitCount(x)
+  }
+
+  /**
    * Let's you use X instead of double for-loops
    */
   implicit class Crossable[A](as: Traversable[A]) {
@@ -129,6 +139,13 @@ object Implicits {
       case x :: xs if x == elem => xs
       case x :: xs => x :: (xs - elem)
     }
+  }
+
+  /**
+   * Let's us easily specify lazy streams that is a function of the last element
+   */
+  implicit class Streamer[A](start: A) {
+    def ~(f: A => A) = Stream.iterate(start)(f)
   }
 
   /**

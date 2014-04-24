@@ -89,6 +89,26 @@ class CombinatoricsSpec extends Specification {
     }
   }
 
+  "choose-bithacks" should {
+    "fail for negative n or negative k" in todo
+
+    "fail when k > n" in todo
+
+    "match C(n,r)" in {
+      examplesBlock {
+        for {
+          // TODO:  start from 0?
+          n <- 1 to 10
+          r <- 1 to n
+        } {
+          val (a, e) = (choose(n, r), c(n, r))
+          a.length must be equalTo e.toInt
+          a forall {i => i.bitCount == r} must beTrue
+        }
+      }
+    }
+  }
+
   "choose" should {
     "fail when n or one of rs is negative" in todo
     "fail when r.sum > n" in todo
