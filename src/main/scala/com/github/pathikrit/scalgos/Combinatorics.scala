@@ -103,16 +103,9 @@ object Combinatorics {
   }
 
   /**
-   * Fibonacci number calculator
-   * O(n) - each number is calculated once in O(1) time
-   *
-   * @return memoized function to calculate nth fibonacci number
+   * Stream of fibonacci numbers
    */
-  val fibonacci: Memo.F[Int, BigInt] = Memo {
-    case 0 => 0
-    case 1 => 1
-    case n => fibonacci(n - 1) + fibonacci(n - 2)
-  }
+  val fibonacci: Stream[BigInt] = BigInt(0) #:: fibonacci.scanLeft(BigInt(1)){_ + _}
 
   /**
    * Calculate catalan number

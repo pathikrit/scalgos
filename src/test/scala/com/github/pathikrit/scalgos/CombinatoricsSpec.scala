@@ -140,10 +140,8 @@ class CombinatoricsSpec extends Specification {
 
     "match known sequence" in {
       val expected: List[BigInt] = List(0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55)
-      fibonacci.cache.size must be equalTo 0
       ((0 to 10) map fibonacci).toList must be equalTo expected
       fibonacci(99) must be equalTo BigInt("218922995834555169026")
-      fibonacci.cache.size must be equalTo 100
     }
   }
 
@@ -152,7 +150,9 @@ class CombinatoricsSpec extends Specification {
 
     "match known sequence" in {
       val expected: List[BigInt] = List(1, 1, 2, 5, 14, 42, 132, 429, 1430, 4862, 16796)
+      catalan.cache.size must be equalTo 0
       ((0 to 10) map catalan).toList must be equalTo expected
+      catalan.cache.size must be equalTo expected.size
     }
   }
 
