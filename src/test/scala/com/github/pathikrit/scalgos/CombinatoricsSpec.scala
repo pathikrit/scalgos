@@ -153,19 +153,17 @@ class CombinatoricsSpec extends Specification {
 
     "match known sequence" in {
       val expected: List[BigInt] = List(1, 1, 2, 5, 14, 42, 132, 429, 1430, 4862, 16796)
-      catalan.cache.size must be equalTo 0
       ((0 to 10) map catalan).toList must be equalTo expected
-      catalan.cache.size must be equalTo expected.size
     }
 
-    "match recurrence relation" in {
-      examplesBlock {
-        def cat(n: Int): BigInt = ((0 until n) map {i => cat(i) * cat(n-i-1)}).sum
-        for (i <- 5 to 10) {
-          catalan(i) mustEqual cat(i)
-        }
-      }
-    }.pendingUntilFixed
+//    "match recurrence relation" in {
+//      examplesBlock {
+//        def cat(n: Int): BigInt = ((0 until n) map {i => cat(i) * cat(n-i-1)}).sum
+//        for (i <- 5 to 10) {
+//          catalan(i) mustEqual cat(i)
+//        }
+//      }
+//    }
   }
 
   "derangements" should {

@@ -112,16 +112,9 @@ object Combinatorics {
   val fibonacci: Stream[BigInt] = 0 #:: fibonacci.scanLeft(BigInt(1)){_ + _}
 
   /**
-   * Calculate catalan number
-   * O(n)
-   * A slower relation exists: c(n) = (0 until n) map {i => c(i) * c(n-i-1)} sum
-   *
-   * @return memoized function to calculate nth catalan number
+   * Stream of catalan numbers
    */
-  val catalan: Memo.F[Int, BigInt] = Memo {
-    case 0 => 1
-    case n => (4*n - 2)*catalan(n - 1)/(n + 1)
-  }
+  val catalan: Stream[BigInt] = 1 #:: (naturals map {i => (4*i - 2)*catalan(i - 1)/(i + 1)})
 
   /**
    * Number of ways of selecting (1 to n) items such that none of the items are in its own position
