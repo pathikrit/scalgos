@@ -98,13 +98,9 @@ object Combinatorics {
   val wholes = 0 `...`
 
   /**
-   * TODO: Stream[BigInt] = 1 #:: naturals map {i => i*fact(i - 1)}
-   * @return memoized function to calculate n!
+   * Stream of factorials
    */
-  val factorial: Memo.F[Int, BigInt] = Memo {
-    case 0 => 1
-    case n => n * factorial(n - 1)
-  }
+  val factorial: Stream[BigInt] = 1 #:: (naturals map {i => i*factorial(i - 1)})
 
   /**
    * Stream of fibonacci numbers
