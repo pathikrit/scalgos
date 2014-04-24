@@ -73,7 +73,7 @@ object Combinatorics {
   /**
    * @return a stream of longs such that k bits of it are set and max total bits = n
    */
-  def choose(n: Int, k: Int) = ((1L<<k) - 1) ~~ { c =>
+  def choose(n: Int, k: Int) = ((1L<<k) - 1) `...` { c =>
     val u = -c&c
     val v = c + u
     val k = v + (c^v)/u/4
@@ -94,7 +94,12 @@ object Combinatorics {
     case x :: y :: z => c(x + y, y) * choose(n, (x + y) :: z)
   }
 
+  val naturals = 1 `...`
+
+  val wholes = 0 `...`
+
   /**
+   * TODO: Stream[BigInt] = 1 #:: naturals map {i => i*fact(i - 1)}
    * @return memoized function to calculate n!
    */
   val factorial: Memo.F[Int, BigInt] = Memo {
@@ -105,7 +110,7 @@ object Combinatorics {
   /**
    * Stream of fibonacci numbers
    */
-  val fibonacci: Stream[BigInt] = BigInt(0) #:: fibonacci.scanLeft(BigInt(1)){_ + _}
+  val fibonacci: Stream[BigInt] = 0 #:: fibonacci.scanLeft(BigInt(1)){_ + _}
 
   /**
    * Calculate catalan number
@@ -137,4 +142,6 @@ object Combinatorics {
    * @return Number of ways to arrange [1 to n] such that exactly k of them are in own position
    */
   def partialDerangement(n: Int, k: Int) = c(n, k) * derangement(n - k)
+
+  private[this] implicit def toBigInt(i: Int) = BigInt(i)
 }

@@ -8,17 +8,6 @@ import collection.mutable
 object Implicits {
 
   /**
-   * Range utils
-   */
-  implicit class SmartRange(start: Int) {
-
-    /**
-     * @return range that goes forward or backward depending on start and end
-     */
-    def -->(end: Int) = start to end by (if (start < end) 1 else -1)
-  }
-
-  /**
    * Sometimes its convenient to map true to 1 and false to 0
    */
   implicit def toInt(x: Boolean) = if (x) 1 else 0
@@ -64,7 +53,14 @@ object Implicits {
      */
     def mod(y: Int) = x - (x/y)*y
 
-    def ! = Combinatorics.factorial(x)
+    def ! = Combinatorics factorial x
+
+    def `...` = Stream from x
+
+    /**
+     * @return range that goes forward or backward depending on x and y
+     */
+    def -->(y: Int) = x to y by (if (x < y) 1 else -1)
   }
 
   /**
@@ -150,11 +146,11 @@ object Implicits {
    * Let's us easily specify lazy streams that is a function of the last element
    */
   implicit class Streamer[A](start: A) {
-    def ~~(f: A => A) = Stream.iterate(start)(f)
+    def `...`(f: A => A) = Stream.iterate(start)(f)
   }
 
   /**
-   * Mimic's F#'s forward pipe operator
+   * F#'s forward pipe operator
    */
   implicit class PipedFunctions[A](x: => A) {
     def |>[B](f: A => B) = f(x)
