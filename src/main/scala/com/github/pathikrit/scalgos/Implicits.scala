@@ -124,9 +124,14 @@ object Implicits {
   }
 
   /**
-   * Support removal of items from list
+   * Support some more operations on lists
    */
-  implicit class RemovableList[A](s: List[A]) {
+  implicit class RichList[A](l: List[A]) {
+
+    /**
+     * @return a list with items in position i and j swapped
+     */
+    def swap(i: Int, j: Int) = l.updated(i, l(j)).updated(j, l(i))
 
     /**
      * Remove 1 element
@@ -134,7 +139,7 @@ object Implicits {
      * @param elem element to remove
      * @return a list with first occurrence of elem removed
      */
-    def -(elem: A): List[A] = s match {
+    def -(elem: A): List[A] = l match {
       case Nil => Nil
       case x :: xs if x == elem => xs
       case x :: xs => x :: (xs - elem)

@@ -52,15 +52,14 @@ object Combinatorics {
    *
    * @return Some(p) if next permutation exists or None if s is already in decreasing order
    */
-  def nextPermutation[A: Ordering](s: IndexedSeq[A]): Option[Seq[A]] = {
-    s zip s.tail lastIndexWhere {p => p._1 < p._2} match {
+  def nextPermutation[A: Ordering](s: List[A]) = s zip s.tail lastIndexWhere {e => e._1 < e._2} match {
       case -1 => None
-      case pivot =>
-        val next = s lastIndexWhere {s(pivot) < _}
-        // swap the pivot and next, and then reverse the portion of the array to the right of where the pivot was found
-        Some(((s take pivot) :+ s(next)) ++ ((s.slice(pivot+1, next):+ s(pivot)) ++ (s drop next+1)).reverse)
+      case p =>
+        val e = s(p)
+        val n = s lastIndexWhere {e < _}
+        val (a, b) = s.swap(p, n) splitAt (p + 1)
+        Some(a ::: b.reverse)
     }
-  }
 
   /**
    * @return memoized function to calculate C(n,r)

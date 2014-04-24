@@ -64,14 +64,19 @@ class CombinatoricsSpec extends Specification {
 
     "operate in lexicographic order" in todo
 
-//    {
-//      var s: Option[Seq[Int]] = Some(Seq(1,2,3,4))
-//      do {
-//        val permutation = s.get
-//        //println(permutation mkString " ")
-//        s = nextPermutation(permutation)
-//      } while(s.isDefined)
-//    }
+    "match the library method" in {
+      val input = List(1, 2, 3, 4)
+      var s: Option[List[Int]] = Some(input)
+      var c = 0
+      do {
+        val permutation = s.get
+        //println(s mkString ", ")
+        s = nextPermutation(permutation)
+        c += 1
+      } while(s.isDefined)
+
+      c mustEqual input.permutations.length
+    }
 
     "should match combinations(k) when called with 0,1 and k bits sets" in todo
   }
@@ -120,7 +125,7 @@ class CombinatoricsSpec extends Specification {
       // todo - what if n != r.sum?
       val n = 10
       val r = Seq(1,2,3,4)
-      choose(n, r) must be equalTo(factorial(n)/((r map factorial).product))
+      choose(n, r) must be equalTo((n!)/(r map factorial).product)
     }
   }
 
