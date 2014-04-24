@@ -76,9 +76,8 @@ object Combinatorics {
   def choose(n: Int, k: Int) = ((1L<<k) - 1) `...` { c =>
     val u = -c&c
     val v = c + u
-    val k = v + (c^v)/u/4
-    if ((k>>n) == 0) k else 0
-  } takeWhile {_ != 0}
+    v + (v^c)/u/4
+  } takeWhile {i => (i>>n) == 0}
 
   /**
    * Number of ways to permute n objects which has r.length kinds of items
