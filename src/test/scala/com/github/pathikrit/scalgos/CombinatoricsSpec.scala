@@ -87,9 +87,12 @@ class CombinatoricsSpec extends Specification {
 
     "match formula" in {
       examplesBlock {
-        for {n <- 0 to 50; r <- 0 to n} {
+        c.cache.size must be equalTo 0
+        val t = 50
+        for {n <- 0 to t; r <- 0 to n} {
           c(n, r) must be equalTo (n!)/(((n-r)!) * (r!))
         }
+        c.cache.size must be equalTo (t/2 + 1)*(t + 1) // TODO: why
       }
     }
   }
@@ -154,6 +157,15 @@ class CombinatoricsSpec extends Specification {
       ((0 to 10) map catalan).toList must be equalTo expected
       catalan.cache.size must be equalTo expected.size
     }
+
+    "match recurrence relation" in {
+      examplesBlock {
+        def cat(n: Int): BigInt = ((0 until n) map {i => cat(i) * cat(n-i-1)}).sum
+        for (i <- 5 to 10) {
+          catalan(i) mustEqual cat(i)
+        }
+      }
+    }.pendingUntilFixed
   }
 
   "derangements" should {
