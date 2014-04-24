@@ -33,12 +33,13 @@ object Macros {
    * An LRU cache
    * @param maxEntries maximum number of entries to retain
    */
-  def lruCache[A,B](maxEntries: Int): mutable.Map[A,B] = new java.util.LinkedHashMap[A,B]() {
-    override def removeEldestEntry(eldest: java.util.Map.Entry[A,B]) = size > maxEntries
+  def lruCache[A, B](maxEntries: Int): mutable.Map[A, B] = new java.util.LinkedHashMap[A, B]() {
+    override def removeEldestEntry(eldest: java.util.Map.Entry[A, B]) = size > maxEntries
   }
 
   /**
    * Useful in debugging - prints variable names alongside values (also supports expressions e.g. debug(a+b))
+   * TODO: include file & line number
    */
   def debug(params: Any*) = macro debugImpl
 
@@ -57,7 +58,7 @@ object Macros {
       }).tree
     }
 
-    val separators = (1 until trees.size).map(_ => (reify { print(", ") }).tree) :+ (reify { println() }).tree
+    val separators = (1 until trees.size).map(_ => reify { print(", ") }.tree) :+ reify { println() }.tree
     val treesWithSeparators = trees zip separators flatMap {p => List(p._1, p._2)}
 
     c.Expr[Unit](Block(treesWithSeparators.toList, Literal(Constant(()))))
