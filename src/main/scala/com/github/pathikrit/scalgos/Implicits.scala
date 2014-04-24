@@ -150,7 +150,7 @@ object Implicits {
    * Let's us easily specify lazy streams that is a function of the last element
    */
   implicit class Streamer[A](start: A) {
-    def ~(f: A => A) = Stream.iterate(start)(f)
+    def ~~(f: A => A) = Stream.iterate(start)(f)
   }
 
   /**

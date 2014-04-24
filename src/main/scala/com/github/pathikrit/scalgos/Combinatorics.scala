@@ -53,13 +53,13 @@ object Combinatorics {
    * @return Some(p) if next permutation exists or None if s is already in decreasing order
    */
   def nextPermutation[A: Ordering](s: List[A]) = s zip s.tail lastIndexWhere {e => e._1 < e._2} match {
-      case -1 => None
-      case p =>
-        val e = s(p)
-        val n = s lastIndexWhere {e < _}
-        val (a, b) = s.swap(p, n) splitAt (p + 1)
-        Some(a ::: b.reverse)
-    }
+    case -1 => None
+    case p =>
+      val e = s(p)
+      val n = s lastIndexWhere {e < _}
+      val (a, b) = s.swap(p, n) splitAt (p + 1)
+      Some(a ::: b.reverse)
+  }
 
   /**
    * @return memoized function to calculate C(n,r)
@@ -73,7 +73,7 @@ object Combinatorics {
   /**
    * @return a stream of longs such that k bits of it are set and max total bits = n
    */
-  def choose(n: Int, k: Int) = ((1L<<k) - 1) ~ { c =>
+  def choose(n: Int, k: Int) = ((1L<<k) - 1) ~~ { c =>
     val u = -c&c
     val v = c + u
     val k = v + (c^v)/u/4
