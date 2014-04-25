@@ -74,6 +74,34 @@ class DynamicProgrammingSpec extends Specification {
     }
   }
 
+  "knapSack" should {
+    import KnapSack._
+
+    "0-1 knapSack" should {
+      "fail for invalid items or negative capacity" in todo
+      "work for capacity = 0 or 1 and items.size = 0 or 1" in todo
+
+      def totalValue(items: Seq[Item]) = {items map {_.value} sum}
+      def totalWeight(items: Seq[Item]) = {items map {_.weight} sum}
+
+      "match the brute force results" in {
+        examplesBlock {
+          for(i <- 1 to 100) {
+            val n = 10
+            val items = List.fill(n){Item(RandomData.integer(end = 20), RandomData.integer(start = 1, end = 10))}
+            val maxWeight = RandomData.integer()
+            val actual = KnapSack(items, maxWeight)
+            val expected  = Combinatorics.combinations(items) filter {totalWeight(_) <= maxWeight} maxBy totalValue
+
+            //totalValue(actual) mustEqual totalValue(expected)
+            //actual mustEqual expected
+            todo
+          }
+        }
+      }
+    }
+  }
+
   "minimumChange" should {
     "fail for negative numbers" in todo
     "work for empty coin list" in todo

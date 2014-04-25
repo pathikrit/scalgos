@@ -75,6 +75,62 @@ object DynamicProgramming {
   }
 
   /**
+   * KnapSack problem
+   */
+  object KnapSack {
+
+    /**
+     * @param value value of this item - more the better
+     * @param weight weight of this item - less the better
+     */
+    case class Item(value: Int, weight: Int) {
+      require(weight > 0)
+    }
+
+    /**
+     * O(maxWeight * items.length)
+     * 0-1 knapsack problem
+     * @return sublist of items such that total weight < maxWeight and sum of values is maximized
+     */
+    def apply(items: List[Item], maxWeight: Int): List[Item] = {
+      require(maxWeight >= 0)
+
+      type DP = Memo[(List[Item], Int), (Int, Int), (Int, List[Item])]
+      implicit def encode(key: (List[Item], Int)) = (key._1.length, key._2)
+
+      lazy val dp: DP = Memo {
+        case (_, w) if w <= 0 => (0, Nil)
+        case (Nil, _) => (0, Nil)
+        case (i :: is, w) =>
+          val (v1, c1) = dp(is, w)
+          if (w > i.weight) {
+            val (v2, c2) = dp(is, w - i.weight)
+            if (v2 + i.value > v1) {
+              (v2 + i.value, i :: c2)
+            } else {
+              (v1, c1)
+            }
+          } else {
+            (v1, c1)
+          }
+      }
+
+      dp(items, maxWeight)._2
+    }
+
+    /**
+     * Generalized version of the problem
+     * O(?)
+     *
+     * @param items counts of available items (multiple copies of the item can be available)
+     * @param maxCount maximum number of items we can select
+     * @param maxWeight maximum weight we can use
+     * @return subCounter of items such that total weight < maxWeight, count < maxCount and sum of values is maximized
+     */
+    def apply(items: Counter[Item], maxCount: Int, maxWeight: Int): Counter[Item] = ???
+  }
+
+  /**
    * Calculate edit distance between 2 sequences
    * O(s1.length * s2.length)
    *
