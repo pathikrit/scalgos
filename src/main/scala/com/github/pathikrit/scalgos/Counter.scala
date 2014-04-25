@@ -54,7 +54,7 @@ object Counter {
    * Can be used as a multiset too
    * TODO: add setops?
    */
-  type MultiSet = Counter
+  type MultiSet[A] = Counter[A]
 
   /**
    * @return new empty counter

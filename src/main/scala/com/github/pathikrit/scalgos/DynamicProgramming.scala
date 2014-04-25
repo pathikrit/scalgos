@@ -99,11 +99,9 @@ object DynamicProgramming {
       implicit def encode(key: (List[Item], Int)) = (key._1.length, key._2)
 
       lazy val f: DP = Memo {
-        case (_, w) if w <= 0 => (0, Nil)
-        case (Nil, _) => (0, Nil)
-        case (i :: is, w) =>
+        case (i :: is, w) if w > 0 =>
           val (v1, c1) = f(is, w)
-          if (w > i.weight) {
+          if (w >= i.weight) {
             val (v2, c2) = f(is, w - i.weight)
             if (v2 + i.value > v1) {
               (v2 + i.value, i :: c2)
@@ -113,6 +111,8 @@ object DynamicProgramming {
           } else {
             (v1, c1)
           }
+
+        case _ => (0, Nil)
       }
 
       f(items, maxWeight)._2

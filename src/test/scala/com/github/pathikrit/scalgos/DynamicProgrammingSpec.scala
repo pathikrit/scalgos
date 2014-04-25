@@ -93,9 +93,8 @@ class DynamicProgrammingSpec extends Specification {
             val actual = KnapSack(items, maxWeight)
             val expected  = Combinatorics.combinations(items) filter {totalWeight(_) <= maxWeight} maxBy totalValue
 
-            //totalValue(actual) mustEqual totalValue(expected)
+            totalValue(actual) mustEqual totalValue(expected)
             //actual mustEqual expected
-            todo
           }
         }
       }
