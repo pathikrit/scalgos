@@ -22,13 +22,13 @@ object DynamicProgramming {
     type DP = Memo[(List[Int], Int), (Int, Int), Boolean]
     implicit def encode(key: (List[Int], Int)) = (key._1.length, key._2)
 
-    lazy val dp: DP = Memo {
+    lazy val f: DP = Memo {
       case (_, 0) => true         // 0 can always be achieved using empty list
       case (Nil, _) => false      // we can never achieve non-zero if we have empty list
-      case (a :: as, x) => dp(as, x - a) || dp(as, x)      // try with/without a.head
+      case (a :: as, x) => f(as, x - a) || f(as, x)      // try with/without a.head
     }
 
-    dp(s, t)
+    f(s, t)
   }
 
   /**
@@ -44,13 +44,13 @@ object DynamicProgramming {
     type DP = Memo[(List[Int], Int), (Int, Int), Seq[Seq[Int]]]
     implicit def encode(key: (List[Int], Int)) = (key._1.length, key._2)
 
-    lazy val dp: DP = Memo {
+    lazy val f: DP = Memo {
       case (Nil, 0) => Seq(Nil)
       case (Nil, _) => Nil
-      case (a :: as, x) => (dp(as, x - a) map {_ :+ a}) ++ dp(as, x)
+      case (a :: as, x) => (f(as, x - a) map {_ :+ a}) ++ f(as, x)
     }
 
-    dp(s, t)
+    f(s, t)
   }
 
   /**
@@ -64,14 +64,14 @@ object DynamicProgramming {
     type DP = Memo[(List[Int], Int), (Int, Int), Option[Seq[Int]]]
     implicit def encode(key: (List[Int], Int)) = (key._1.length, key._2)
 
-    lazy val dp: DP = Memo {
+    lazy val f: DP = Memo {
       case (_, 0) => Some(Nil)
       case (Nil, _) => None
-      case (a :: as, x) => dp(as, x - a) map {_ :+ a} orElse {dp(as, x)}
+      case (a :: as, x) => f(as, x - a) map {_ :+ a} orElse {f(as, x)}
     }
 
-    val f = Function.unlift(dp(s, _: Int))     // check if _ can be created using all elements of s
-    (s.sum/2 --> 0 collectFirst f).get   // find largest such x < s.sum/2 (always a solution at 0)
+    val possible = Function.unlift(f(s, _: Int))     // check if _ can be created using all elements of s
+    (s.sum/2 --> 0 collectFirst possible).get   // find largest such x < s.sum/2 (always a solution at 0)
   }
 
   /**
@@ -98,13 +98,13 @@ object DynamicProgramming {
       type DP = Memo[(List[Item], Int), (Int, Int), (Int, List[Item])]
       implicit def encode(key: (List[Item], Int)) = (key._1.length, key._2)
 
-      lazy val dp: DP = Memo {
+      lazy val f: DP = Memo {
         case (_, w) if w <= 0 => (0, Nil)
         case (Nil, _) => (0, Nil)
         case (i :: is, w) =>
-          val (v1, c1) = dp(is, w)
+          val (v1, c1) = f(is, w)
           if (w > i.weight) {
-            val (v2, c2) = dp(is, w - i.weight)
+            val (v2, c2) = f(is, w - i.weight)
             if (v2 + i.value > v1) {
               (v2 + i.value, i :: c2)
             } else {
@@ -115,7 +115,7 @@ object DynamicProgramming {
           }
       }
 
-      dp(items, maxWeight)._2
+      f(items, maxWeight)._2
     }
 
     /**
@@ -145,14 +145,14 @@ object DynamicProgramming {
     type DP = Memo[(Seq[A], Seq[A]), (Int, Int), Int]
     implicit def encode(key: (Seq[A], Seq[A])) = (key._1.length, key._2.length)
 
-    lazy val dp: DP = Memo {
+    lazy val f: DP = Memo {
       case (a, Nil) => a.length * (delete min insert)
       case (Nil, b) => b.length * (delete min insert)
-      case (a :: as, b :: bs) if a == b => dp(as, bs)
-      case (a, b) => (delete + dp(a, b.tail)) min (insert + dp(a.tail, b)) min (replace + dp(a.tail, b.tail))
+      case (a :: as, b :: bs) if a == b => f(as, bs)
+      case (a, b) => (delete + f(a, b.tail)) min (insert + f(a.tail, b)) min (replace + f(a.tail, b.tail))
     }
 
-    dp(s1, s2)
+    f(s1, s2)
   }
 
   /**
@@ -186,14 +186,14 @@ object DynamicProgramming {
 
     implicit val c = Ordering by {s: List[T] => s.length}
 
-    lazy val dp: DP = Memo {
+    lazy val f: DP = Memo {
       case (_, Nil) => Nil
       case (Nil, _) => Nil
-      case (x :: xs, y :: ys) if x == y => x :: dp(xs, ys)
-      case (x, y) => c.max(dp(x.tail, y), dp(x, y.tail))
+      case (x :: xs, y :: ys) if x == y => x :: f(xs, ys)
+      case (x, y) => c.max(f(x.tail, y), f(x, y.tail))
     }
 
-    dp(a, b)
+    f(a, b)
   }
 
   /**

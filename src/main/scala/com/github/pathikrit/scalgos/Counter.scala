@@ -51,6 +51,12 @@ class Counter[A] extends mutable.Map[A, Int] {
 object Counter {
 
   /**
+   * Can be used as a multiset too
+   * TODO: add setops?
+   */
+  type MultiSet = Counter
+
+  /**
    * @return new empty counter
    */
   def empty[A] = new Counter[A]
