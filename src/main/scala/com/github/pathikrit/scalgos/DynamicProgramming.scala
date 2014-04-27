@@ -99,18 +99,11 @@ object DynamicProgramming {
       implicit def encode(key: (List[Item], Int)) = (key._1.length, key._2)
 
       lazy val f: DP = Memo {
-        case (i :: is, w) if w > 0 =>
-          val (v1, c1) = f(is, w)
-          if (w >= i.weight) {
-            val (v2, c2) = f(is, w - i.weight)
-            if (v2 + i.value > v1) {
-              (v2 + i.value, i :: c2)
-            } else {
-              (v1, c1)
-            }
-          } else {
-            (v1, c1)
-          }
+        case (i :: is, w) if w >= i.weight =>
+          val ((v1, c1), (v2, c2)) = (f(is, w), f(is, w - i.weight))
+          if (v2 + i.value > v1) (v2 + i.value, i :: c2) else (v1, c1)
+
+        case (i :: is, w) if w > 0 => f(is, w)
 
         case _ => (0, Nil)
       }
