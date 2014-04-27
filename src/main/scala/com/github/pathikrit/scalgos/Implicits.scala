@@ -61,6 +61,11 @@ object Implicits {
      * @return range that goes forward or backward depending on x and y
      */
     def -->(y: Int) = x to y by (if (x < y) 1 else -1)
+
+    /**
+     * For doing 5 times f
+     */
+    def times[A](f: => A) = 1 to x map {i => f}
   }
 
   /**
