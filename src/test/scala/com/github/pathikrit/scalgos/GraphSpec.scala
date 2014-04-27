@@ -79,6 +79,30 @@ class GraphSpec extends Specification {
     "match bellman-ford algorithm" in todo
   }
 
+  "minimum-spanning-tree" should {
+
+    "kruskalsMst" should {
+      "work for graphs with 0, 1 or 2 vertices" in todo
+      "work for graphs with no edges" in todo
+      "fail for disjoint graphs" in todo
+      "fail for directed graphs" in todo
+    }
+
+    "primsMst" should {
+      "work for graphs with 0, 1 or 2 vertices" in todo
+      "work for graphs with no edges" in todo
+      "fail for disjoint graphs" in todo
+      "fail for directed graphs" in todo
+    }
+
+    "prims match kruskals" in {
+      val g = RandomData.graph(numberOfVertices = 100, edgeDensity = 1, isPositiveEdges = true, isDirected = false)
+      def cost(edges: Set[(Int, Int)]) = (edges map g.apply).sum
+      val (p, k) = (primsMst(g), kruskalsMst(g))
+      cost(p) mustEqual cost(k)
+    }
+  }
+
   "stronglyConnectedComponents" should {
     /**
      * Given a graph and its strongly connected components check if all vertices are covered and mutual exclusion

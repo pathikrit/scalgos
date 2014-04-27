@@ -2,6 +2,8 @@ package com.github.pathikrit.scalgos
 
 import collection.mutable
 
+import Implicits._
+
 /**
  * A semi mutable weighted graph representation using adjacency list
  * Can add/remove/update edges but cannot add/remove vertices
@@ -92,7 +94,7 @@ class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
   /**
    * @return the adjacency matrix of this graph
    */
-  def adjacencyMatrix = Array.tabulate(numberOfVertices, numberOfVertices)((u, v) => this(u->v))
+  def adjacencyMatrix = Array.tabulate(numberOfVertices, numberOfVertices){(u, v) => this(u->v)}
 }
 
 /**
@@ -213,8 +215,7 @@ object Graph {
 
     for {
       i <- 1 until g.numberOfVertices
-      (u, v) <- g.edges
-      if distance(v) >= distance(u) + g(u->v)
+      (u, v) <- g.edges if distance(v) >= distance(u) + g(u->v)
     } {
       distance(v) = distance(u) + g(u->v)
       parent(v) = u
@@ -223,6 +224,39 @@ object Graph {
     (distance.toSeq, parent.toSeq)
   }
 
+  /**
+   * Kruskal's Minimum Spanning Tree algorithm
+   * O(E log V)
+   *
+   * @return list of edges in the MST
+   */
+  def kruskalsMst(g: Graph) = {
+    val (d, mst) = (DisjointSet(g.vertices: _*), mutable.Set.empty[EndPoints])
+    for ((u, v) <- g.edges sortBy g.apply if d(u) != d(v)) {
+      d union (u, v)
+      mst += u->v
+    }
+    mst.toSet
+  }
+
+  /**
+   * Prim's Minimum Spanning Tree algorithm
+   * O(VE) ?
+   *
+   * @return list of edges in the MST
+   */
+  def primsMst(g: Graph) = g.vertices.toList match {
+    case Nil => Set.empty[EndPoints]
+    case v :: vs =>
+      val (seen, unseen, mst) = (mutable.Set(v), mutable.Set(vs: _*), mutable.Set.empty[EndPoints])
+      while(!unseen.isEmpty) {
+        val (u, v) = seen X unseen minBy g.apply
+        unseen -= v
+        seen += v
+        mst += u->v
+      }
+      mst.toSet
+  }
 
   /**
    * Breadth first search from source in g
