@@ -18,5 +18,5 @@ object Memo {
   /**
    * Type of a simple memoized function e.g. when I = K
    */
-  type F[I, O] = Memo[I, I, O]
+  type ==>[I, O] = Memo[I, I, O]
 }

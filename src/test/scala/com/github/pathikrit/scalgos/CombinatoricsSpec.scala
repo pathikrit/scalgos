@@ -3,6 +3,7 @@ package com.github.pathikrit.scalgos
 import org.specs2.mutable.Specification
 
 import Implicits._
+import Memo._
 import Combinatorics._
 
 class CombinatoricsSpec extends Specification {
@@ -182,7 +183,7 @@ class CombinatoricsSpec extends Specification {
     "fail for negative numbers" in todo
     "match the recurrence relation" in {
 
-      lazy val d: Memo.F[Int, BigInt] = Memo {
+      lazy val d: Int ==> BigInt = Memo {
         case n if n < 0 => throw new IllegalArgumentException
         case 0 => 1
         case 1 => 0

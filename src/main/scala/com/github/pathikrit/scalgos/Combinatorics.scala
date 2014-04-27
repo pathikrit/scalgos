@@ -3,6 +3,7 @@ package com.github.pathikrit.scalgos
 import math.Ordering.Implicits._
 
 import Implicits._
+import Memo._
 
 /**
  * collection of algorithms related to combinatorics
@@ -83,7 +84,7 @@ object Combinatorics {
   /**
    * @return memoized function to calculate C(n,r)
    */
-  val c: Memo.F[(Int, Int), BigInt] = Memo {
+  val c: (Int, Int) ==> BigInt = Memo {
     case (_, 0) => 1
     case (n, r) if r > n/2 => c(n, n - r)
     case (n, r) => c(n - 1, r - 1) + c(n - 1, r)
@@ -139,7 +140,7 @@ object Combinatorics {
    *
    * @return memoized function to count derangements
    */
-  val derangement: Memo.F[Int, BigInt] = Memo {
+  val derangement: Int ==> BigInt = Memo {
     case n if n%2 == 0 => n*derangement(n - 1) + 1
     case n if n%2 == 1 => n*derangement(n - 1) - 1
     case _ => 0     // negative n

@@ -4,6 +4,7 @@ import math.Ordering.Implicits._
 import collection.mutable
 
 import Implicits._
+import Memo._
 
 /**
  * Collection of DP algorithms
@@ -156,7 +157,7 @@ object DynamicProgramming {
    *
    * @return memoized function to generate all possible valid n-pair bracket strings
    */
-  val validBrackets: Memo.F[Int, IndexedSeq[String]] = Memo {
+  val validBrackets: Int ==> IndexedSeq[String] = Memo {
     case 0 => IndexedSeq("")
     case n => for {
       i <- 0 until n
