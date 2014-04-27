@@ -24,7 +24,7 @@ private class Node[A](val entry: A) {
  * A disjoint-set data structure (also called union-find data structure)
  * Has efficient union and find operations in amortised O(a(n)) time (where a is the inverse-Ackermann function)
  * TODO: Support delete
- * TODO; extend scala collection
+ * TODO: extend scala collection
  *
  * @tparam A types of things in set
  */
@@ -44,7 +44,7 @@ class DisjointSet[A] {
   /**
    * Add a new singleton set with only x in it (assuming x is not already known)
    */
-  def makeSet(x: A) {
+  def +=(x: A) {
     assume(!contains(x))
     index(x) = new Node(x)
   }
@@ -69,10 +69,27 @@ class DisjointSet[A] {
   /**
    * @return the root (or the canonical element that contains x)
    */
-  def find(x: A) = x.root.entry
+  def apply(x: A) = x.root.entry
 
   /**
    * @return Iterator over groups of items in same set
    */
   def sets = index.keys groupBy {_.root.entry} values
+}
+
+object DisjointSet {
+
+  /**
+   * @return empty disjoint set
+   */
+  def empty[A] = new DisjointSet[A]
+
+  /**
+   * @return a disjoint set with each element in its own set
+   */
+  def apply[A](elements: A*) = {
+    val d = empty[A]
+    elements foreach {e => d += e}
+    d
+  }
 }
