@@ -14,7 +14,7 @@ import Implicits._
 class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
   import Graph.EndPoints
 
-  private val adjacencyList = Array.fill(numberOfVertices)(mutable.Map.empty[Int, Double] withDefaultValue Double.PositiveInfinity)
+  private val adjacencyList = Array.fill(numberOfVertices){mutable.Map.empty[Int, Double] withDefaultValue Double.PositiveInfinity}
 
   private implicit class Edge(points: EndPoints) {
     val (u, v) = points
@@ -156,7 +156,7 @@ object Graph {
     val (index, lowLink) = (mutable.Map.empty[Int, Int], mutable.Map.empty[Int, Int])
     val stack = mutable.Stack[Int]()         //TODO: try empty here
     val inProcess = mutable.LinkedHashSet.empty[Int]
-    val sccs = mutable.Queue.empty[Set[Int]]
+    val components = mutable.Queue.empty[Set[Int]]
 
     def dfs(u: Int) {
       index(u) = count        // set u.index to lowest unused count
@@ -182,7 +182,7 @@ object Graph {
          inProcess -= v
          scc += v
        } while(u != v)
-       sccs += scc.toSet
+       components += scc.toSet
       }
     }
 
@@ -190,7 +190,7 @@ object Graph {
     for {
       u <- g.vertices if !(index contains u)
     } dfs(u)
-    sccs.toSeq
+    components.toSeq
   }
 
   /**
@@ -211,7 +211,7 @@ object Graph {
    */
   def bellmanFord(g: Graph, source: Int) = {
     val distance = Array.tabulate(g.numberOfVertices){g(source)}
-    val parent = Array.fill(g.numberOfVertices)(-1)
+    val parent = Array.fill(g.numberOfVertices)(-1)        // TODO: use Option instead of -1
 
     for {
       i <- 1 until g.numberOfVertices

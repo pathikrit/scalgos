@@ -100,6 +100,7 @@ class GraphSpec extends Specification {
       def cost(edges: Set[(Int, Int)]) = (edges map g.apply).sum
       val (p, k) = (primsMst(g), kruskalsMst(g))
       cost(p) mustEqual cost(k)
+      // todo: check for cycle, coverage, vertex incidence etc
     }
   }
 
@@ -117,25 +118,25 @@ class GraphSpec extends Specification {
 
     "work for empty graphs" in {
       val g = Graphs.zero
-      val sccs = stronglyConnectedComponents(g)
-      checkCoverage(g, sccs)
-      sccs must be empty
+      val components = stronglyConnectedComponents(g)
+      checkCoverage(g, components)
+      components must be empty
     }
 
     "work for graphs with 1 or 2 vertices" in todo
 
     "work for graphs with no edges" in {
       val g = Graphs.noEdges
-      val sccs = stronglyConnectedComponents(g)
-      checkCoverage(g, sccs)
-      sccs must be length g.numberOfVertices
+      val components = stronglyConnectedComponents(g)
+      checkCoverage(g, components)
+      components must be length g.numberOfVertices
     }
 
     "work on a clique" in {
       val g = Graphs.clique
-      val sccs = stronglyConnectedComponents(g)
-      checkCoverage(g, sccs)
-      sccs must be length 1
+      val components = stronglyConnectedComponents(g)
+      checkCoverage(g, components)
+      components must be length 1
     }
 
     "match floyd-warshall" in {
@@ -146,9 +147,9 @@ class GraphSpec extends Specification {
 
       def checkCycle(scc: Set[Int]) = for ((u, v) <- scc X g.vertices) (scc contains v) must be equalTo inCycle(u,v)
 
-      val sccs = stronglyConnectedComponents(g)
-      checkCoverage(g, sccs)
-      examplesBlock {sccs foreach checkCycle}
+      val components = stronglyConnectedComponents(g)
+      checkCoverage(g, components)
+      examplesBlock {components foreach checkCycle}
     }
   }
 
