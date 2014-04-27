@@ -12,7 +12,7 @@ object Combinatorics {
   // TODO: make these implicit methods .combinations, .combinations(n) etc
 
   /**
-   * Iterate over all 2^n combinations - do not use this, simply use the one from Scala collections library instead
+   * Iterate over all 2^n combinations - Different from the Scala Collection's combinations...
    *
    * @param s sequence to do combination over
    * @return all 2^n ways of choosing elements from s
@@ -59,6 +59,25 @@ object Combinatorics {
       val n = s lastIndexWhere {e < _}
       val (a, b) = s.swap(p, n) splitAt (p + 1)
       Some(a ::: b.reverse)
+  }
+
+  /**
+   * Find nth Permutation
+   * O(l*l)
+   *
+   * @return nth permutation of {0, 1, ... , l-1}
+   */
+  def nthPermutation(l: Int)(n: Int) = {
+    implicit def toInt(b: BigInt) = b.toInt
+    require(l >=0 && n >= 0 && n < (l!))
+    def select(s: List[Int], i: Int): List[Int] = s.length match {
+      case 0 => Nil
+      case k =>
+        val d = (k - 1)!
+        val e = s(i/d)
+        e :: select(s - e, i%d)
+    }
+    select(List(0 until l: _*), n)
   }
 
   /**

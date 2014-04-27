@@ -81,6 +81,18 @@ class CombinatoricsSpec extends Specification {
     "should match combinations(k) when called with 0,1 and k bits sets" in todo
   }
 
+  "nthPermutation" should {
+
+    "work for 0 or 1 length" in todo
+
+    "fail for l < 0 or n not in [0, l!)" in todo
+
+    "match permutations" in {
+      val n = 5
+      (0 until (n!).toInt) map nthPermutation(n) mustEqual (0 until n).permutations.toList
+    }
+  }
+
   "c" should {
     "fail if either n or r is negative" in todo
     "always 1 if r>n" in todo
