@@ -44,4 +44,18 @@ object LinearAlgebra {
      */
     def cols = a(0).size
   }
+
+  /**
+   * @param coeffs coefficients of the polynomial
+   */
+  case class Polynomial(coeffs: List[Double]) {
+
+    /**
+     * Evaluate a polynomial using Horner's rule
+     *
+     * @param x point at which to evaluate the polynomial
+     * @return a0 + a1*x + a2*x*x + ....
+     */
+    def apply(x: Double) = coeffs.foldRight(0.0){(c, a) => a*x + c}
+  }
 }

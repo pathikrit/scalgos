@@ -27,4 +27,21 @@ class LinearAlgebraSpec extends Specification {
       todo
     }
   }
+
+  "evalPolynomial" should {
+
+    "work for 0/1 length coeffs" in todo
+
+    "match definition" in {
+      def recursiveEval(coeffs: List[Double])(x: Double): Double = coeffs match {
+        case Nil => 0
+        case c :: cs => c + x*recursiveEval(cs)(x)
+      }
+
+      val n = 10
+      val a = ((1 to n) map {i => RandomData.number(0, 10)}).toList
+      val x = RandomData.number(-5, 5)
+      Polynomial(a)(x) must be ~(recursiveEval(a)(x) +/- 1e-9)
+    }
+  }
 }
