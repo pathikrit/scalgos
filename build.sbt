@@ -10,7 +10,7 @@ CoverallsPlugin.coverallsSettings
 
 scalacOptions ++= Seq(
   "-unchecked", "-deprecation", "-feature",
-  "-language:postfixOps", "-language:implicitConversions", "-language:experimental.macros", "-language:dynamics"
+  "-language:postfixOps,implicitConversions,experimental.macros,dynamics,reflectiveCalls"
 )
 
 libraryDependencies ++= Seq(
