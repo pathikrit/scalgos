@@ -249,7 +249,7 @@ object Graph {
     case Nil => Set.empty[EndPoints]
     case v :: vs =>
       val (seen, unseen, mst) = (mutable.Set(v), mutable.Set(vs: _*), mutable.Set.empty[EndPoints])
-      while(!unseen.isEmpty) {
+      while(unseen.nonEmpty) {
         val (u, v) = seen X unseen minBy g.apply
         unseen -= v
         seen += v
@@ -276,7 +276,7 @@ object Graph {
 
     visit(source)
 
-    while (!queue.isEmpty) {
+    while (queue nonEmpty) {
       val u = queue.dequeue()
       if (f(u)) {
         return Some(u)
@@ -296,5 +296,5 @@ object Graph {
    * @return If f is true at a vertex v, return Some(v) else None
    */
   def dfs(g: Graph, u: Int, f: Int => Boolean, seen: Set[Int] = Set.empty[Int]): Option[Int] =
-    if(f(u)) Some(u) else g neighbours u filterNot seen find {v => dfs(g, u, f, seen + u).isDefined}
+    if (f(u)) Some(u) else g neighbours u filterNot seen collectFirst Function.unlift(dfs(g, _, f, seen + u))
 }

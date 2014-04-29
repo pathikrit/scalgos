@@ -37,7 +37,7 @@ abstract class AStar[Node] {
       score(n) = score(current) + distance(current, n)
     }
 
-    while(!queue.isEmpty) {
+    while (queue nonEmpty) {
       val current = queue.removeFirst
       if (isGoal(current)) {
         val trace = mutable.ArrayBuffer.empty[Node]
