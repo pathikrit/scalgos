@@ -2,11 +2,11 @@ name := "scalgos"
 
 version := "0.0.1"
 
-scalaVersion := "2.10.4"
+scalaVersion := "2.11.0"
 
-ScoverageSbtPlugin.instrumentSettings
+//instrumentSettings
 
-CoverallsPlugin.coverallsSettings
+//CoverallsPlugin.coverallsSettings
 
 scalacOptions ++= Seq(
   "-unchecked", "-deprecation", "-feature",
@@ -15,5 +15,5 @@ scalacOptions ++= Seq(
 
 libraryDependencies ++= Seq(
   "org.scala-lang" % "scala-reflect" % scalaVersion.value,
-  "org.specs2" %% "specs2" % "2.3.11" % "test"
+  "org.specs2" %% "specs2" % "2.3.12" % "test"
 )
