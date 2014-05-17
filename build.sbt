@@ -4,9 +4,9 @@ version := "0.0.1"
 
 scalaVersion := "2.11.0"
 
-//instrumentSettings
+instrumentSettings
 
-//CoverallsPlugin.coverallsSettings
+CoverallsPlugin.coverallsSettings
 
 scalacOptions ++= Seq(
   "-unchecked", "-deprecation", "-feature",
