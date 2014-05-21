@@ -2,7 +2,7 @@ name := "scalgos"
 
 version := "0.0.1"
 
-scalaVersion := "2.11.0"
+scalaVersion := "2.11.1"
 
 instrumentSettings
 
