@@ -41,12 +41,13 @@ object Macros {
    * Useful in debugging - prints variable names alongside values (also supports expressions e.g. debug(a+b))
    * TODO: include file & line number
    */
-  def debug(params: Any*) = macro debugImpl
+  def debug(params: Any*): Unit = macro debugImpl
 
   /**
    * Implementation of the debug macro
+   * TODO: rewrite this using quasiquotes
    */
-  def debugImpl(c: blackbox.Context)(params: c.Expr[Any]*): Unit = {
+  def debugImpl(c: blackbox.Context)(params: c.Expr[Any]*) = {
     import c.universe._
 
     val trees = params map {param => (param.tree match {
