@@ -13,7 +13,7 @@ object Randomized {
    *
    * @return the k-th item in s
    */
-  def quickSelect[T: Ordering](s: Seq[T], k: Int): T = {
+  def quickSelect[A: Ordering](s: Seq[A], k: Int): A = {
     assume(k >= 0 && k < s.size)
     val pivot = s(Random.nextInt(s.length))
     val (low, rest) = s partition {_ < pivot}

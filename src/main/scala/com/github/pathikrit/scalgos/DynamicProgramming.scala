@@ -174,11 +174,11 @@ object DynamicProgramming {
    * @return a longest common subsequence of a and b
    *         if multiple possible lcs, return the one that is "earliest" in a
    */
-  def longestCommonSubsequence[T](a: List[T], b: List[T]) = {
-    type DP = Memo[(List[T], List[T]), (Int, Int), List[T]]
-    implicit def encode(key: (List[T], List[T])) = (key._1.length, key._2.length)
+  def longestCommonSubsequence[A](a: List[A], b: List[A]) = {
+    type DP = Memo[(List[A], List[A]), (Int, Int), List[A]]
+    implicit def encode(key: (List[A], List[A])) = (key._1.length, key._2.length)
 
-    implicit val c = Ordering by {s: List[T] => s.length}
+    implicit val c = Ordering by {s: List[A] => s.length}
 
     lazy val f: DP = Memo {
       case (_, Nil) => Nil
@@ -198,8 +198,8 @@ object DynamicProgramming {
    * @param s input sequence
    * @return return longest increasing subsequence of a
    */
-  def longestIncreasingSubsequence[T: Ordering](s: Seq[T]) = {
-    val cache = mutable.Map(0 -> Seq.empty[T]) // cache(i) is longest increasing sequence of length i
+  def longestIncreasingSubsequence[A: Ordering](s: Seq[A]) = {
+    val cache = mutable.Map(0 -> Seq.empty[A]) // cache(i) is longest increasing sequence of length i
     def longest = cache.size - 1
 
     /**
@@ -212,7 +212,7 @@ object DynamicProgramming {
      * @param end end index of best
      * @return the longest item from best[start..end] where a can be appended to
      */
-    def findCandidate(a: T, start: Int = 0, end: Int = longest): Int = {
+    def findCandidate(a: A, start: Int = 0, end: Int = longest): Int = {
       if (start == end) {
         start
       } else {

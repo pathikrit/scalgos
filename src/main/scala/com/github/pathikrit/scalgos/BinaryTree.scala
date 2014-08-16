@@ -7,29 +7,29 @@ import Ordering.Implicits._
  */
 object BinaryTree {
 
-  /**
-   * A Binary Search Tree
-   */
-  sealed abstract class BST[A: Ordering](val value: A)
-
-  /**
-   * A way to represent a full BST i.e. no nodes with 1 child
-   */
-  object BST {
-
-    /**
-     * An internal node of the BST
-     */
-    case class Node[A: Ordering](left: BST[A], override val value: A, right: BST[A]) extends BST {
-      require(left.value <= value && value <= right.value)
-    }
-    case class Leaf[A: Ordering](override val value: A) extends BST
-  }
+//  /**
+//   * A Binary Search Tree
+//   */
+//  sealed abstract class BST[A: Ordering](val value: A)
+//
+//  /**
+//   * A way to represent a full BST i.e. no nodes with 1 child
+//   */
+//  object BST {
+//
+//    /**
+//     * An internal node of the BST
+//     */
+//    case class Node[A: Ordering](left: BST[A], override val value: A, right: BST[A]) extends BST(value) {
+//      require(left.value <= value && value <= right.value)
+//    }
+//    case class Leaf[A: Ordering](override val value: A) extends BST
+//  }
 
   /**
    * A BinaryTree
    */
-  type Tree[T] = Option[Node[T]]
+  type Tree[A] = Option[Node[A]]
 
   /**
    * A binary tree node
@@ -37,7 +37,7 @@ object BinaryTree {
    * @param entry the value stored at the node
    * @param right right sub-tree
    */
-  case class Node[T](left: Tree[T], entry: T, right: Tree[T])
+  case class Node[A](left: Tree[A], entry: A, right: Tree[A])
 
   /**
    * Reconstruct a BST from its pre-order traversal in O(n * depth)
@@ -47,7 +47,7 @@ object BinaryTree {
    * @param preOrder pre-order traversal of BST
    * @return reconstructed BST
    */
-  def reconstructBST[T: Ordering](preOrder: Seq[T]): Tree[T] = preOrder match {
+  def reconstructBST[A: Ordering](preOrder: Seq[A]): Tree[A] = preOrder match {
     case Nil => None
     case root :: children =>
       val (left, right) = children partition {_ < root}
@@ -61,7 +61,7 @@ object BinaryTree {
    * @param root the root of the tree
    * @return the pre-order traversal
    */
-  def preOrderTraversal[T](root: Tree[T]): List[T] = root match {
+  def preOrderTraversal[A](root: Tree[A]): List[A] = root match {
     case None => Nil
     case Some(Node(left, entry, right)) => entry :: preOrderTraversal(left) ::: preOrderTraversal(right)
   }
@@ -75,7 +75,7 @@ object BinaryTree {
    * @param preOrder pre-order traversal of binary tree
    * @return reconstructed tree
    */
-  def reconstruct[T](inOrder: Seq[T], preOrder: Seq[T]): Tree[T] = preOrder match {
+  def reconstruct[A](inOrder: Seq[A], preOrder: Seq[A]): Tree[A] = preOrder match {
     case Nil => None
     case root :: children =>
       val (leftIn, head :: rightIn) = inOrder splitAt (inOrder indexOf root)
