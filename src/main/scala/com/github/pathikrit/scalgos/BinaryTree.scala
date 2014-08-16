@@ -7,24 +7,30 @@ import Ordering.Implicits._
  */
 object BinaryTree {
 
-//  /**
-//   * A Binary Search Tree
-//   */
-//  sealed abstract class BST[A: Ordering](val value: A)
-//
-//  /**
-//   * A way to represent a full BST i.e. no nodes with 1 child
-//   */
-//  object BST {
-//
-//    /**
-//     * An internal node of the BST
-//     */
-//    case class Node[A: Ordering](left: BST[A], override val value: A, right: BST[A]) extends BST(value) {
-//      require(left.value <= value && value <= right.value)
-//    }
-//    case class Leaf[A: Ordering](override val value: A) extends BST
-//  }
+  /**
+   * A Binary Search Tree
+   */
+  sealed trait BST[A] {
+    val value: A
+  }
+
+  /**
+   * A way to represent a full BST i.e. no nodes with 1 child
+   */
+  object BST {
+
+    /**
+     * An internal node of the full BST
+     */
+    case class Node[A: Ordering](left: BST[A], override val value: A, right: BST[A]) extends BST[A] {
+      require(left.value <= value && value <= right.value)
+    }
+
+    /**
+     * A leaf node of the full BST
+     */
+    case class Leaf[A: Ordering](override val value: A) extends BST[A]
+  }
 
   /**
    * A BinaryTree
