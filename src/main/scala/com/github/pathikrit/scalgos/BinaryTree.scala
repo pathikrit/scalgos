@@ -8,6 +8,25 @@ import Ordering.Implicits._
 object BinaryTree {
 
   /**
+   * A Binary Search Tree
+   */
+  sealed abstract class BST[A: Ordering](val value: A)
+
+  /**
+   * A way to represent a full BST i.e. no nodes with 1 child
+   */
+  object BST {
+
+    /**
+     * An internal node of the BST
+     */
+    case class Node[A: Ordering](left: BST[A], override val value: A, right: BST[A]) extends BST {
+      require(left.value <= value && value <= right.value)
+    }
+    case class Leaf[A: Ordering](override val value: A) extends BST
+  }
+
+  /**
    * A BinaryTree
    */
   type Tree[T] = Option[Node[T]]
@@ -28,7 +47,7 @@ object BinaryTree {
    * @param preOrder pre-order traversal of BST
    * @return reconstructed BST
    */
-  def reconstructBST[T](preOrder: Seq[T])(implicit ordering: Ordering[T]): Tree[T] = preOrder match {
+  def reconstructBST[T: Ordering](preOrder: Seq[T]): Tree[T] = preOrder match {
     case Nil => None
     case root :: children =>
       val (left, right) = children partition {_ < root}
