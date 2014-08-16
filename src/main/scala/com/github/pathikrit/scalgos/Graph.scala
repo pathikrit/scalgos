@@ -102,7 +102,7 @@ class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
  */
 object Graph {
 
-  private type EndPoints = Pair[Int, Int]
+  private type EndPoints = (Int, Int)
 
   /**
    * Run Dijkstra's shortest path algorithm

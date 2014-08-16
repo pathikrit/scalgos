@@ -3,7 +3,7 @@ package com.github.pathikrit.scalgos
 import io.Source
 import collection.mutable
 import collection.JavaConversions._
-import reflect.macros.Context
+import reflect.macros.blackbox
 
 /**
  * Collection of code snippets that do common tasks such as profiling, downloading a webpage, debugging variables etc
@@ -46,7 +46,7 @@ object Macros {
   /**
    * Implementation of the debug macro
    */
-  def debugImpl(c: Context)(params: c.Expr[Any]*) = {
+  def debugImpl(c: blackbox.Context)(params: c.Expr[Any]*): Unit = {
     import c.universe._
 
     val trees = params map {param => (param.tree match {

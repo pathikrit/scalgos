@@ -1,6 +1,6 @@
 package com.github.pathikrit.scalgos.games
 
-import scala.util.{Failure, Success, Try}
+import scala.util.Try
 
 /**
  * Generic idea to solve maze style problems
@@ -8,10 +8,7 @@ import scala.util.{Failure, Success, Try}
 object Maze {
 
   implicit class Grid[A](a: Array[Array[A]]) {
-    def apply(x: Int, y: Int) = Try(a(x)(y)) match {
-      case Success(c) => Some(c)
-      case Failure(e: ArrayIndexOutOfBoundsException) => None
-    }
+    def apply(x: Int, y: Int) = Try(a(x)(y)).toOption
   }
 
   def explore[A](g: Array[Array[A]]) = for {
