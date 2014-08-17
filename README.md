@@ -9,5 +9,6 @@ Goals
 
 Building
 ========
-* Install scala and sbt (`brew install scala sbt`)
-* Build and run tests: `sbt test` (in the project directory)
+* Install git, scala and sbt: `brew install git scala sbt`
+* Clone project: `git clone https://github.com/pathikrit/scalgos.git; cd scalgos`
+* Build and run tests: `sbt test`

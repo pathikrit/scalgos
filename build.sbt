@@ -14,3 +14,5 @@ libraryDependencies ++= Seq(
   "org.scala-lang" % "scala-reflect" % scalaVersion.value,
   "org.specs2" %% "specs2" % "2.4.1" % "test"
 )
+
+//wartremoverErrors ++= Warts.all
