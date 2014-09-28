@@ -3,7 +3,7 @@ language: scala
 scala: 2.11.2
 
 before_install:
-  sudo pip install git+git://github.com/codecov/codecov-python.git@master#egg=codecov
+  sudo pip install codecov
 
 env:
   - SBT_OPTS="-XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:PermSize=256M -XX:MaxPermSize=512M"
