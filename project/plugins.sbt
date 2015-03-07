@@ -1,12 +1,9 @@
 resolvers ++= Seq(
-  Classpaths.sbtPluginReleases,
-  "Sonatype snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
+  Resolver.typesafeRepo("releases")
 )
 
 addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.1.6")
 
-addSbtPlugin("org.scoverage" %% "sbt-scoverage" % "0.99.7.1")
+addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.0.4")
 
-addSbtPlugin("com.sksamuel.scoverage" %% "sbt-coveralls" % "0.0.5")
-
-addSbtPlugin("org.brianmckenna" % "sbt-wartremover" % "0.11")
+addSbtPlugin("com.codacy" % "sbt-codacy-coverage" % "1.0.3")

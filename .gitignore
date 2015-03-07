@@ -2,17 +2,70 @@
 
 # OSX #
 .DS_Store
+.AppleDouble
+.LSOverride
 .Spotlight-V100
 .Trashes
+*~
+
+# Windows #
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msm
+*.msp
 
 # IntelliJ #
 *.iml
 *.ipr
 *.iws
+out/
 .idea/
 .idea_modules/
 atlassian-ide-plugin.xml
 
+# Eclipse #
+*.pydevproject
+.metadata
+.gradle
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.externalToolBuilders/
+*.launch
+.cproject
+.buildpath
+.target
+.texlipse
+
+# Java #
+*.class
+*.log
+.mtj.tmp/
+*.jar
+*.war
+*.ear
+
 # sbt #
+cache/
+.history/
+.lib/
+dist/
 target/
 lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+
+# Scala #
+.scala_dependencies
+.worksheet
