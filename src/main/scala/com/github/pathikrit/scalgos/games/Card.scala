@@ -18,7 +18,7 @@ object Card {
 
   val all = for ((rank, suit) <- ranks.indices X suits.indices) yield Card(rank, suit)
 
-  implicit def fromStr(s: String) = Card(ranks indexOf s(0).toUpper, "CSDH" indexOf s(1).toUpper)
+  def fromStr(s: String) = Card(ranks indexOf s(0).toUpper, "CSDH" indexOf s(1).toUpper)
 }
 
 /**
@@ -67,5 +67,5 @@ object PokerHandType extends Enumeration {
   }
 
   import scala.math.Ordering.Implicits._
-  implicit val handOrdering = Ordering by {hand: Set[Card] => classify(hand) }
+  implicit val handOrdering: Ordering[Set[Card]] = Ordering.by(classify)
 }

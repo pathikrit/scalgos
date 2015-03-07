@@ -1,6 +1,6 @@
 package com.github.pathikrit.scalgos
 
-import util.Random._
+import scala.util.Random._
 
 import Implicits.Crossable
 import Geometry.Point

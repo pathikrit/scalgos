@@ -1,6 +1,6 @@
 package com.github.pathikrit.scalgos
 
-import Ordering.Implicits._
+import scala.Ordering.Implicits._
 
 /**
  * Collection of algorithms pertaining to Binary Trees

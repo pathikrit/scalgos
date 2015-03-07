@@ -1,7 +1,7 @@
 package com.github.pathikrit.scalgos
 
-import util.Random
-import math.Ordering.Implicits._
+import scala.util.Random
+import scala.math.Ordering.Implicits._
 
 /**
  * Collection of randomized algorithms
@@ -14,13 +14,13 @@ object Randomized {
    * @return the k-th item in s
    */
   def quickSelect[A: Ordering](s: Seq[A], k: Int): A = {
-    assume(k >= 0 && k < s.size)
+    require(k >= 0 && k < s.size)
     val pivot = s(Random.nextInt(s.length))
-    val (low, rest) = s partition {_ < pivot}
+    val (low, rest) = s.partition(_ < pivot)
     if (k < low.size) {
       quickSelect(low, k)
     } else {
-      val (equal, high) = rest partition {_ == pivot}
+      val (equal, high) = rest.partition(_ == pivot)
       if (k < low.size + equal.size) pivot else quickSelect(high, k - low.size - equal.size)
     }
   }

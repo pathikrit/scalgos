@@ -6,10 +6,10 @@ import Card._
 import PokerHandType._
 
 class CardSpec extends Specification {
-  
+
   "hand evaluation" should {
 
-    implicit def toCardSeq(s: String) = (s split " " map fromStr).toSeq
+    implicit def toCardSeq(s: String): Seq[Card] = (s split " " map fromStr).toSeq
 
     "work" in {
       def test(cards: String, expectedHand: PokerHandType.Value, kickers: Seq[Card]) {

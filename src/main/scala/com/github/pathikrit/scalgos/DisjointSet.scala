@@ -1,6 +1,6 @@
 package com.github.pathikrit.scalgos
 
-import collection.mutable
+import scala.collection.mutable
 
 /**
  * Each internal node in DisjointSet

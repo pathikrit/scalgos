@@ -1,6 +1,6 @@
 package com.github.pathikrit.scalgos
 
-import collection.mutable
+import scala.collection.mutable
 
 /**
  * Implicits that enhance default library stuff
@@ -10,7 +10,7 @@ object Implicits {
   /**
    * Sometimes its convenient to map true to 1 and false to 0
    */
-  implicit def toInt(x: Boolean) = if (x) 1 else 0
+  implicit def toInt(x: Boolean): Int = if (x) 1 else 0
 
   /**
    * Better floating point comparison with a tolerance of eps = 1e-9

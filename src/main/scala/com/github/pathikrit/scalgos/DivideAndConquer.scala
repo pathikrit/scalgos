@@ -1,6 +1,6 @@
 package com.github.pathikrit.scalgos
 
-import math.Ordered._
+import scala.math.Ordered._
 
 import Implicits.FuzzyDouble
 

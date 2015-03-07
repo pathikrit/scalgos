@@ -1,6 +1,6 @@
 package com.github.pathikrit.scalgos
 
-import collection.mutable
+import scala.collection.mutable
 
 /**
  * A simple counter class that keeps count of objects

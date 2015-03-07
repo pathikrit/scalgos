@@ -1,6 +1,6 @@
 package com.github.pathikrit.scalgos
 
-import math.Ordering.Implicits._
+import scala.math.Ordering.Implicits._
 
 import Implicits._
 import Memo._
@@ -69,7 +69,7 @@ object Combinatorics {
    * @return nth permutation of {0, 1, ... , l-1}
    */
   def nthPermutation(l: Int)(n: Int) = {
-    implicit def toInt(b: BigInt) = b.toInt
+    implicit def toInt(b: BigInt): Int = b.toInt
     require(l >=0 && n >= 0 && n < (l!))
     def select(s: List[Int], i: Int): List[Int] = s.length match {
       case 0 => Nil
@@ -151,5 +151,5 @@ object Combinatorics {
    */
   def partialDerangement(n: Int, k: Int) = c(n, k) * derangement(n - k)
 
-  private[this] implicit def toBigInt(i: Int) = BigInt(i)
+  private[this] implicit def toBigInt(i: Int): BigInt = BigInt(i)
 }

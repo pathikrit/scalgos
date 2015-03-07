@@ -1,4 +1,4 @@
-[![Codacy Badge](https://img.shields.io/codacy/7628da9b32734c1c96b55b5650aa96be)](https://www.codacy.com/p/2328/dashboard) [![CircleCI](https://img.shields.io/circleci/project/pathikrit/scalgos.svg)](https://circleci.com/gh/pathikrit/scalgos)
+[![Codacy Badge](https://img.shields.io/codacy/7628da9b32734c1c96b55b5650aa96be.svg)](https://www.codacy.com/p/2328/dashboard) [![CircleCI](https://img.shields.io/circleci/project/pathikrit/scalgos.svg)](https://circleci.com/gh/pathikrit/scalgos)
 
 Goals
 =====

@@ -1,8 +1,9 @@
 package com.github.pathikrit.scalgos
 
 import org.specs2.mutable._
-import collection.mutable
-import collection.immutable.BitSet
+
+import scala.collection.mutable
+import scala.collection.immutable.BitSet
 
 import Implicits.Crossable
 import NumberTheory._

@@ -1,6 +1,6 @@
 package com.github.pathikrit.scalgos
 
-import collection.mutable
+import scala.collection.mutable
 
 import Implicits.Updateable
 
@@ -37,7 +37,7 @@ abstract class AStar[Node] {
       score(n) = score(current) + distance(current, n)
     }
 
-    while (queue nonEmpty) {
+    while (queue.nonEmpty) {
       val current = queue.removeFirst
       if (isGoal(current)) {
         val trace = mutable.ArrayBuffer.empty[Node]

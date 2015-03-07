@@ -1,7 +1,7 @@
 package com.github.pathikrit.scalgos
 
-import math.Ordering.Implicits._
-import collection.mutable
+import scala.math.Ordering.Implicits._
+import scala.collection.mutable
 
 import Implicits._
 import Memo._
