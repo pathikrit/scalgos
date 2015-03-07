@@ -1,7 +1,8 @@
 test:
   override:
-    - sbt clean coverage test
+    - sbt coverage test
   post:
+    - sbt coverage test
     - sbt coverageReport
     - sbt coverageAggregate
     - sbt codacyCoverage
