@@ -31,7 +31,10 @@ private class Node[A](val entry: A) {
 class DisjointSet[A] {
   private val index = mutable.Map.empty[A, Node[A]]
 
-  private[this] implicit def toNode(x: A) = index(x) ensuring contains(x)
+  private implicit def toNode(x: A) = {
+    assume(contains(x))
+    index(x)
+  }
 
   /**
    * @return true iff x is known
@@ -41,9 +44,10 @@ class DisjointSet[A] {
   /**
    * Add a new singleton set with only x in it (assuming x is not already known)
    */
-  def +=(x: A) = {
+  def +=(x: A) {
+    assume(!contains(x))
     index(x) = new Node(x)
-  } ensuring (!contains(x))
+  }
 
   /**
    * Union the sets containing x and y
@@ -70,7 +74,7 @@ class DisjointSet[A] {
   /**
    * @return Iterator over groups of items in same set
    */
-  def sets = index.keys.groupBy(_.root.entry).values
+  def sets = index.keys groupBy {_.root.entry} values
 }
 
 object DisjointSet {
@@ -85,7 +89,7 @@ object DisjointSet {
    */
   def apply[A](elements: A*) = {
     val d = empty[A]
-    elements foreach {d += _}
+    elements foreach {e => d += e}
     d
   }
 }
