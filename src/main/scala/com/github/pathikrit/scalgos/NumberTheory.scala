@@ -98,7 +98,7 @@ object NumberTheory {
    */
   def numberOfMultiples(a: Int, b: Int, c: Int): Int = c.signum match {
     case -1 => numberOfMultiples(a, b, -c)
-    case 1 if b >= a => (b + (b<0))/c - (a - (a>0))/c + (a <= 0 && b >= 0)
+    case 1 if b >= a => (b + (b < 0))/c - (a - (a > 0))/c + (a <= 0 && b >= 0)
     case _ => throw new IllegalArgumentException
   }
 
@@ -107,7 +107,7 @@ object NumberTheory {
    * @return f s.t. f(i) = number of factors of i (including 1 and i)
    */
   def countFactors(n: Int) = {
-    val f = Array[Int](n+1)
+    val f = Array[Int](n + 1)
     for {
       i <- 1 to n
       j <- i to n by i

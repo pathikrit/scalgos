@@ -48,7 +48,7 @@ object DynamicProgramming {
     lazy val f: DP = Memo {
       case (Nil, 0) => Seq(Nil)
       case (Nil, _) => Nil
-      case (a :: as, x) => (f(as, x - a) map {_ :+ a}) ++ f(as, x)
+      case (a :: as, x) => f(as, x - a).map(_ :+ a) ++ f(as, x)
     }
 
     f(s, t)
@@ -68,7 +68,7 @@ object DynamicProgramming {
     lazy val f: DP = Memo {
       case (_, 0) => Some(Nil)
       case (Nil, _) => None
-      case (a :: as, x) => f(as, x - a) map {_ :+ a} orElse {f(as, x)}
+      case (a :: as, x) => f(as, x - a).map(_ :+ a) orElse f(as, x)
     }
 
     val possible = Function.unlift(f(s, _: Int))     // check if _ can be created using all elements of s

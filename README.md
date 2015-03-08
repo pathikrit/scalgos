@@ -3,8 +3,8 @@
 Goals
 =====
 * Learn Scala
-* Text book [implementation](src/main/scala/com/github/pathikrit/scalgos) of common algorithms in idiomatic functional Scala
-* [No external dependency](build.sbt) (except specs2 for tests)
+* Text book [implementations](src/main/scala/com/github/pathikrit/scalgos) of common algorithms in idiomatic functional Scala
+* No external [dependencies](build.sbt) (except specs2 for tests)
 * 100% [test](src/test/scala/com/github/pathikrit/scalgos) coverage and documentation
 
 Building

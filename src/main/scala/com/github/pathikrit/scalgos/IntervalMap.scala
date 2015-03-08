@@ -110,6 +110,6 @@ object IntervalMap {
       after
     }
 
-    def toSeq = segments.toSeq sortBy {_._1.start}
+    def toSeq = segments.toSeq.sortBy(_._1.start)
   }
 }
