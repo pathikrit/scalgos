@@ -63,9 +63,9 @@ object DivideAndConquer {
     if (l ~= r) {
       (l+r)/2     // sometimes good idea (l-delta) to (r+delta) minBy/maxBy f
     } else if (f(l) > f(r) ^ max) {
-      ternarySearch(l, right, f)
+      ternarySearch(l, right, f, max)
     } else {
-      ternarySearch(left, r, f)
+      ternarySearch(left, r, f, max)
     }
   }
 }

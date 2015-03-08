@@ -1,6 +1,6 @@
 test:
   override:
-    - sbt coverage test
+    - sbt test
   post:
     - sbt coverage test
     - sbt coverageReport

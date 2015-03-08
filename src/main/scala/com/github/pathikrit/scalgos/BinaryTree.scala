@@ -84,7 +84,7 @@ object BinaryTree {
   def reconstruct[A](inOrder: Seq[A], preOrder: Seq[A]): Tree[A] = preOrder match {
     case Nil => None
     case root :: children =>
-      val (leftIn, head :: rightIn) = inOrder splitAt (inOrder indexOf root)
+      val (leftIn, _ :: rightIn) = inOrder splitAt (inOrder indexOf root)
       val (leftPre, rightPre) = children splitAt leftIn.length
       Some(Node(reconstruct(leftIn, leftPre), root, reconstruct(rightIn, rightPre)))
   }

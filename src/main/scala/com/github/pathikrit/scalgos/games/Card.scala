@@ -27,7 +27,7 @@ object Card {
 class Deck {
   val cards = mutable.Queue() ++ util.Random.shuffle(Card.all)
 
-  def deal = cards dequeue
+  def deal = cards.dequeue
 
   def remove(discards: Set[Card]) {discards foreach {card: Card => cards dequeueFirst {_ == card}}}
 }
