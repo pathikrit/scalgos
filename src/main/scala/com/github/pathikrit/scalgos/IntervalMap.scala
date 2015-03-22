@@ -1,5 +1,7 @@
 package com.github.pathikrit.scalgos
 
+import scala.collection.mutable
+
 /**
  * A data structure that supports interval updates
  * e.g. map(5 -> 60000) = "hello" would set all keys in [5, 60000) to be "hello"
@@ -71,45 +73,41 @@ object IntervalMap {
 
   private class SegmentedIntervalMap[A] extends IntervalMap[A] {
 
-    private var segments = Map.empty[Interval, A]
+    private[this] val segments = mutable.Map.empty[Interval, A]
 
     override def update(r: Interval, value: A) = {
       clear(r)
-
-      val a = segments flatMap {
-        case (k, v) if k.end == r.start && v == value => dropAnd(k, Some(k.start))
-        case _ => None
+      val a = segments collect { case (k @ Interval(_, r.start), `value`) =>
+        unset(k)
+        k.start
       }
-
-      val b = segments flatMap {
-        case (k, v) if r.end == k.start && v == value => dropAnd(k, Some(k.end))
-        case _ => None
+      val b = segments collect { case (k @ Interval(r.end, _), `value`) =>
+        unset(k)
+        k.end
       }
-
-      val key: Interval = (a.headOption getOrElse r.start, b.headOption getOrElse r.end)
-      segments = segments + (key -> value)
+      set((a.headOption getOrElse r.start) -> (b.headOption getOrElse r.end), value)
     }
 
     override def apply(x: Int) = segments find {_._1 contains x} map {_._2}
 
     override def clear(r: Interval) = {
-      segments = segments filterKeys {key => !(r overlaps key)}
+      segments.keys filter r.overlaps foreach unset
 
       segments foreach {case (k, v)  =>
         if (k contains r.start) {
-          dropAnd(k, segments = segments + (Interval(k.start, r.start) -> v))
+          unset(k)
+          set(k.start -> r.start, v)
         }
         if (k contains r.end) {
-          dropAnd(k, segments = segments + (Interval(r.end, k.end) -> v))
+          unset(k)
+          set(r.end -> k.end, v)
         }
       }
     }
 
-    private def dropAnd[B](toDrop: Interval, after: => B) = {
-      segments = segments - toDrop
-      after
-    }
+    override def toSeq = segments.toSeq.sortBy(_._1.start)
 
-    def toSeq = segments.toSeq.sortBy(_._1.start)
+    private[this] def unset(i: Interval) = segments -= i
+    private[this] def set(i: Interval, value: A) = segments(i) = value
   }
 }
