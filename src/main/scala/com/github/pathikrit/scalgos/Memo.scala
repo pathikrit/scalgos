@@ -2,6 +2,7 @@ package com.github.pathikrit.scalgos
 
 /**
  * Generic way to create memoized functions (even recursive and multiple-arg ones)
+ * @see http://stackoverflow.com/questions/25129721/ for full explanation of this
  *
  * @param f the function to memoize
  * @tparam I input to f

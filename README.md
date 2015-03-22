@@ -2,9 +2,9 @@
 
 Goals
 =====
-* Learn Scala
+* [Learn Scala](http://stackoverflow.com/tags/scala/info)
 * Text book [implementations](src/main/scala/com/github/pathikrit/scalgos) of common algorithms in idiomatic functional Scala
-* No external [dependencies](build.sbt) (except specs2 for tests)
+* No external [dependencies](build.sbt) (except [specs2](http://etorreborre.github.io/specs2/) for tests)
 * 100% [test](src/test/scala/com/github/pathikrit/scalgos) coverage and documentation
 
 Building
