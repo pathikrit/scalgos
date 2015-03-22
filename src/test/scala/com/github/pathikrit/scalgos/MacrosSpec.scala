@@ -1,7 +1,6 @@
 package com.github.pathikrit.scalgos
 
 import org.specs2.mutable.Specification
-import java.io.{ByteArrayOutputStream, PrintStream}
 
 import Macros._
 

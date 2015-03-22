@@ -7,7 +7,7 @@ import scala.collection.mutable
  * e.g. map(5 -> 60000) = "hello" would set all keys in [5, 60000) to be "hello"
  */
 trait IntervalMap[A] {
-  import com.github.pathikrit.scalgos.IntervalMap.Interval
+  import IntervalMap.Interval
 
   /**
    * Set all values in range to value

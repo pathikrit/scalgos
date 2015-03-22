@@ -178,10 +178,10 @@ object DynamicProgramming {
     type DP = Memo[(List[A], List[A]), (Int, Int), List[A]]
     implicit def encode(key: (List[A], List[A])) = (key._1.length, key._2.length)
 
-    implicit val c = Ordering by {s: List[A] => s.length}
+    implicit val c: Ordering[List[A]] = Ordering by {_.length}
 
     lazy val f: DP = Memo {
-      case (_, Nil) | (Nil, _) => Nil
+      case (Nil, _) | (_, Nil) => Nil
       case (x :: xs, y :: ys) if x == y => x :: f(xs, ys)
       case (x, y) => c.max(f(x.tail, y), f(x, y.tail))
     }

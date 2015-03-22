@@ -1,6 +1,6 @@
 package com.github.pathikrit.scalgos
 
-import com.github.pathikrit.scalgos.IntervalMap._
+import IntervalMap._
 
 import org.specs2.mutable.Specification
 

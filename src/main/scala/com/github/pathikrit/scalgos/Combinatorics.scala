@@ -53,13 +53,12 @@ object Combinatorics {
    *
    * @return Some(p) if next permutation exists or None if s is already in decreasing order
    */
-  def nextPermutation[A: Ordering](s: List[A]) = s zip s.tail lastIndexWhere {e => e._1 < e._2} match {
-    case -1 => None
+  def nextPermutation[A: Ordering](s: List[A]) = indexToOpt(s zip s.tail lastIndexWhere {e => e._1 < e._2}) map {
     case p =>
       val e = s(p)
       val n = s lastIndexWhere {e < _}
       val (a, b) = s.swap(p, n) splitAt (p + 1)
-      Some(a ::: b.reverse)
+      a ::: b.reverse
   }
 
   /**

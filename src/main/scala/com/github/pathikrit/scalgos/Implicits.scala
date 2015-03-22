@@ -125,6 +125,11 @@ object Implicits {
   }
 
   /**
+   * To get around the fact that indexOf returns -1 for missing instead of None.
+   */
+  def indexToOpt(idx: Int) = if (idx < 0) None else Some(idx)
+
+  /**
    * Support some more operations on lists
    */
   implicit class RichList[A](l: List[A]) {
