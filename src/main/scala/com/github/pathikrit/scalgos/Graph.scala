@@ -249,7 +249,7 @@ object Graph {
     case Nil => Set.empty[EndPoints]
     case v :: vs =>
       val (seen, unseen, mst) = (mutable.Set(v), mutable.Set(vs: _*), mutable.Set.empty[EndPoints])
-      while(unseen.nonEmpty) {
+      while(unseen nonEmpty) {
         val (u, v) = seen X unseen minBy g.apply
         unseen -= v
         seen += v
