@@ -1,14 +1,15 @@
 package com.github.pathikrit.scalgos.games
 
-import scala.util.Try
-
 /**
  * Generic idea to solve maze style problems
  */
 object Maze {
 
   implicit class Grid[A](a: Array[Array[A]]) {
-    def apply(x: Int, y: Int) = Try(a(x)(y)).toOption
+    def apply(x: Int, y: Int) = for {
+      i <- a lift x
+      j <- i lift y
+    } yield j
   }
 
   def explore[A](g: Array[Array[A]]) = for {

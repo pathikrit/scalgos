@@ -162,7 +162,7 @@ object DynamicProgramming {
     case n => for {
       i <- 0 until n
       (a, b) <- validBrackets(i) X validBrackets(n-i-1)
-    } yield '(' + a  + ')' + b
+    } yield s"($a)$b"
   }
 
   /**
@@ -181,8 +181,7 @@ object DynamicProgramming {
     implicit val c = Ordering by {s: List[A] => s.length}
 
     lazy val f: DP = Memo {
-      case (_, Nil) => Nil
-      case (Nil, _) => Nil
+      case (_, Nil) | (Nil, _) => Nil
       case (x :: xs, y :: ys) if x == y => x :: f(xs, ys)
       case (x, y) => c.max(f(x.tail, y), f(x, y.tail))
     }

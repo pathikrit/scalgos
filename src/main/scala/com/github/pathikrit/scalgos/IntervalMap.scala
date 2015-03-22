@@ -73,7 +73,7 @@ object IntervalMap {
 
     private var segments = Map.empty[Interval, A]
 
-    def update(r: Interval, value: A) = {
+    override def update(r: Interval, value: A) = {
       clear(r)
 
       val a = segments flatMap {
@@ -90,9 +90,9 @@ object IntervalMap {
       segments = segments + (key -> value)
     }
 
-    def apply(x: Int) = segments find {_._1 contains x} map {_._2}
+    override def apply(x: Int) = segments find {_._1 contains x} map {_._2}
 
-    def clear(r: Interval) = {
+    override def clear(r: Interval) = {
       segments = segments filterKeys {key => !(r overlaps key)}
 
       segments foreach {case (k, v)  =>

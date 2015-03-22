@@ -3,7 +3,6 @@ package com.github.pathikrit.scalgos
 import scala.io.Source
 import scala.collection.mutable
 import scala.collection.JavaConversions._
-import scala.reflect.macros.blackbox
 
 /**
  * Collection of code snippets that do common tasks such as profiling, downloading a webpage, debugging variables etc
