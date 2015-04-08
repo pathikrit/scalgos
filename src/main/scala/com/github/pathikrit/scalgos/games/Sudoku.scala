@@ -5,9 +5,8 @@ package com.github.pathikrit.scalgos.games
  * @param board underlying board (0 for empty cells)
  */
 case class Sudoku(board: IndexedSeq[IndexedSeq[Int]]) {
-
   /**
-   * Sudoku solver
+   * Solve this board
    * O(average elementary branching factor ^ empty cells)
    *
    * @param cell current cell (0 at start, 81 at end)
@@ -19,10 +18,13 @@ case class Sudoku(board: IndexedSeq[IndexedSeq[Int]]) {
     case (r, c) =>
       def cells(i: Int) = board(r)(i) :: board(i)(c) :: board(3*(r/3) + i/3)(3*(c/3) + i%3) :: Nil
       val used = 0 until 9 flatMap cells
-
-      def guess(x: Int) = Sudoku(board.updated(r, board(r).updated(c, x))).solve(cell+1)
-      1 to 9 diff used collectFirst Function.unlift(guess)
+      1 to 9 diff used collectFirst Function.unlift(update(r, c, _).solve(cell+1))
   }
+
+  /**
+   * @return New board with (r,c) set to i
+   */
+  def update(r: Int, c: Int, i: Int) = Sudoku(board.updated(r, board(r).updated(c, i)))
 
   /**
    * @return true iff board is in valid solved state
@@ -32,20 +34,5 @@ case class Sudoku(board: IndexedSeq[IndexedSeq[Int]]) {
   /**
    * @return pretty print sudoku board
    */
-  override def toString = {
-    var pretty = ""
-    for (i <- board.indices) {
-      if(i == 3 || i == 6) {
-        pretty += "- - - - - - - - - - -\n"
-      }
-      for (j <- board(i).indices) {
-        if (j == 3 || j == 6) {
-          pretty += "| "
-        }
-        pretty += board(i)(j) + " "
-      }
-      pretty += "\n"
-    }
-    pretty
-  }
+  override def toString = board grouped 3 map {_ map {_ grouped 3 map {_ mkString " "} mkString " | "} mkString "\n"} mkString s"\n${"-" * 11 mkString " "}\n"
 }
