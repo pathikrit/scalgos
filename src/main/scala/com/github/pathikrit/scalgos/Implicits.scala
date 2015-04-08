@@ -78,6 +78,10 @@ object Implicits {
     def bitCount = java.lang.Long.bitCount(x)
   }
 
+  implicit class TraversableExtension[A](t: Traversable[A]) {
+    def firstDefined[B](f: A => Option[B]): Option[B] = t collectFirst Function.unlift(f)
+  }
+
   /**
    * Let's you use X instead of double for-loops
    */
@@ -127,7 +131,12 @@ object Implicits {
   /**
    * To get around the fact that indexOf returns -1 for missing instead of None.
    */
-  def indexToOpt(idx: Int) = if (idx < 0) None else Some(idx)
+  def indexToOpt(idx: Int) = when(idx >= 0)(idx)
+
+  /**
+   * @return If predicate is true, return Some(f) else None
+   */
+  def when[A](predicate: Boolean)(f: => A): Option[A] = if (predicate) Some(f) else None
 
   /**
    * Support some more operations on lists
