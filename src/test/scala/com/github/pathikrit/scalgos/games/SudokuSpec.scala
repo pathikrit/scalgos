@@ -24,7 +24,7 @@ class SudokuSpec extends Specification {
           $(0, 4, 0, 0, 0, 0, 0, 0, 7),
           $(0, 0, 7, 0, 0, 0, 3, 0, 0)
         )
-      ).solve().map(_.toString) must beSome("""
+      ).solve.map(_.toString) must beSome("""
         |1 6 2 | 8 5 7 | 4 9 3
         |5 3 4 | 1 2 9 | 6 7 8
         |7 8 9 | 6 4 3 | 5 2 1
