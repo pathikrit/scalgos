@@ -248,5 +248,5 @@ object DynamicProgramming {
    * @param s
    * @return the maximum contiguous sub array sum
    */
-  def maxSubArraySum(s: Seq[Int]) = s.scanLeft(0){(sum, i) => (sum + i) max 0}.max
+  def maxSubArraySum(s: Seq[Int]) = s.scanLeft(0){_ + _ max 0}.max
 }
