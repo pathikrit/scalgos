@@ -71,8 +71,8 @@ object DynamicProgramming {
       case (a :: as, x) => f(as, x - a).map(_ :+ a) orElse f(as, x)
     }
 
-    val possible = Function.unlift(f(s, _: Int))     // check if _ can be created using all elements of s
-    (s.sum/2 --> 0 collectFirst possible).get   // find largest such x < s.sum/2 (always a solution at 0)
+    val possible = f(s, _: Int)                 // check if _ can be created using all elements of s
+    (s.sum/2 --> 0 firstDefined possible).get   // find largest such x < s.sum/2 (always a solution at 0)
   }
 
   /**

@@ -296,5 +296,5 @@ object Graph {
    * @return If f is true at a vertex v, return Some(v) else None
    */
   def dfs(g: Graph, u: Int, f: Int => Boolean, seen: Set[Int] = Set.empty[Int]): Option[Int] =
-    if (f(u)) Some(u) else g neighbours u filterNot seen collectFirst Function.unlift(dfs(g, _, f, seen + u))
+    if (f(u)) Some(u) else g neighbours u filterNot seen firstDefined (dfs(g, _, f, seen + u))
 }
