@@ -1,5 +1,5 @@
 name := "scalgos"
-version := "0.0.1"
+version := "1.0-SNAPSHOT"
 description := "Algorithms in Scala"
 licenses += ("MIT", url("http://opensource.org/licenses/MIT"))
 organization := "com.github.pathikrit"

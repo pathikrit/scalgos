@@ -26,6 +26,7 @@ object DivideAndConquer {
   /**
    * Generic binary search in [min,max] f to achieve target goal
    * O(log n)
+   * TODO: implement a binarySearch where f is from A to Boolean
    *
    * @param f the function to binary search over - must be monotonically increasing
    * @param min starting minimum guess
