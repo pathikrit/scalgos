@@ -45,6 +45,13 @@ object Implicits {
   }
 
   /**
+   * Extension to Booleans
+   */
+  implicit class BooleanExtensions(b: Boolean) {
+    def then[A](f: => A): Option[A] = if (b) Some(f) else None
+  }
+
+  /**
    * Extensions to Ints
    */
   implicit class IntExtensions(x: Int) {
@@ -131,12 +138,12 @@ object Implicits {
   /**
    * To get around the fact that indexOf returns -1 for missing instead of None.
    */
-  def indexToOpt(idx: Int) = when(idx >= 0)(idx)
+  def indexToOpt(idx: Int) = idx >= 0 then idx
 
   /**
    * @return If predicate is true, return Some(f) else None
    */
-  def when[A](predicate: Boolean)(f: => A): Option[A] = if (predicate) Some(f) else None
+  def when[A](predicate: Boolean)(f: => A): Option[A] = predicate then f
 
   /**
    * Support some more operations on lists

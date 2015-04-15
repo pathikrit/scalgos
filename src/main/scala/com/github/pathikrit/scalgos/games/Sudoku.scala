@@ -1,6 +1,6 @@
 package com.github.pathikrit.scalgos.games
 
-import com.github.pathikrit.scalgos.Implicits.{when, TraversableExtension}
+import com.github.pathikrit.scalgos.Implicits.{BooleanExtensions, TraversableExtension}
 
 /**
  * Sudoku related algorithms
@@ -21,7 +21,7 @@ case class Sudoku(board: IndexedSeq[IndexedSeq[Int]]) {
    * @return Some(solved board) if solution exists; else None
    */
   private[Sudoku] def solve(cell: Int): Option[Sudoku] = (cell%n, cell/n) match {
-    case (_, `n`) => when(isSolution)(this)
+    case (_, `n`) => isSolution then this
     case (r, c) if board(r)(c) > 0 => solve(cell + 1)
     case (r, c) =>
       def used(i: Int) = board(r)(i) :: board(i)(c) :: board(s*(r/s) + i/s)(s*(c/s) + i%s) :: Nil
