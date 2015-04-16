@@ -2,7 +2,7 @@ package com.github.pathikrit.scalgos
 
 import scala.math.Ordered._
 
-import Implicits.FuzzyDouble
+import Implicits.{FuzzyDouble, BooleanExtensions}
 
 /**
  * Collection of divide and conquer algorithms
@@ -26,7 +26,6 @@ object DivideAndConquer {
   /**
    * Generic binary search in [min,max] f to achieve target goal
    * O(log n)
-   * TODO: implement a binarySearch where f is from A to Boolean
    *
    * @param f the function to binary search over - must be monotonically increasing
    * @param min starting minimum guess
@@ -47,6 +46,21 @@ object DivideAndConquer {
       }
     } else {
       mid
+    }
+  }
+
+  /**
+   * Find smallest x in [min,max] where f is true
+   *
+   * @return Some(x) if such an x is found in [min,max] else None
+   */
+  def binarySearch[A: Ordering](f: A => Boolean, min: A, max: A, avg: (A, A) => A): Option[A] = {
+    val mid = avg(min, max)
+    val ok = f(mid)
+    if (min < mid && mid < max) {
+      if(ok) binarySearch(f, min, mid, avg) else binarySearch(f, mid, max, avg)
+    } else {
+      ok then mid
     }
   }
 
