@@ -56,6 +56,7 @@ object IntervalMap {
   /**
    * @return a new empty IntervalMap
    *         all operations are O(n) except toSeq which is O(n log n) (where n is number of disjoint segments)
+   *         TODO: Make these O(log n)
    */
   def empty[A]: IntervalMap[A] = new SegmentedIntervalMap[A]
 

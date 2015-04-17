@@ -24,7 +24,7 @@ case class Sudoku(board: IndexedSeq[IndexedSeq[Int]]) {
     case (_, `n`) => isSolution then this
     case (r, c) if board(r)(c) > 0 => solve(cell + 1)
     case (r, c) =>
-      def used(i: Int) = board(r)(i) :: board(i)(c) :: board(s*(r/s) + i/s)(s*(c/s) + i%s) :: Nil
+      def used(i: Int) = Seq(board(r)(i), board(i)(c), board(s*(r/s) + i/s)(s*(c/s) + i%s))
       def guess(x: Int) = (this(r, c) = x).solve(c + 1)
       1 to n diff (board.indices flatMap used) firstDefined guess
   }

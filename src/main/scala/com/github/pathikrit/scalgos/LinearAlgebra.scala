@@ -36,13 +36,13 @@ object LinearAlgebra {
     /**
      * @return num rows in matrix
      */
-    def rows = a.size
+    def rows = a.length
 
     /**
      * TODO: what if num rows == 0
      * @return num cols in matrix
      */
-    def cols = a(0).size
+    def cols = a(0).length
   }
 
   /**

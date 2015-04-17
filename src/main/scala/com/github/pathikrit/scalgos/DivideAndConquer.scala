@@ -58,7 +58,7 @@ object DivideAndConquer {
     val mid = avg(min, max)
     val ok = f(mid)
     if (min < mid && mid < max) {
-      if(ok) binarySearch(f, min, mid, avg) else binarySearch(f, mid, max, avg)
+      if (ok) binarySearch(f, mid, max, avg) else binarySearch(f, min, mid, avg)
     } else {
       ok then mid
     }
