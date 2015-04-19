@@ -99,7 +99,7 @@ object Implicits {
   /**
    * Supports map inversions
    */
-  implicit class Invertible[K, V](map: collection.Map[K, V]) {
+  implicit class Invertible[K, V](map: Map[K, V]) {
 
     /**
      * Invert a map[K,V] to map[V, Iterable[K]]

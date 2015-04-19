@@ -43,7 +43,10 @@ trait IntervalMap[A] {
 
   override def hashCode = toSeq.hashCode()
 
-  override def equals(obj: Any) = obj.isInstanceOf[IntervalMap[A]] && obj.asInstanceOf[IntervalMap[A]].toSeq == toSeq
+  override def equals(obj: Any) = obj match {
+    case that: IntervalMap[A] => that.toSeq == this.toSeq
+    case _ => false
+  }
 
   override def toString = toSeq map {case (i, v) => s"$i : $v"} mkString ("{", ", ", "}")
 }
