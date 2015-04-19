@@ -14,9 +14,9 @@ import Implicits._
 class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
   import Graph.EndPoints
 
-  private val adjacencyList = Array.fill(numberOfVertices){mutable.Map.empty[Int, Double] withDefaultValue Double.PositiveInfinity}
+  private[this] val adjacencyList = Array.fill(numberOfVertices){mutable.Map.empty[Int, Double] withDefaultValue Double.PositiveInfinity}
 
-  private implicit class Edge(points: EndPoints) {
+  private[this] implicit class Edge(points: EndPoints) {
     val (u, v) = points
     assume(hasVertices(u, v))
   }
@@ -102,7 +102,7 @@ class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
  */
 object Graph {
 
-  private type EndPoints = (Int, Int)
+  private[Graph] type EndPoints = (Int, Int)
 
   /**
    * Run Dijkstra's shortest path algorithm

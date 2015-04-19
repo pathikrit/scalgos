@@ -16,7 +16,7 @@ object Card {
 
   val (ranks, suits) = ("23456789TJQKA", "♣♠♦♥")
 
-  val all = for ((rank, suit) <- ranks.indices X suits.indices) yield Card(rank, suit)
+  val all = for {(rank, suit) <- ranks.indices X suits.indices} yield Card(rank, suit)
 
   def fromStr(s: String) = Card(ranks indexOf s(0).toUpper, "CSDH" indexOf s(1).toUpper)
 }
@@ -27,7 +27,7 @@ object Card {
 class Deck {
   val cards = mutable.Queue() ++ util.Random.shuffle(Card.all)
 
-  def deal = cards.dequeue
+  def deal = cards.dequeue()
 
   def remove(discards: Set[Card]) {discards foreach {card: Card => cards dequeueFirst {_ == card}}}
 }

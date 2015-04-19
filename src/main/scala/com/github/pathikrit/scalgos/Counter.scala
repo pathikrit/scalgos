@@ -8,7 +8,7 @@ import scala.collection.mutable
  */
 class Counter[A] extends mutable.Map[A, Int] {
 
-  private val delegate = mutable.Map.empty[A, Int] withDefaultValue 0
+  private[this] val delegate = mutable.Map.empty[A, Int] withDefaultValue 0
 
   /**
    * Increment counter of kv._1 by kv._2

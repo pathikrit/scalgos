@@ -32,7 +32,7 @@ object Geometry {
    * @param points points on the shape
    */
   case class Shape(points: Set[Point]) {
-    private val polygon = new java.awt.geom.GeneralPath()
+    private[this] val polygon = new java.awt.geom.GeneralPath()
 
     polygon moveTo (points.head.x, points.head.y)
     points.tail foreach {p => polygon lineTo (p.x, p.y)}

@@ -3,24 +3,6 @@ package com.github.pathikrit.scalgos
 import scala.collection.mutable
 
 /**
- * Each internal node in DisjointSet
- */
-private class Node[A](val entry: A) {
-  /**
-   * parent - the pointer to root node (by default itself)
-   * rank - depth if we did not do path compression in find - else its upper bound on the distance from node to parent
-   */
-  var (parent, rank) = (this, 0)
-
-  def root: Node[A] = {
-    if (parent != this) {
-      parent = parent.root     // path compression
-    }
-    parent
-  }
-}
-
-/**
  * A disjoint-set data structure (also called union-find data structure)
  * Has efficient union and find operations in amortised O(a(n)) time (where a is the inverse-Ackermann function)
  * TODO: Support delete
@@ -29,9 +11,10 @@ private class Node[A](val entry: A) {
  * @tparam A types of things in set
  */
 class DisjointSet[A] {
-  private val index = mutable.Map.empty[A, Node[A]]
+  import DisjointSet.Node
+  private[this] val index = mutable.Map.empty[A, Node[A]]
 
-  private implicit def toNode(x: A) = {
+  private[this] implicit def toNode(x: A) = {
     assume(contains(x))
     index(x)
   }
@@ -44,7 +27,7 @@ class DisjointSet[A] {
   /**
    * Add a new singleton set with only x in it (assuming x is not already known)
    */
-  def +=(x: A) {
+  def +=(x: A) = {
     assume(!contains(x))
     index(x) = new Node(x)
   }
@@ -52,7 +35,7 @@ class DisjointSet[A] {
   /**
    * Union the sets containing x and y
    */
-  def union(x: A, y: A) {
+  def union(x: A, y: A) = {
     val (xRoot, yRoot) = (x.root, y.root)
     if (xRoot != yRoot) {
       if (xRoot.rank < yRoot.rank) {        // change the root of the shorter/less-depth one
@@ -78,6 +61,23 @@ class DisjointSet[A] {
 }
 
 object DisjointSet {
+  /**
+   * Each internal node in DisjointSet
+   */
+  private[DisjointSet] class Node[A](val entry: A) {
+    /**
+     * parent - the pointer to root node (by default itself)
+     * rank - depth if we did not do path compression in find - else its upper bound on the distance from node to parent
+     */
+    var (parent, rank) = (this, 0)
+
+    def root: Node[A] = {
+      if (parent != this) {
+        parent = parent.root     // path compression
+      }
+      parent
+    }
+  }
 
   /**
    * @return empty disjoint set
