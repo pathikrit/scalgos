@@ -75,7 +75,7 @@ object IntervalMap {
 
   implicit val toInterval = Interval.tupled
 
-  private class SegmentedIntervalMap[A] extends IntervalMap[A] {
+  private[this] class SegmentedIntervalMap[A] extends IntervalMap[A] {
 
     private[this] val segments = mutable.Map.empty[Interval, A]
 

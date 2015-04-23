@@ -108,7 +108,7 @@ class GraphSpec extends Specification {
     /**
      * Given a graph and its strongly connected components check if all vertices are covered and mutual exclusion
      */
-    def checkCoverage(g: Graph, sccs: Seq[Set[Int]]) {
+    def checkCoverage(g: Graph, sccs: Seq[Set[Int]]) = {
       for {
         (s1, s2) <- sccs X sccs if s1 != s2
       } s1.intersect(s2) must be empty

@@ -29,7 +29,7 @@ class Deck {
 
   def deal = cards.dequeue()
 
-  def remove(discards: Set[Card]) {discards foreach {card: Card => cards dequeueFirst {_ == card}}}
+  def remove(discards: Set[Card]) = discards foreach {card => cards dequeueFirst {_ == card}}
 }
 
 /**

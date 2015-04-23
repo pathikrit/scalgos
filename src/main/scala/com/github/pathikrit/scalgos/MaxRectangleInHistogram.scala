@@ -6,7 +6,7 @@ package com.github.pathikrit.scalgos
  */
 object MaxRectangleInHistogram {
 
-  private val (left, right) = (true, false)
+  private[this] val (left, right) = (true, false)
 
   /**
    * A block has dimension (height, width) and prev and next pointers
@@ -32,7 +32,7 @@ object MaxRectangleInHistogram {
      * Merge this block either with prev (if left is true) or next (if left is false)
      * @return max(this block's area, collapsing after merging)
      */
-    private def merge(left: Boolean) = {
+    private[this] def merge(left: Boolean) = {
       val that = if (left) prev.get else next.get
       val currentArea = area
       height = this.height min that.height

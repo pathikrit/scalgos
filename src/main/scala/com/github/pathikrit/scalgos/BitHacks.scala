@@ -19,7 +19,7 @@ object BitHacks {
 
     def *~(b: Long) = combine(a.toDouble * b, a*b)
 
-    private def combine(x: Double, y: Long) = {
+    private[this] def combine(x: Double, y: Long) = {
       val l = 18
       val sx = "%.0f" format x
       if (sx.length <= l) {
@@ -52,7 +52,7 @@ object BitHacks {
    * @return the tuple swapped
    */
   def noTempSwap(a: (Int, Int)) = {
-    var (x,y) = a
+    var (x, y) = a
     x = x - y
     y = x + y
     x = y - x

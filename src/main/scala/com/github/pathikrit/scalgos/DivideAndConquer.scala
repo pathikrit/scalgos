@@ -74,9 +74,9 @@ object DivideAndConquer {
    */
   def ternarySearch[A: Ordering](left: Double, right: Double, f: Double => A, max: Boolean = true): Double = {
     assume(right >~ left)
-    val (l, r) = ((2*left+right)/3, (left+2*right)/3)
+    val (l, r) = ((2*left + right)/3, (left + 2*right)/3)
     if (l ~= r) {
-      (l+r)/2     // sometimes good idea (l-delta) to (r+delta) minBy/maxBy f
+      (l + r)/2     // sometimes good idea (l-delta) to (r+delta) minBy/maxBy f
     } else if (f(l) > f(r) ^ max) {
       ternarySearch(l, right, f, max)
     } else {

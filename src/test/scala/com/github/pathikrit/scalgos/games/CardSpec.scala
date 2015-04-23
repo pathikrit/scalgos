@@ -12,7 +12,7 @@ class CardSpec extends Specification {
     implicit def toCardSeq(s: String): Seq[Card] = (s split " " map fromStr).toSeq
 
     "work" in {
-      def test(cards: String, expectedHand: PokerHandType.Value, kickers: Seq[Card]) {
+      def test(cards: String, expectedHand: PokerHandType.Value, kickers: Seq[Card]) = {
         val (hand, sorted) = classify(toCardSeq(cards).toSet)
         hand must be equalTo expectedHand
         sorted zip kickers foreach {p => p._1.rank must be equalTo p._2.rank}

@@ -34,9 +34,13 @@ object Geometry {
   case class Shape(points: Set[Point]) {
     private[this] val polygon = new java.awt.geom.GeneralPath()
 
-    polygon moveTo (points.head.x, points.head.y)
-    points.tail foreach {p => polygon lineTo (p.x, p.y)}
-    polygon.closePath()
+    points.toList match {     //TODO: .toList is non-deterministic!
+      case p1 :: ps =>
+        polygon moveTo (p1.x, p1.y)
+        ps foreach {p => polygon lineTo (p.x, p.y)}
+        polygon.closePath()
+      case _ =>
+    }
 
     def contains(p: Point) = polygon contains (p.x, p.y)
   }

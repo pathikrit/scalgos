@@ -63,7 +63,7 @@ class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
    * @param points (from, to)
    * @param weight (from,to) = weight
    */
-  def update(points: EndPoints, weight: Double) {
+  def update(points: EndPoints, weight: Double) = {
     adjacencyList(points.u)(points.v) = weight
     if (!isDirected) {
       adjacencyList(points.v)(points.u) = weight
@@ -74,7 +74,7 @@ class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
    * Delete an edge between (from,to)
    * @param points (from,to)
    */
-  def -=(points: EndPoints) {
+  def -=(points: EndPoints) = {
     adjacencyList(points.u) -= points.v
     if (!isDirected) {
       adjacencyList(points.v) -= points.u

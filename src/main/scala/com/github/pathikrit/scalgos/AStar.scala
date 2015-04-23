@@ -33,7 +33,7 @@ abstract class AStar[Node] {
     val parent = mutable.Map.empty[Node, Node]
     val visited = mutable.Set.empty[Node]
 
-    def reScore(current: Node)(n: Node) {
+    def reScore(current: Node)(n: Node) = {
       score(n) = score(current) + distance(current, n)
     }
 
