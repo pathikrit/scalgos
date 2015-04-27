@@ -7,8 +7,8 @@ object Greedy {
 
   /**
    * Stack based solution to maximum rectangle in histogram problem
-   * stack always has (h, x) such that h is increasing order x is the earliest index at which h can be spanned
-   * O(n) - TODO: Proof?
+   * stack always has (h, x) such that h is in increasing order and x is the earliest index at which h can be spanned
+   * O(n) - stack can be atmost size of remaining; no recursive step repeats previous; size of remaining never increases
    *
    * @param heights heights of histogram
    * @return area of largest rectangle under histogram
