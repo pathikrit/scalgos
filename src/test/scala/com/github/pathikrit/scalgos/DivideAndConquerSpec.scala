@@ -28,9 +28,9 @@ class DivideAndConquerSpec extends Specification {
 
     "fail for negative inputs" in todo
 
-    "match the rewrite algorithm" in {
+    "match the greedy algorithm" in {
       val heights = RandomData.positiveList()
-      maxRectangleInHistogram(heights) must be equalTo MaxRectangleInHistogram(heights map {(_, 1)})
+      maxRectangleInHistogram(heights) must be equalTo Greedy.maxRectangleInHistogram(heights)
     }
   }
 
