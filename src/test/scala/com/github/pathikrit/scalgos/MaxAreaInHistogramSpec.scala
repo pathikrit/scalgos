@@ -33,5 +33,11 @@ class MaxAreaInHistogramSpec extends Specification {
       apply(blocks) must be equalTo expectedArea
       apply(bars map {(_, 1)}) must be equalTo expectedArea
     }
+
+    "match the greedy algorithm" in {
+      val blocks = RandomData.list(min = 1, max = 10, length = 5)
+      val expectedArea = Greedy.maxRectangleInHistogram(blocks)
+      apply(blocks map {(_, 1)}) aka blocks.mkString(",") must be equalTo expectedArea
+    }
   }
 }
