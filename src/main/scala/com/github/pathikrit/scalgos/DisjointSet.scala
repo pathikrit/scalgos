@@ -12,24 +12,24 @@ import scala.collection.mutable
  */
 class DisjointSet[A] {
   import DisjointSet.Node
-  private[this] val index = mutable.Map.empty[A, Node[A]]
+  private[this] val parent = mutable.Map.empty[A, Node[A]]
 
   private[this] implicit def toNode(x: A) = {
     assume(contains(x))
-    index(x)
+    parent(x)
   }
 
   /**
    * @return true iff x is known
    */
-  def contains(x: A) = index contains x
+  def contains(x: A) = parent contains x
 
   /**
    * Add a new singleton set with only x in it (assuming x is not already known)
    */
   def +=(x: A) = {
     assume(!contains(x))
-    index(x) = new Node(x)
+    parent(x) = new Node(x)
   }
 
   /**
@@ -57,7 +57,7 @@ class DisjointSet[A] {
   /**
    * @return Iterator over groups of items in same set
    */
-  def sets = index.keys groupBy {_.root.entry} values
+  def sets = parent.keys groupBy {_.root.entry} values
 }
 
 object DisjointSet {
