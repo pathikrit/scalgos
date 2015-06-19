@@ -3,6 +3,8 @@ package com.github.pathikrit.scalgos
 import scala.collection.mutable
 import java.lang.Math._
 
+import Implicits.FuzzyDouble
+
 /**
  * Collection of geometrical algorithms
  */
@@ -60,6 +62,11 @@ object Geometry {
    * @return Area of triangle a,b,c
    */
   def areaOfTriangle(a: Point, b: Point, c: Point) = crossProduct(a, b, c).abs/2
+
+  /**
+   * @return true iff a,b,c are on the same line i.e. crossProduct is 0
+   */
+  def isCollinear(a: Point, b: Point, c: Point) = (b.x - a.x)*(c.y - a.y) ~= (c.x - a.x)*(b.y - a.y)
 
   /**
    * Check if 2 segments intersect
