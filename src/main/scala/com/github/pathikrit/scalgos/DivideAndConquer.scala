@@ -83,4 +83,16 @@ object DivideAndConquer {
       ternarySearch(left, r, f, max)
     }
   }
+
+
+  /**
+   * Recursive algorithm of exponentiation by squaring
+   * O(log b)
+   *
+   * @return a^b
+   */
+  def intPow(a: Int, b: Int): Long = if (b == 0) 1 else {
+    val h = intPow(a, b/2)
+    h * h * (if (b%2 == 0) 1 else a)
+  }
 }
