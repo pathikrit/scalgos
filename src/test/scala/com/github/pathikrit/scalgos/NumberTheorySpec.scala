@@ -43,9 +43,13 @@ class NumberTheorySpec extends Specification {
     "fail for negative/zero inputs" in todo
 
     "match brute force" in {
+      val n = 100
+      val phi = phis(n)
+      def phi2(n: Int) = sieveOfEratosthenes(n).foldLeft(n){(phi, p) => if (phi%p == 0) phi - phi/p else phi}
       examplesBlock {
-        for (i <- 1 to 100) {
+        for (i <- 1 to n) {
           phi(i) must be equalTo ((1 to i) count {gcd(i, _) == 1})
+          phi(i) must be equalTo phi2(i)
         }
       }
     }

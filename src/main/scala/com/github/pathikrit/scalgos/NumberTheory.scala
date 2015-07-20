@@ -44,9 +44,16 @@ object NumberTheory {
    * Euler's Totient Function or phi function
    * O(n log n)
    *
-   * @return positive integers <= n that are co-prime to n
+   * @return phi s.t. phi(n) = number of positive integers <= n that are co-prime to n
    */
-  def phi(n: Int) = sieveOfEratosthenes(n).foldLeft(n){(phi, p) => if (phi%p == 0) phi - phi/p else phi}
+  def phis(n: Int) = {
+    val phi = Array.tabulate(n + 1)(identity)
+    for {
+      i <- 2 to n if phi(i) == i
+      j <- i to n by i
+    } phi(j) = (phi(j)/i)*(i-1)
+    phi
+  }
 
   /**
    * O(c = 100) primality check
