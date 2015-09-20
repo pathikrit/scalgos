@@ -1,7 +1,8 @@
 test:
   override:
-    - sbt coverage test
+    - sbt clean coverage test
   post:
+    - bash <(curl -s https://codecov.io/bash)
     - sbt coverageReport
     - sbt coverageAggregate
     - sbt codacyCoverage

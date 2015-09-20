@@ -4,7 +4,7 @@ description := "Algorithms in Scala"
 licenses += ("MIT", url("http://opensource.org/licenses/MIT"))
 organization := "com.github.pathikrit"
 
-scalaVersion := "2.11.6"
+scalaVersion := "2.11.7"
 scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-language:_")
 
 libraryDependencies ++= Seq(
