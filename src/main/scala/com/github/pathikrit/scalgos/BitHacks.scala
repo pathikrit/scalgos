@@ -79,4 +79,23 @@ object BitHacks {
       case (1, 1) => if (a>b) gcd(b, a-b) else gcd(a, b-a)
     }
   }
+
+  /**
+   * Binary search by bit toggling from MSB to LSB
+   * O(64) bit-wise operations for Longs (O(32) for Ints)
+   *
+   * @return Some(x) such that x is the largest number for which f is true
+   *         If no such x is found, None
+   */
+  def bitBinSearch(f: Long => Boolean): Option[Long] = {
+    var p = 0L
+    var n = Long.MinValue
+    var t = n >>> 1
+    while (t > 0) {
+      if (f(p|t)) p |= t
+      if (f(n|t)) n |= t
+      t >>= 1
+    }
+    Seq(p, n) find f
+  }
 }

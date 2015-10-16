@@ -24,4 +24,7 @@ object Greedy {
     }
     solve(Nil, heights.zipWithIndex)
   }
+
+  //TODO: stable marraige
+  //TODO: 2SAT
 }

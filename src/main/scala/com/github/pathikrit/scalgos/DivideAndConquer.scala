@@ -94,19 +94,4 @@ object DivideAndConquer {
     val h = intPow(a, b/2)
     h * h * (if (b%2 == 0) 1 else a)
   }
-
-  /**
-   * Binary search by checking every bit of a Long
-   * Can be changed to search for maximum instead of minimum by inverting f
-   * O(62)
-   *
-   * @return the smallest number in [1, Long.MaxValue] which satisfies f (else 0)
-   */
-  def binaryLift(f: Long => Boolean): Long = {
-    var p = 0L
-    for {
-      i <- 62 --> 0 if f(p + (1L << i))
-    } p += (1L << i)
-    p
-  }
 }
