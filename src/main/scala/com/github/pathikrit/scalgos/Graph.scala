@@ -297,4 +297,23 @@ object Graph {
    */
   def dfs(g: Graph, u: Int, f: Int => Boolean, seen: Set[Int] = Set.empty[Int]): Option[Int] =
     if (f(u)) Some(u) else g neighbours u filterNot seen firstDefined (dfs(g, _, f, seen + u))
+
+  /**
+   * Topological sort this graph
+   * O(V + E) - same cost as a DFS
+   *
+   * @param root This algo assumes graph is not disjoint and has a root which has edges to every node and no incoming edge
+   * @param g
+   * @return Map from node to maxDepth
+   */
+  def topologicalSort(g: Graph, root: Int): Map[Int, Int]  = {
+    val depth = mutable.Map.empty[Int, Int] withDefaultValue 0
+    def dfs(visited: Set[Int])(u: Int): Unit = {
+      require(!visited(u), s"Cycle detected involving $u")
+      g.neighbours(u) filterNot visited foreach dfs(visited + u)
+      depth(u) = depth(u) max visited.size
+    }
+    dfs(Set.empty)(root)
+    depth.toMap
+  }
 }
