@@ -9,14 +9,14 @@ trait BitIndexTree {
    * O(log n)
    * @return sum of elements in [0, i]
    */
-  def apply(i: Int): Int
+  def prefixSum(i: Int): Int
 
   /**
    * O(log n)
    *
    * @return sum of all elements in [start, end)
    */
-  def apply(start: Int, end: Int): Int = this(end) - this(start - 1)
+  def sum(start: Int, end: Int): Int = prefixSum(end) - prefixSum(start - 1)
 
   /**
    * Adds delta to the ith element
@@ -28,7 +28,7 @@ trait BitIndexTree {
 class FenwickTree(n: Int) extends BitIndexTree {
   private[this] val tree = Array.ofDim[Int](n)
 
-  override def apply(i: Int) = if (i < 0) 0 else tree(i) + apply((i & (i + 1)) - 1)
+  override def prefixSum(i: Int) = if (i < 0) 0 else tree(i) + prefixSum((i & (i + 1)) - 1)
 
   override def +=(i: Int, delta: Int) = if (i < n) {
     tree(i) += delta

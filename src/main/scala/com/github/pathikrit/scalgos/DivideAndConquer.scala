@@ -85,6 +85,29 @@ object DivideAndConquer {
   }
 
   /**
+   * Ternary search on integer domain
+   * @see http://codeforces.com/blog/entry/11497
+   * @param left
+   * @param right
+   * @param f
+   * @param max
+   * @tparam A
+   * @return
+   */
+  def integerTernarySearch[A: Ordering](left: Int, right: Int, f: Int => A, max: Boolean = true): Int = {
+    if (left < right) {
+      val mid = (left + right) / 2
+      if (f(mid) > f(mid + 1) ^ max) {
+        integerTernarySearch(left, mid, f, max)
+      } else {
+        integerTernarySearch(mid + 1, right, f, max)
+      }
+    } else {
+      left
+    }
+  }
+
+  /**
    * Recursive algorithm of exponentiation by squaring
    * O(log b)
    *
