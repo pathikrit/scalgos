@@ -5,7 +5,7 @@ import scala.collection.mutable
 /**
  * Implicits that enhance default library stuff
  */
-object Implicits {
+object Implicits { //TODO: Move to package.scala
 
   /**
    * Sometimes its convenient to map true to 1 and false to 0

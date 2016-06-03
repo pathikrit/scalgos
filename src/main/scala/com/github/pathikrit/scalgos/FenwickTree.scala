@@ -2,7 +2,7 @@ package com.github.pathikrit.scalgos
 
 /**
  * Calculate prefix sums and support updates
- * @see http://codeforces.com/contest/635/submission/16423034
+ * @see http://codeforces.com/contest/635/submission/16433484
  */
 trait BitIndexTree {
   /**
@@ -14,9 +14,9 @@ trait BitIndexTree {
   /**
    * O(log n)
    *
-   * @return sum of all elements in [start, end)
+   * @return sum of all elements in [from, to]
    */
-  def sum(start: Int, end: Int): Int = prefixSum(end) - prefixSum(start - 1)
+  def sum(from: Int, to: Int): Int = prefixSum(to) - prefixSum(from - 1)
 
   /**
    * Adds delta to the ith element
