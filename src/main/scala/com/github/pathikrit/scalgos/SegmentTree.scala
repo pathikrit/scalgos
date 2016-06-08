@@ -37,8 +37,8 @@ object SegmentTree {
       var p = idx + n
       t(p) = value
       while (p > 1) {
-        build(p/2)
         p /= 2
+        build(p)
       }
     }
 
