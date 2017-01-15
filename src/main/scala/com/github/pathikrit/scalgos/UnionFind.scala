@@ -18,7 +18,7 @@ class UnionFind[A] extends PartialFunction[A, A] with generic.Growable[A] {
 
   override def isDefinedAt(x: A) = parent contains x
 
-  override def apply(x: A) = find(x) // TODO: Get rid of find and just use apply
+  override def apply(x: A) = find(x)
  
   def sets: Map[A, Iterable[A]] = parent.keys.groupBy(find)
 
@@ -34,5 +34,13 @@ class UnionFind[A] extends PartialFunction[A, A] with generic.Growable[A] {
     // If input is randomized we don't need randomization anyway: http://codeforces.com/blog/entry/21476
     // Without any linking heuristics but only path compression, it is O(log n) too: http://stackoverflow.com/questions/2323351/
     if (scala.util.Random.nextBoolean()) parent(find(x)) = find(y) else parent(find(y)) = find(x)
+  }
+}
+
+object UnionFind {
+  def apply[A](data: Traversable[A]): UnionFind[A] = {
+    val ds = new UnionFind[A]
+    data.foreach(ds +=)
+    ds
   }
 }
