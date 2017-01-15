@@ -18,7 +18,9 @@ class UnionFind[A] extends PartialFunction[A, A] with generic.Growable[A] {
 
   override def isDefinedAt(x: A) = parent contains x
 
-  override def apply(x: A) = find(x)
+  override def apply(x: A) = find(x) // TODO: Get rid of find and just use apply
+ 
+  def sets: Map[A, Iterable[A]] = parent.keys.groupBy(find)
 
   override def +=(x: A) = {
     parent(x) = x
