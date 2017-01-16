@@ -1,8 +1,9 @@
 package com.github.pathikrit.scalgos
 
 import scala.collection.mutable
-
 import Implicits._
+
+import scala.annotation.tailrec
 
 /**
  * Collection of number theory algorithms
@@ -68,7 +69,7 @@ object NumberTheory {
    *
    * @return largest number g such that a%g == 0 and b%g == 0
    */
-  def gcd(a: Int, b: Int): Int = (a, b) match {
+  def gcd(a: Long, b: Long): Long = (a, b) match {
     case _ if a < 0 => gcd(-a, b)
     case _ if b < 0 => gcd(a, -b)
     case (_, 0) => assume(a!=0); a
@@ -120,5 +121,36 @@ object NumberTheory {
       j <- i to n by i
     } f(j) = f(j) + 1
     f
+  }
+
+  /**
+    * Pollard's rho factorization algorithm
+    * O(n**(1/4)) -- birthday paradox
+    *
+    * @param n
+    * @return A prime factor of n
+    *         If n itself is prime, will loop infinitely
+    */
+  def pollardRho(n: Long): Option[Long] = Seq(2L, 3L, 5L, 7L).find(i => n%i == 0) orElse {
+    def rand() = scala.util.Random.nextLong().abs%(n - 1) + 1
+
+    def f(x: Long) = (x*x + 1)%n
+
+    @tailrec
+    def solve(tortoise: Long, hare: Long): Option[Long] = {
+      gcd((tortoise - hare).abs, n) match {
+        case 1 => solve(f(tortoise), f(f(hare)))
+        case `n` => None      // factor not found, very likely prime
+        //case `n` => pollardRho(n) --> Use this line instead of above if you are sure input is composite
+        case d => Some(d)
+      }
+    }
+
+    solve(rand(), rand())
+  }
+
+  def primeFactors(n: Long, acc: Counter[Long] = Counter.empty[Long]): acc.type = pollardRho(n) match {
+    case Some(i) => primeFactors(n/i, acc += i)
+    case _ => if (n > 1) acc += n else acc
   }
 }

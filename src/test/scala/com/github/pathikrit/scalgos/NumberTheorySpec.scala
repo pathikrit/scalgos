@@ -81,7 +81,7 @@ class NumberTheorySpec extends Specification {
         for ((a,b) <- (-100 to 100) X (-100 to 100) if a!=0 || b!=0) {
           val (x,y) = extendedEuclidean(a,b)
           // todo: do we really need abs here?
-          a.abs*x + b.abs*y must be equalTo gcd(a,b)
+          a.abs*x + b.abs*y must be equalTo gcd(a.toLong, b.toLong).toInt
         }
       }
     }
@@ -129,5 +129,18 @@ class NumberTheorySpec extends Specification {
       val f = countFactors(n)
       (0 to n) forall {i => f(i) == slowCount(i)} must beTrue
     }.pendingUntilFixed
+  }
+
+  "primeFactorization" should {
+    "fail for invalid inputs e.g. <= 0" in todo
+    "match product of factors" in todo
+
+    "work" in {
+      primeFactors(7477955261L).toMap must be equalTo Map(
+        104723L -> 1,
+        101L -> 2,
+        7L -> 1
+      )
+    }
   }
 }

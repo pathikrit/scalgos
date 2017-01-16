@@ -40,7 +40,7 @@ class BitHacksSpec extends Specification {
           val g = gcd(x,y)
           x%g must be equalTo 0
           y%g must be equalTo 0
-          g must be equalTo NumberTheory.gcd(x,y)
+          g must be equalTo NumberTheory.gcd(x.toLong,y.toLong).toInt
         }
       }
     }
