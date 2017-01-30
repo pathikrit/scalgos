@@ -11,7 +11,7 @@ class CircularBufferSpec extends Specification {
       val buffer2 = mutable.ArrayBuffer.empty[Int]
 
       def apply[U](f: mutable.Buffer[Int] => U) = {
-        //val clue = s"Before: [buffer1=${buffer}; buffer2=${buffer2}]"
+        //println(s"Before: [buffer1=${buffer}; buffer2=${buffer2}]")
         f(buffer)
         f(buffer2)
         buffer shouldEqual buffer2
@@ -23,6 +23,9 @@ class CircularBufferSpec extends Specification {
       apply(_.trimEnd(3))
       apply(_.insertAll(0, Seq(9, 10, 11)))
       apply(_.insertAll(1, Seq(12, 13)))
+      apply(_.remove(2))
+      apply(_.prependAll(Seq(14, 15, 16, 17)))
+      apply(_.remove(1, 5))
     }
   }
 }

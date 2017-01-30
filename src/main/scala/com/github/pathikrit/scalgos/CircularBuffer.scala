@@ -70,7 +70,7 @@ class CircularBuffer[A: ClassTag](initialSize: Int = 1<<4) extends mutable.Buffe
       if (idx == 0) {
         start += count
       } else {
-        (0 until count).foreach(i => this(idx + i) = this(idx + count + i))
+        ((idx + count) until size).foreach(i => this(i - count) = this(i))
         end -= count
       }
     }
