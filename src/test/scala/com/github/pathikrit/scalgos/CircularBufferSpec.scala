@@ -14,7 +14,7 @@ class CircularBufferSpec extends Specification {
         //val clue = s"Before: [buffer1=${buffer}; buffer2=${buffer2}]"
         f(buffer)
         f(buffer2)
-        (buffer shouldEqual buffer2)
+        buffer shouldEqual buffer2
       }
 
       apply(_.append(1, 2, 3, 4, 5))

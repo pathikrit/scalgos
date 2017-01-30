@@ -11,11 +11,13 @@ class CircularBuffer[A: ClassTag](initialSize: Int = 1<<4) extends mutable.Buffe
   private var array = Array.ofDim[A](initialSize)
   private var start, end = 0
 
-  override def apply(idx: Int) = assumingValidIndex(idx) {
+  override def apply(idx: Int) = {
+    if(!isDefinedAt(idx)) throw new IndexOutOfBoundsException(idx.toString)
     array(mod(start + idx))
   }
 
-  override def update(idx: Int, elem: A) = assumingValidIndex(idx) {
+  override def update(idx: Int, elem: A) = {
+    if(!isDefinedAt(idx)) throw new IndexOutOfBoundsException(idx.toString)
     array(mod(start + idx)) = elem
   }
 
@@ -47,20 +49,21 @@ class CircularBuffer[A: ClassTag](initialSize: Int = 1<<4) extends mutable.Buffe
     if (idx == 0) {
       prependAll(elems)
     } else {
+      if(!isDefinedAt(idx)) throw new IndexOutOfBoundsException(idx.toString)
       val shift = (idx until size).map(this)
       end = start + idx
-      elems.foreach(+=)
-      shift.foreach(+=)
+      this ++= elems ++= shift
     }
   }
 
-  override def remove(idx: Int) = assumingValidIndex(idx) {
+  override def remove(idx: Int) = {
     val ret = this(idx)
     remove(idx, 1)
     ret
   }
 
-  override def remove(idx: Int, count: Int) = assumingValidIndex(idx) {
+  override def remove(idx: Int, count: Int) = {
+    if(!isDefinedAt(idx)) throw new IndexOutOfBoundsException(idx.toString)
     if (idx + count >= size) {
       end = start + idx
     } else if (count > 0) {
@@ -91,10 +94,5 @@ class CircularBuffer[A: ClassTag](initialSize: Int = 1<<4) extends mutable.Buffe
     end = size
     start = 0
     array = array2
-  }
-
-  private def assumingValidIndex[U](idx: Int)(f: => U): U = {
-    if(!isDefinedAt(idx)) throw new IndexOutOfBoundsException(idx.toString)
-    f
   }
 }
