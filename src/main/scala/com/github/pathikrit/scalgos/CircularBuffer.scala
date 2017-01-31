@@ -30,10 +30,7 @@ class CircularBuffer[A: ClassTag](initialSize: Int = 1<<4) extends mutable.Buffe
     this
   }
 
-  override def clear() = {
-    start = 0
-    end = 0
-  }
+  override def clear() = start = end
 
   override def +=:(elem: A) = {
     ensureCapacity()
@@ -57,9 +54,9 @@ class CircularBuffer[A: ClassTag](initialSize: Int = 1<<4) extends mutable.Buffe
   }
 
   override def remove(idx: Int) = {
-    val ret = this(idx)
+    val elem = this(idx)
     remove(idx, 1)
-    ret
+    elem
   }
 
   override def remove(idx: Int, count: Int) = {
@@ -79,7 +76,7 @@ class CircularBuffer[A: ClassTag](initialSize: Int = 1<<4) extends mutable.Buffe
   /**
     * Trims the capacity of this CircularBuffer's instance to be the current size
     */
-  def trimToSize(): Unit = resize(size)
+  def trimToSize(): Unit = resizeTo(size)
 
   override def iterator = indices.iterator.map(apply)
 
@@ -93,7 +90,8 @@ class CircularBuffer[A: ClassTag](initialSize: Int = 1<<4) extends mutable.Buffe
 
   private def mod(x: Int) = Math.floorMod(x, array.length)
 
-  private def resize(len: Int) = {
+  private def resizeTo(len: Int) = {
+    require(len >= size)
     val array2 = Array.ofDim[A](len)
     copyToArray(array2) //TODO: optimize this by doing array.copy(array2, start, len) etc.
     end = size
@@ -103,5 +101,5 @@ class CircularBuffer[A: ClassTag](initialSize: Int = 1<<4) extends mutable.Buffe
 
   private def checkIndex(idx: Int) = if(!isDefinedAt(idx)) throw new IndexOutOfBoundsException(idx.toString)
 
-  private def ensureCapacity() = if (size == array.length) resize(2 * array.length)
+  private def ensureCapacity() = if (size == array.length) resizeTo(2 * array.length)
 }
