@@ -93,7 +93,14 @@ class CircularBuffer[A: ClassTag](initialSize: Int = 1<<4) extends mutable.Buffe
   private def resizeTo(len: Int) = {
     require(len >= size)
     val array2 = Array.ofDim[A](len)
-    copyToArray(array2) //TODO: optimize this by doing array.copy(array2, start, len) etc.
+    val (l, r) = (mod(start), mod(end))
+    if (l <= r) {
+      Array.copy(src = array, srcPos = l, dest = array2, destPos = 0, length = size)
+    } else {
+      val s = array.length - l
+      Array.copy(src = array, srcPos = l, dest = array2, destPos = 0, length = s)
+      Array.copy(src = array, srcPos = 0, dest = array2, destPos = s, length = r)
+    }
     end = size
     start = 0
     array = array2
@@ -101,5 +108,5 @@ class CircularBuffer[A: ClassTag](initialSize: Int = 1<<4) extends mutable.Buffe
 
   private def checkIndex(idx: Int) = if(!isDefinedAt(idx)) throw new IndexOutOfBoundsException(idx.toString)
 
-  private def ensureCapacity() = if (size == array.length) resizeTo(2 * array.length)
+  private def ensureCapacity() = if (size == array.length - 1) resizeTo(2 * array.length)
 }
