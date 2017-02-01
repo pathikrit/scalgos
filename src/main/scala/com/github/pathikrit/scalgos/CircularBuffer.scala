@@ -21,12 +21,12 @@ class CircularBuffer[A: ClassTag](initialSize: Int = 1<<4) extends mutable.Buffe
     array(mod(start + idx)) = elem
   }
 
-  override def length = mod(mod(end) - mod(start))
+  override def length = mod(end - start)
 
   override def +=(elem: A) = {
     ensureCapacity()
-    array(mod(end)) = elem
-    end += 1
+    array(end) = elem
+    end = mod(end + 1)
     this
   }
 
@@ -34,8 +34,8 @@ class CircularBuffer[A: ClassTag](initialSize: Int = 1<<4) extends mutable.Buffe
 
   override def +=:(elem: A) = {
     ensureCapacity()
-    start -= 1
-    array(mod(start)) = elem
+    start = mod(start - 1)
+    array(start) = elem
     this
   }
 
@@ -48,7 +48,7 @@ class CircularBuffer[A: ClassTag](initialSize: Int = 1<<4) extends mutable.Buffe
       prependAll(elems)
     } else {
       val shift = (idx until size).map(this)
-      end = start + idx
+      end = mod(start + idx)
       this ++= elems ++= shift
     }
   }
@@ -62,13 +62,13 @@ class CircularBuffer[A: ClassTag](initialSize: Int = 1<<4) extends mutable.Buffe
   override def remove(idx: Int, count: Int) = {
     checkIndex(idx)
     if (idx + count >= size) {
-      end = start + idx
+      end = mod(start + idx)
     } else if (count > 0) {
       if (idx == 0) {
-        start += count
+        start = mod(start + count)
       } else {
         ((idx + count) until size).foreach(i => this(i - count) = this(i))
-        end -= count
+        end = mod(end - count)
       }
     }
   }
@@ -88,18 +88,16 @@ class CircularBuffer[A: ClassTag](initialSize: Int = 1<<4) extends mutable.Buffe
 
   override def last = this(size - 1)
 
-  private def mod(x: Int) = Math.floorMod(x, array.length)
+  @inline private def mod(x: Int) = (array.length + x)%array.length
 
   private def resizeTo(len: Int) = {
     require(len >= size)
     val array2 = Array.ofDim[A](len)
-    val (l, r) = (mod(start), mod(end))
-    if (l <= r) {
-      Array.copy(src = array, srcPos = l, dest = array2, destPos = 0, length = size)
+    if (start <= end) {
+      Array.copy(src = array, srcPos = start, dest = array2, destPos = 0, length = size)
     } else {
-      val s = array.length - l
-      Array.copy(src = array, srcPos = l, dest = array2, destPos = 0, length = s)
-      Array.copy(src = array, srcPos = 0, dest = array2, destPos = s, length = r)
+      Array.copy(src = array, srcPos = start, dest = array2, destPos = 0, length = array.length - start)
+      Array.copy(src = array, srcPos = 0, dest = array2, destPos = array.length - start, length = end)
     }
     end = size
     start = 0
