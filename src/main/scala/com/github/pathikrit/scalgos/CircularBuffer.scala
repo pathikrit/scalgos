@@ -8,7 +8,7 @@ import scala.reflect.ClassTag
   * @tparam A
   */
 class CircularBuffer[A: ClassTag](initialSize: Int = 1<<4) extends mutable.Buffer[A] {
-  private var array = Array.ofDim[A](initialSize)
+  private var array = alloc(initialSize)
   private var start, end = 0
 
   override def apply(idx: Int) = {
@@ -92,29 +92,33 @@ class CircularBuffer[A: ClassTag](initialSize: Int = 1<<4) extends mutable.Buffe
     require(len >= 0)
     if(!dest.isDefinedAt(destStart)) throw new IndexOutOfBoundsException(destStart.toString)
 
-    val destCapacity = len min (dest.length - destStart)
-    val toCopy = size min destCapacity
+    val toCopy = size min len min (dest.length - destStart)
     val block1 = toCopy min (array.length - start)
 
     Array.copy(src = array, srcPos = start, dest = dest, destPos = destStart, length = block1)
-
     if (block1 < toCopy) {
       Array.copy(src = array, srcPos = mod(start + block1), dest = dest, destPos = block1, length = toCopy - block1)
     }
   }
 
-  @inline private def mod(x: Int) = (array.length + x)%array.length
+  @inline private def mod(x: Int) = x & (array.length - 1)  // modulus using bitmask since array.length is always power of 2
 
   private def resizeTo(len: Int) = {
-    require(len > size)
-    val array2 = Array.ofDim[A](len)
+    require(len >= size)
+    val array2 = alloc(len)
     copyToArray(array2)
     end = size
     start = 0
     array = array2
   }
 
+  private def alloc(len: Int) = {
+    var i = len     //See: http://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2
+    i |= i >> 1; i |= i >> 2; i |= i >> 4; i |= i >> 8; i |= i >> 16
+    Array.ofDim[A]((i + 1) max (1<<4))
+  }
+
   private def checkIndex(idx: Int) = if(!isDefinedAt(idx)) throw new IndexOutOfBoundsException(idx.toString)
 
-  private def ensureCapacity() = if (size == array.length - 1) resizeTo(2 * array.length)
+  private def ensureCapacity() = if (size == array.length - 1) resizeTo(array.length)
 }
