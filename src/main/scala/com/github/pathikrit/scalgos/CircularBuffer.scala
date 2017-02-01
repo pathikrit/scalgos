@@ -76,7 +76,7 @@ class CircularBuffer[A: ClassTag](initialSize: Int = 1<<4) extends mutable.Buffe
   /**
     * Trims the capacity of this CircularBuffer's instance to be the current size
     */
-  def trimToSize(): Unit = resizeTo(size + 1)
+  def trimToSize(): Unit = accomodate(size)
 
   override def iterator = indices.iterator.map(apply)
 
@@ -89,21 +89,20 @@ class CircularBuffer[A: ClassTag](initialSize: Int = 1<<4) extends mutable.Buffe
   override def last = this(size - 1)
 
   override def copyToArray[B >: A](dest: Array[B], destStart: Int, len: Int) = {
-    require(len >= 0)
     if(!dest.isDefinedAt(destStart)) throw new IndexOutOfBoundsException(destStart.toString)
-
-    val toCopy = size min len min (dest.length - destStart)
-    val block1 = toCopy min (array.length - start)
-
-    Array.copy(src = array, srcPos = start, dest = dest, destPos = destStart, length = block1)
-    if (block1 < toCopy) {
-      Array.copy(src = array, srcPos = mod(start + block1), dest = dest, destPos = block1, length = toCopy - block1)
+    if (len > 0) {
+      val toCopy = size min len min (dest.length - destStart)
+      val block1 = toCopy min (array.length - start)
+      Array.copy(src = array, srcPos = start, dest = dest, destPos = destStart, length = block1)
+      if (block1 < toCopy) {
+        Array.copy(src = array, srcPos = mod(start + block1), dest = dest, destPos = block1, length = toCopy - block1)
+      }
     }
   }
 
   @inline private def mod(x: Int) = x & (array.length - 1)  // modulus using bitmask since array.length is always power of 2
 
-  private def resizeTo(len: Int) = {
+  private def accomodate(len: Int) = {
     require(len >= size)
     val array2 = alloc(len)
     copyToArray(array2)
@@ -120,5 +119,5 @@ class CircularBuffer[A: ClassTag](initialSize: Int = 1<<4) extends mutable.Buffe
 
   private def checkIndex(idx: Int) = if(!isDefinedAt(idx)) throw new IndexOutOfBoundsException(idx.toString)
 
-  private def ensureCapacity() = if (size == array.length - 1) resizeTo(array.length)
+  private def ensureCapacity() = if (size == array.length - 1) accomodate(array.length)
 }
