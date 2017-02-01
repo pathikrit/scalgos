@@ -27,6 +27,8 @@ class CircularBufferSpec extends Specification {
       apply(_.prependAll(Seq(14, 15, 16, 17)))
       apply(_.remove(1, 5))
       apply(_.prependAll(Seq.tabulate(100)(identity)))
+      buffer.trimToSize()
+      apply(_.appendAll(Seq.tabulate(100)(identity)))
     }
   }
 }

@@ -76,7 +76,7 @@ class CircularBuffer[A: ClassTag](initialSize: Int = 1<<4) extends mutable.Buffe
   /**
     * Trims the capacity of this CircularBuffer's instance to be the current size
     */
-  def trimToSize(): Unit = resizeTo(size)
+  def trimToSize(): Unit = resizeTo(size + 1)
 
   override def iterator = indices.iterator.map(apply)
 
@@ -88,17 +88,27 @@ class CircularBuffer[A: ClassTag](initialSize: Int = 1<<4) extends mutable.Buffe
 
   override def last = this(size - 1)
 
+  override def copyToArray[B >: A](dest: Array[B], destStart: Int, len: Int) = {
+    require(len >= 0)
+    if(!dest.isDefinedAt(destStart)) throw new IndexOutOfBoundsException(destStart.toString)
+
+    val destCapacity = len min (dest.length - destStart)
+    val toCopy = size min destCapacity
+    val block1 = toCopy min (array.length - start)
+
+    Array.copy(src = array, srcPos = start, dest = dest, destPos = destStart, length = block1)
+
+    if (block1 < toCopy) {
+      Array.copy(src = array, srcPos = mod(start + block1), dest = dest, destPos = block1, length = toCopy - block1)
+    }
+  }
+
   @inline private def mod(x: Int) = (array.length + x)%array.length
 
   private def resizeTo(len: Int) = {
-    require(len >= size)
+    require(len > size)
     val array2 = Array.ofDim[A](len)
-    if (start <= end) {
-      Array.copy(src = array, srcPos = start, dest = array2, destPos = 0, length = size)
-    } else {
-      Array.copy(src = array, srcPos = start, dest = array2, destPos = 0, length = array.length - start)
-      Array.copy(src = array, srcPos = 0, dest = array2, destPos = array.length - start, length = end)
-    }
+    copyToArray(array2)
     end = size
     start = 0
     array = array2
