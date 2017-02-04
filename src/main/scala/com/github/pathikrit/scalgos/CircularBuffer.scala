@@ -7,10 +7,7 @@ import scala.reflect.ClassTag
   * A data structure that provides O(1) get, update, length, append, prepend, clear, trimStart and trimRight
   * @tparam A
   */
-class CircularBuffer[A: ClassTag](initialSize: Int = 1<<4) extends mutable.Buffer[A] {
-  private var array = alloc(initialSize)
-  private var start, end = 0
-
+class CircularBuffer[A: ClassTag] private(var array: Array[A], var start: Int, var end: Int) extends mutable.Buffer[A] {
   override def apply(idx: Int) = {
     checkIndex(idx)
     array(mod(start + idx))
@@ -67,16 +64,11 @@ class CircularBuffer[A: ClassTag](initialSize: Int = 1<<4) extends mutable.Buffe
       if (idx == 0) {
         start = mod(start + count)
       } else {
-        ((idx + count) until size).foreach(i => this(i - count) = this(i))
+        ((idx + count) until size).foreach(i => this(i - count) = this(i)) //TODO: use arrayCopy here
         end = mod(end - count)
       }
     }
   }
-
-  /**
-    * Trims the capacity of this CircularBuffer's instance to be the current size
-    */
-  def trimToSize(): Unit = accomodate(size)
 
   override def iterator = indices.iterator.map(apply)
 
@@ -87,6 +79,40 @@ class CircularBuffer[A: ClassTag](initialSize: Int = 1<<4) extends mutable.Buffe
   override def head = this(0)
 
   override def last = this(size - 1)
+
+  override def init = drop(1)
+
+  override def tail = dropRight(1)
+
+  override def drop(n: Int) = slice(n, size)
+
+  override def dropRight(n: Int) = slice(0, size - n)
+
+  override def take(n: Int) = slice(0, n)
+
+  override def takeRight(n: Int) = slice(size - n, n)
+
+  override def clone() = new CircularBuffer(array.clone, start, end)
+
+  override def slice(from: Int, until: Int) = {
+    var left = box(from)
+    var right = box(until)
+    val len = right - left
+    if (len <= 0) {
+      CircularBuffer.empty[A]
+    } else {
+      val array2 = CircularBuffer.alloc[A](len)
+      left = mod(start + left)
+      right = mod(start + right)
+      if (left <= right) {
+        Array.copy(src = array, srcPos = left, dest = array2, destPos = 0, length = len)
+      } else {
+        Array.copy(src = array, srcPos = left, dest = array2, destPos = 0, length = size - left)
+        Array.copy(src = array, srcPos = 0, dest = array2, destPos = size - left, length = right)
+      }
+      new CircularBuffer(array2, 0, len)
+    }
+  }
 
   override def copyToArray[B >: A](dest: Array[B], destStart: Int, len: Int) = {
     if(!dest.isDefinedAt(destStart)) throw new IndexOutOfBoundsException(destStart.toString)
@@ -100,24 +126,40 @@ class CircularBuffer[A: ClassTag](initialSize: Int = 1<<4) extends mutable.Buffe
     }
   }
 
+  /**
+    * Trims the capacity of this CircularBuffer's instance to be the current size
+    */
+  def trimToSize(): Unit = accomodate(size)
+
   @inline private def mod(x: Int) = x & (array.length - 1)  // modulus using bitmask since array.length is always power of 2
+
+  @inline private def box(i: Int) = if (i <= 0) 0 else if (i >= size) size else i
 
   private def accomodate(len: Int) = {
     require(len >= size)
-    val array2 = alloc(len)
+    val array2 = CircularBuffer.alloc[A](len)
     copyToArray(array2)
     end = size
     start = 0
     array = array2
   }
 
-  private def alloc(len: Int) = {
-    var i = len     //See: http://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2
-    i |= i >> 1; i |= i >> 2; i |= i >> 4; i |= i >> 8; i |= i >> 16
-    Array.ofDim[A]((i + 1) max (1<<4))
-  }
-
   private def checkIndex(idx: Int) = if(!isDefinedAt(idx)) throw new IndexOutOfBoundsException(idx.toString)
 
   private def ensureCapacity() = if (size == array.length - 1) accomodate(array.length)
+}
+
+object CircularBuffer {
+  private[CircularBuffer] val minimumCapacity = 8
+
+  def apply[A: ClassTag](initialSize: Int = minimumCapacity) = new CircularBuffer(alloc[A](initialSize), 0, 0)
+
+  def empty[A: ClassTag] = CircularBuffer[A](0)
+
+  private[CircularBuffer] def alloc[A: ClassTag](len: Int) = {
+    var i = len max minimumCapacity
+    //See: http://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2
+    i |= i >> 1; i |= i >> 2; i |= i >> 4; i |= i >> 8; i |= i >> 16
+    Array.ofDim[A](i + 1)
+  }
 }
