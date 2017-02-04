@@ -35,6 +35,7 @@ class CircularBufferSpec extends Specification {
       examplesBlock {
         (-100 to 100) X (-100 to 100) foreach {case (i, j) =>
             buffer.slice(i, j) shouldEqual buffer2.slice(i, j)
+            //if (i >= 1 && j >= 1) buffer.sliding(i, j).toList shouldEqual buffer2.sliding(i, j).toList
         }
       }
     }

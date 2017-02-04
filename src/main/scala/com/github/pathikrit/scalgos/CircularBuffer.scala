@@ -1,28 +1,27 @@
 package com.github.pathikrit.scalgos
 
 import scala.collection.mutable
-import scala.reflect.ClassTag
 
 /**
   * A data structure that provides O(1) get, update, length, append, prepend, clear, trimStart and trimRight
   * @tparam A
   */
-class CircularBuffer[A: ClassTag] private(var array: Array[A], var start: Int, var end: Int) extends mutable.Buffer[A] {
+class CircularBuffer[A] private(var array: Array[AnyRef], var start: Int, var end: Int) extends mutable.Buffer[A] {
   override def apply(idx: Int) = {
     checkIndex(idx)
-    array(mod(start + idx))
+    array(mod(start + idx)).asInstanceOf[A]
   }
 
   override def update(idx: Int, elem: A) = {
     checkIndex(idx)
-    array(mod(start + idx)) = elem
+    array(mod(start + idx)) = elem.asInstanceOf[AnyRef]
   }
 
   override def length = mod(end - start)
 
   override def +=(elem: A) = {
     ensureCapacity()
-    array(end) = elem
+    array(end) = elem.asInstanceOf[AnyRef]
     end = mod(end + 1)
     this
   }
@@ -32,7 +31,7 @@ class CircularBuffer[A: ClassTag] private(var array: Array[A], var start: Int, v
   override def +=:(elem: A) = {
     ensureCapacity()
     start = mod(start - 1)
-    array(start) = elem
+    array(start) = elem.asInstanceOf[AnyRef]
     this
   }
 
@@ -103,7 +102,7 @@ class CircularBuffer[A: ClassTag] private(var array: Array[A], var start: Int, v
     } else if (len >= size) {
       clone()
     } else {
-      val array2 = CircularBuffer.alloc[A](len)
+      val array2 = CircularBuffer.alloc(len)
       left = mod(start + left)
       right = mod(start + right)
       if (left <= right) {
@@ -125,20 +124,13 @@ class CircularBuffer[A: ClassTag] private(var array: Array[A], var start: Int, v
 
   override def copyToArray[B >: A](dest: Array[B], destStart: Int, len: Int) = {
     if(!dest.isDefinedAt(destStart)) throw new IndexOutOfBoundsException(destStart.toString)
-    if (len > 0) {
-      val toCopy = size min len min (dest.length - destStart)
-      val block1 = toCopy min (array.length - start)
-      Array.copy(src = array, srcPos = start, dest = dest, destPos = destStart, length = block1)
-      if (block1 < toCopy) {
-        Array.copy(src = array, srcPos = mod(start + block1), dest = dest, destPos = block1, length = toCopy - block1)
-      }
-    }
+    if (len > 0) arrayCopy(dest.asInstanceOf[Array[AnyRef]], destStart, len)
   }
 
   /**
     * Trims the capacity of this CircularBuffer's instance to be the current size
     */
-  def trimToSize(): Unit = accomodate(size - 1)
+  def trimToSize(): Unit = accomodate(size)
 
   @inline private def mod(x: Int) = x & (array.length - 1)  // modulus using bitmask since array.length is always power of 2
 
@@ -146,11 +138,20 @@ class CircularBuffer[A: ClassTag] private(var array: Array[A], var start: Int, v
 
   private def accomodate(len: Int) = {
     require(len >= size)
-    val array2 = CircularBuffer.alloc[A](len)
-    copyToArray(array2)
+    val array2 = CircularBuffer.alloc(len)
+    arrayCopy(array2, 0, size)
     end = size
     start = 0
     array = array2
+  }
+
+  private def arrayCopy(dest: Array[AnyRef], destStart: Int, len: Int) = {
+    val toCopy = size min len min (dest.length - destStart)
+    val block1 = toCopy min (array.length - start)
+    Array.copy(src = array, srcPos = start, dest = dest, destPos = destStart, length = block1)
+    if (block1 < toCopy) {
+      Array.copy(src = array, srcPos = mod(start + block1), dest = dest, destPos = block1, length = toCopy - block1)
+    }
   }
 
   private def checkIndex(idx: Int) = if(!isDefinedAt(idx)) throw new IndexOutOfBoundsException(idx.toString)
@@ -161,14 +162,14 @@ class CircularBuffer[A: ClassTag] private(var array: Array[A], var start: Int, v
 object CircularBuffer {
   private[CircularBuffer] val minimumCapacity = 8
 
-  def apply[A: ClassTag](initialSize: Int = minimumCapacity) = new CircularBuffer(alloc[A](initialSize), 0, 0)
+  def apply[A](initialSize: Int = minimumCapacity) = new CircularBuffer[A](alloc(initialSize), 0, 0)
 
-  def empty[A: ClassTag] = CircularBuffer[A](0)
+  def empty[A] = CircularBuffer[A](0)
 
-  private[CircularBuffer] def alloc[A: ClassTag](len: Int) = {
+  private[CircularBuffer] def alloc(len: Int) = {
     var i = len max minimumCapacity
     //See: http://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2
     i |= i >> 1; i |= i >> 2; i |= i >> 4; i |= i >> 8; i |= i >> 16
-    Array.ofDim[A](i + 1)
+    Array.ofDim[AnyRef](i + 1)
   }
 }
