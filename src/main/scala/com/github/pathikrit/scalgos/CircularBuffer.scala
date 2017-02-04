@@ -100,6 +100,8 @@ class CircularBuffer[A: ClassTag] private(var array: Array[A], var start: Int, v
     val len = right - left
     if (len <= 0) {
       CircularBuffer.empty[A]
+    } else if (len >= size) {
+      clone()
     } else {
       val array2 = CircularBuffer.alloc[A](len)
       left = mod(start + left)
@@ -113,6 +115,13 @@ class CircularBuffer[A: ClassTag] private(var array: Array[A], var start: Int, v
       new CircularBuffer(array2, 0, len)
     }
   }
+
+  override def sliding(window: Int, step: Int) = {
+    require(window >= 1 && step >= 1, s"size=$size and step=$step, but both must be positive")
+    (indices by step).iterator.map(i => slice(i, i + window))
+  }
+
+  override def grouped(n: Int) = sliding(n, n)
 
   override def copyToArray[B >: A](dest: Array[B], destStart: Int, len: Int) = {
     if(!dest.isDefinedAt(destStart)) throw new IndexOutOfBoundsException(destStart.toString)
@@ -129,7 +138,7 @@ class CircularBuffer[A: ClassTag] private(var array: Array[A], var start: Int, v
   /**
     * Trims the capacity of this CircularBuffer's instance to be the current size
     */
-  def trimToSize(): Unit = accomodate(size)
+  def trimToSize(): Unit = accomodate(size - 1)
 
   @inline private def mod(x: Int) = x & (array.length - 1)  // modulus using bitmask since array.length is always power of 2
 
