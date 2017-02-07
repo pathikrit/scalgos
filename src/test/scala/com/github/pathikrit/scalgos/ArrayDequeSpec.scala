@@ -6,10 +6,10 @@ import org.specs2.mutable.Specification
 
 import scala.collection.mutable
 
-class CircularBufferSpec extends Specification {
+class ArrayDequeSpec extends Specification {
   "circular-buffer" should {
     "match the library" in {
-      val buffer = CircularBuffer.empty[Int]
+      val buffer = ArrayDeque.empty[Int]
       val buffer2 = mutable.ArrayBuffer.empty[Int]
 
       def apply[U](f: mutable.Buffer[Int] => U) = {

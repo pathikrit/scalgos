@@ -8,17 +8,17 @@ import scala.collection.{generic, mutable}
   * @author Pathikrit Bhowmick
   * @tparam A
   */
-class CircularBuffer[A] private(var array: Array[AnyRef], var start: Int, var end: Int)
+class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: Int)
   extends mutable.AbstractBuffer[A]
     with mutable.Buffer[A]
-    with generic.GenericTraversableTemplate[A, CircularBuffer]
-    with mutable.BufferLike[A, CircularBuffer[A]]
+    with generic.GenericTraversableTemplate[A, ArrayDeque]
+    with mutable.BufferLike[A, ArrayDeque[A]]
     with mutable.IndexedSeq[A]
-    with mutable.IndexedSeqOptimized[A, CircularBuffer[A]]
-    with mutable.Builder[A, CircularBuffer[A]]
+    with mutable.IndexedSeqOptimized[A, ArrayDeque[A]]
+    with mutable.Builder[A, ArrayDeque[A]]
     with Serializable {
 
-  def this(initialSize: Int = CircularBuffer.defaultInitialSize) = this(CircularBuffer.alloc(initialSize), 0, 0)
+  def this(initialSize: Int = ArrayDeque.defaultInitialSize) = this(ArrayDeque.alloc(initialSize), 0, 0)
 
   override def apply(idx: Int) = {
     checkIndex(idx)
@@ -87,20 +87,20 @@ class CircularBuffer[A] private(var array: Array[AnyRef], var start: Int, var en
 
   override def trimEnd(n: Int) = if (n >= size) clear() else if (n > 0) end -= n
 
-  override def clone() = new CircularBuffer(array.clone, start, end)
+  override def clone() = new ArrayDeque(array.clone, start, end)
 
   override def slice(from: Int, until: Int) = {
     val left = box(from)
     val right = box(until)
     val len = right - left
     if (len <= 0) {
-      CircularBuffer.empty[A]
+      ArrayDeque.empty[A]
     } else if (len >= size) {
       clone()
     } else {
-      val array2 = CircularBuffer.alloc(len)
+      val array2 = ArrayDeque.alloc(len)
       arrayCopy(array2, left, 0, len)
-      new CircularBuffer(array2, 0, len)
+      new ArrayDeque(array2, 0, len)
     }
   }
 
@@ -125,7 +125,7 @@ class CircularBuffer[A] private(var array: Array[AnyRef], var start: Int, var en
 
   private def accomodate(len: Int) = {
     require(len >= size)
-    val array2 = CircularBuffer.alloc(len)
+    val array2 = ArrayDeque.alloc(len)
     arrayCopy(array2, srcStart = 0, destStart = 0, maxItems = size)
     end = size
     start = 0
@@ -151,19 +151,19 @@ class CircularBuffer[A] private(var array: Array[AnyRef], var start: Int, var en
 
   private def ensureCapacity() = if (size == array.length - 1) accomodate(array.length)
 
-  override def companion = CircularBuffer
+  override def companion = ArrayDeque
 
-  override def result(): CircularBuffer[A] = this
+  override def result(): ArrayDeque[A] = this
 }
 
-object CircularBuffer extends generic.SeqFactory[CircularBuffer] {
-  implicit def canBuildFrom[A]: generic.CanBuildFrom[Coll, A, CircularBuffer[A]] = ReusableCBF.asInstanceOf[GenericCanBuildFrom[A]]
+object ArrayDeque extends generic.SeqFactory[ArrayDeque] {
+  implicit def canBuildFrom[A]: generic.CanBuildFrom[Coll, A, ArrayDeque[A]] = ReusableCBF.asInstanceOf[GenericCanBuildFrom[A]]
 
-  override def newBuilder[A]: mutable.Builder[A, CircularBuffer[A]] = new CircularBuffer[A]()
+  override def newBuilder[A]: mutable.Builder[A, ArrayDeque[A]] = new ArrayDeque[A]()
 
   val defaultInitialSize = 8
 
-  private[CircularBuffer] def alloc(len: Int) = {
+  private[ArrayDeque$] def alloc(len: Int) = {
     var i = len max defaultInitialSize
     //See: http://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2
     i |= i >> 1; i |= i >> 2; i |= i >> 4; i |= i >> 8; i |= i >> 16
