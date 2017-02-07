@@ -1,13 +1,25 @@
 package com.github.pathikrit.scalgos
 
-import scala.collection.mutable
+import scala.collection.{generic, mutable}
 
 /**
   * A data structure that provides O(1) get, update, length, append, prepend, clear, trimStart and trimRight
+  *
   * @author Pathikrit Bhowmick
   * @tparam A
   */
-class CircularBuffer[A] private(var array: Array[AnyRef], var start: Int, var end: Int) extends mutable.Buffer[A] {
+class CircularBuffer[A] private(var array: Array[AnyRef], var start: Int, var end: Int)
+  extends mutable.AbstractBuffer[A]
+    with mutable.Buffer[A]
+    with generic.GenericTraversableTemplate[A, CircularBuffer]
+    with mutable.BufferLike[A, CircularBuffer[A]]
+    with mutable.IndexedSeq[A]
+    with mutable.IndexedSeqOptimized[A, CircularBuffer[A]]
+    with mutable.Builder[A, CircularBuffer[A]]
+    with Serializable {
+
+  def this(initialSize: Int = CircularBuffer.defaultInitialSize) = this(CircularBuffer.alloc(initialSize), 0, 0)
+
   override def apply(idx: Int) = {
     checkIndex(idx)
     array(mod(start + idx)).asInstanceOf[A]
@@ -71,42 +83,9 @@ class CircularBuffer[A] private(var array: Array[AnyRef], var start: Int, var en
 
   override def iterator = indices.iterator.map(apply)
 
-  override def trimStart(n: Int) = if (n >= size) clear() else if (n >= 0) start += n
+  override def trimStart(n: Int) = if (n >= size) clear() else if (n > 0) start += n
 
-  override def trimEnd(n: Int) = if (n >= size) clear() else if (n >= 0) end -= n
-
-  override def head = this(0)
-
-  override def last = this(size - 1)
-
-  override def init = drop(1)
-
-  override def tail = dropRight(1)
-
-  override def drop(n: Int) = slice(n, size)
-
-  override def dropRight(n: Int) = slice(0, size - n)
-
-  override def take(n: Int) = slice(0, n)
-
-  override def takeRight(n: Int) = slice(size - n, n)
-
-  override def takeWhile(p: A => Boolean) = {
-    val idx = indexWhere(a => !p(a))
-    if (idx < 0) clone() else slice(0, idx)
-  }
-
-  override def dropWhile(p: A => Boolean) = {
-    val idx = indexWhere(a => !p(a))
-    if (idx < 0) clone() else slice(idx, size)
-  }
-
-  override def span(p: A => Boolean) = {
-    val idx = indexWhere(a => !p(a))
-    if (idx < 0) (clone(), CircularBuffer.empty) else splitAt(idx)
-  }
-
-  override def splitAt(n: Int) = (slice(0, n), slice(n, size))
+  override def trimEnd(n: Int) = if (n >= size) clear() else if (n > 0) end -= n
 
   override def clone() = new CircularBuffer(array.clone, start, end)
 
@@ -132,10 +111,8 @@ class CircularBuffer[A] private(var array: Array[AnyRef], var start: Int, var en
 
   override def grouped(n: Int) = sliding(n, n)
 
-  override def copyToArray[B >: A](dest: Array[B], destStart: Int, len: Int) = {
-    if(!dest.isDefinedAt(destStart)) throw new IndexOutOfBoundsException(destStart.toString)
-    if (len > 0) arrayCopy(dest, srcStart = 0, destStart = destStart, maxItems = len)
-  }
+  override def copyToArray[B >: A](dest: Array[B], destStart: Int, len: Int) =
+    arrayCopy(dest, srcStart = 0, destStart = destStart, maxItems = len)
 
   /**
     * Trims the capacity of this CircularBuffer's instance to be the current size
@@ -156,29 +133,38 @@ class CircularBuffer[A] private(var array: Array[AnyRef], var start: Int, var en
   }
 
   def arrayCopy(dest: Array[_], srcStart: Int, destStart: Int, maxItems: Int) = {
+    if(!dest.isDefinedAt(destStart)) throw new IndexOutOfBoundsException(destStart.toString)
+    checkIndex(srcStart)
     val toCopy = size min maxItems min (dest.length - destStart)
-    val startIdx = mod(start + srcStart)
-    val block1 = toCopy min (array.length - startIdx)
-    Array.copy(src = array, srcPos = startIdx, dest = dest, destPos = destStart, length = block1)
-    if (block1 < toCopy) {
-      Array.copy(src = array, srcPos = 0, dest = dest, destPos = block1, length = toCopy - block1)
+    if (toCopy > 0) {
+      val startIdx = mod(start + srcStart)
+      val block1 = toCopy min (array.length - startIdx)
+      Array.copy(src = array, srcPos = startIdx, dest = dest, destPos = destStart, length = block1)
+      if (block1 < toCopy) {
+        Array.copy(src = array, srcPos = 0, dest = dest, destPos = block1, length = toCopy - block1)
+      }
     }
+    dest
   }
 
   private def checkIndex(idx: Int) = if(!isDefinedAt(idx)) throw new IndexOutOfBoundsException(idx.toString)
 
   private def ensureCapacity() = if (size == array.length - 1) accomodate(array.length)
+
+  override def companion = CircularBuffer
+
+  override def result(): CircularBuffer[A] = this
 }
 
-object CircularBuffer {
-  private[CircularBuffer] val minimumCapacity = 8
+object CircularBuffer extends generic.SeqFactory[CircularBuffer] {
+  implicit def canBuildFrom[A]: generic.CanBuildFrom[Coll, A, CircularBuffer[A]] = ReusableCBF.asInstanceOf[GenericCanBuildFrom[A]]
 
-  def apply[A](initialSize: Int = minimumCapacity) = new CircularBuffer[A](alloc(initialSize), 0, 0)
+  override def newBuilder[A]: mutable.Builder[A, CircularBuffer[A]] = new CircularBuffer[A]()
 
-  def empty[A] = CircularBuffer[A](0)
+  val defaultInitialSize = 8
 
   private[CircularBuffer] def alloc(len: Int) = {
-    var i = len max minimumCapacity
+    var i = len max defaultInitialSize
     //See: http://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2
     i |= i >> 1; i |= i >> 2; i |= i >> 4; i |= i >> 8; i |= i >> 16
     Array.ofDim[AnyRef](i + 1)
