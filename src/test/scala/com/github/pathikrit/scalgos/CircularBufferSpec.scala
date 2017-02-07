@@ -14,8 +14,7 @@ class CircularBufferSpec extends Specification {
 
       def apply[U](f: mutable.Buffer[Int] => U) = {
         //println(s"Before: [buffer1=${buffer}; buffer2=${buffer2}]")
-        f(buffer)
-        f(buffer2)
+        f(buffer) shouldEqual f(buffer2)
         buffer shouldEqual buffer2
       }
 
@@ -31,6 +30,12 @@ class CircularBufferSpec extends Specification {
       apply(_.prependAll(Seq.tabulate(100)(identity)))
       buffer.trimToSize()
       apply(_.appendAll(Seq.tabulate(100)(identity)))
+
+      examplesBlock {
+        (-100 to 100) foreach {i =>
+          buffer.splitAt(i) shouldEqual buffer2.splitAt(i)
+        }
+      }
 
       examplesBlock {
         (-100 to 100) X (-100 to 100) foreach {case (i, j) =>

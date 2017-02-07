@@ -4,6 +4,7 @@ import scala.collection.mutable
 
 /**
   * A data structure that provides O(1) get, update, length, append, prepend, clear, trimStart and trimRight
+  * @author Pathikrit Bhowmick
   * @tparam A
   */
 class CircularBuffer[A] private(var array: Array[AnyRef], var start: Int, var end: Int) extends mutable.Buffer[A] {
@@ -35,15 +36,14 @@ class CircularBuffer[A] private(var array: Array[AnyRef], var start: Int, var en
     this
   }
 
-  override def prependAll(xs: TraversableOnce[A]) =
-    xs.toSeq.reverse.foreach(x => x +=: this)
+  override def prependAll(xs: TraversableOnce[A]) = xs.toSeq.reverse.foreach(+=:)
 
   override def insertAll(idx: Int, elems: Traversable[A]) = {
     checkIndex(idx)
     if (idx == 0) {
       prependAll(elems)
     } else {
-      val shift = (idx until size).map(this)
+      val shift = drop(idx)
       end = mod(start + idx)
       this ++= elems ++= shift
     }
@@ -111,8 +111,8 @@ class CircularBuffer[A] private(var array: Array[AnyRef], var start: Int, var en
   override def clone() = new CircularBuffer(array.clone, start, end)
 
   override def slice(from: Int, until: Int) = {
-    var left = box(from)
-    var right = box(until)
+    val left = box(from)
+    val right = box(until)
     val len = right - left
     if (len <= 0) {
       CircularBuffer.empty[A]
@@ -120,14 +120,7 @@ class CircularBuffer[A] private(var array: Array[AnyRef], var start: Int, var en
       clone()
     } else {
       val array2 = CircularBuffer.alloc(len)
-      left = mod(start + left)
-      right = mod(start + right)
-      if (left <= right) {
-        Array.copy(src = array, srcPos = left, dest = array2, destPos = 0, length = len)
-      } else {
-        Array.copy(src = array, srcPos = left, dest = array2, destPos = 0, length = size - left)
-        Array.copy(src = array, srcPos = 0, dest = array2, destPos = size - left, length = right)
-      }
+      arrayCopy(array2, left, 0, len)
       new CircularBuffer(array2, 0, len)
     }
   }
@@ -141,7 +134,7 @@ class CircularBuffer[A] private(var array: Array[AnyRef], var start: Int, var en
 
   override def copyToArray[B >: A](dest: Array[B], destStart: Int, len: Int) = {
     if(!dest.isDefinedAt(destStart)) throw new IndexOutOfBoundsException(destStart.toString)
-    if (len > 0) arrayCopy(dest, destStart, len)
+    if (len > 0) arrayCopy(dest, srcStart = 0, destStart = destStart, maxItems = len)
   }
 
   /**
@@ -156,18 +149,19 @@ class CircularBuffer[A] private(var array: Array[AnyRef], var start: Int, var en
   private def accomodate(len: Int) = {
     require(len >= size)
     val array2 = CircularBuffer.alloc(len)
-    arrayCopy(array2, 0, size)
+    arrayCopy(array2, srcStart = 0, destStart = 0, maxItems = size)
     end = size
     start = 0
     array = array2
   }
 
-  private def arrayCopy(dest: Array[_], destStart: Int, len: Int) = {
-    val toCopy = size min len min (dest.length - destStart)
-    val block1 = toCopy min (array.length - start)
-    Array.copy(src = array, srcPos = start, dest = dest, destPos = destStart, length = block1)
+  def arrayCopy(dest: Array[_], srcStart: Int, destStart: Int, maxItems: Int) = {
+    val toCopy = size min maxItems min (dest.length - destStart)
+    val startIdx = mod(start + srcStart)
+    val block1 = toCopy min (array.length - startIdx)
+    Array.copy(src = array, srcPos = startIdx, dest = dest, destPos = destStart, length = block1)
     if (block1 < toCopy) {
-      Array.copy(src = array, srcPos = mod(start + block1), dest = dest, destPos = block1, length = toCopy - block1)
+      Array.copy(src = array, srcPos = 0, dest = dest, destPos = block1, length = toCopy - block1)
     }
   }
 
