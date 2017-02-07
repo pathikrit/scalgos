@@ -91,6 +91,23 @@ class CircularBuffer[A] private(var array: Array[AnyRef], var start: Int, var en
 
   override def takeRight(n: Int) = slice(size - n, n)
 
+  override def takeWhile(p: A => Boolean) = {
+    val idx = indexWhere(a => !p(a))
+    if (idx < 0) clone() else slice(0, idx)
+  }
+
+  override def dropWhile(p: A => Boolean) = {
+    val idx = indexWhere(a => !p(a))
+    if (idx < 0) clone() else slice(idx, size)
+  }
+
+  override def span(p: A => Boolean) = {
+    val idx = indexWhere(a => !p(a))
+    if (idx < 0) (clone(), CircularBuffer.empty) else splitAt(idx)
+  }
+
+  override def splitAt(n: Int) = (slice(0, n), slice(n, size))
+
   override def clone() = new CircularBuffer(array.clone, start, end)
 
   override def slice(from: Int, until: Int) = {
@@ -124,7 +141,7 @@ class CircularBuffer[A] private(var array: Array[AnyRef], var start: Int, var en
 
   override def copyToArray[B >: A](dest: Array[B], destStart: Int, len: Int) = {
     if(!dest.isDefinedAt(destStart)) throw new IndexOutOfBoundsException(destStart.toString)
-    if (len > 0) arrayCopy(dest.asInstanceOf[Array[AnyRef]], destStart, len)
+    if (len > 0) arrayCopy(dest, destStart, len)
   }
 
   /**
@@ -145,7 +162,7 @@ class CircularBuffer[A] private(var array: Array[AnyRef], var start: Int, var en
     array = array2
   }
 
-  private def arrayCopy(dest: Array[AnyRef], destStart: Int, len: Int) = {
+  private def arrayCopy(dest: Array[_], destStart: Int, len: Int) = {
     val toCopy = size min len min (dest.length - destStart)
     val block1 = toCopy min (array.length - start)
     Array.copy(src = array, srcPos = start, dest = dest, destPos = destStart, length = block1)
