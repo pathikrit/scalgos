@@ -53,7 +53,7 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
   override def insertAll(idx: Int, elems: Traversable[A]) = {
     checkIndex(idx)
     if (idx == 0) {
-      prependAll(elems)
+      prependAll(elems) //TODO make this faster by using sizeHintIfCheap
     } else {
       val shift = drop(idx)
       end = mod(start + idx)
@@ -82,10 +82,6 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
   }
 
   override def iterator = indices.iterator.map(apply)
-
-  override def trimStart(n: Int) = if (n >= size) clear() else if (n > 0) start += n
-
-  override def trimEnd(n: Int) = if (n >= size) clear() else if (n > 0) end -= n
 
   override def clone() = new ArrayDeque(array.clone, start, end)
 
@@ -132,7 +128,7 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
     array = array2
   }
 
-  def arrayCopy(dest: Array[_], srcStart: Int, destStart: Int, maxItems: Int) = {
+  def arrayCopy(dest: Array[_], srcStart: Int, destStart: Int, maxItems: Int): Unit = {
     if(!dest.isDefinedAt(destStart)) throw new IndexOutOfBoundsException(destStart.toString)
     checkIndex(srcStart)
     val toCopy = size min maxItems min (dest.length - destStart)
@@ -144,7 +140,6 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
         Array.copy(src = array, srcPos = 0, dest = dest, destPos = block1, length = toCopy - block1)
       }
     }
-    dest
   }
 
   private def checkIndex(idx: Int) = if(!isDefinedAt(idx)) throw new IndexOutOfBoundsException(idx.toString)
@@ -153,7 +148,7 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
 
   override def companion = ArrayDeque
 
-  override def result(): ArrayDeque[A] = this
+  override def result() = this
 }
 
 object ArrayDeque extends generic.SeqFactory[ArrayDeque] {
@@ -163,7 +158,7 @@ object ArrayDeque extends generic.SeqFactory[ArrayDeque] {
 
   val defaultInitialSize = 8
 
-  private[ArrayDeque$] def alloc(len: Int) = {
+  private[ArrayDeque] def alloc(len: Int) = {
     var i = len max defaultInitialSize
     //See: http://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2
     i |= i >> 1; i |= i >> 2; i |= i >> 4; i |= i >> 8; i |= i >> 16
