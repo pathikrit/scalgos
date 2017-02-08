@@ -3,10 +3,9 @@ package com.github.pathikrit.scalgos
 import scala.collection.{generic, mutable}
 
 /** An implementation of a double-ended queue using a resizable circular buffer internally
-  *  (See: https://www.wikiwand.com/en/Double-ended_queue)
-  *  Appends, prepends, updates and random-access take constant time (amortized time).
-  *  Other operations (clear, trimStart, trimEnd and removes from the ends) are also in constant time
-  *  Removes and inserts at the middle take linear time
+  *  Append, prepend, removeFirst, removeLast, clear and random-access
+  *  (indexed-lookup and indexed-replacement) take constant amortized time.
+  *  Removes and inserts at the middle take linear time.
   *
   *  @author  Pathikrit Bhowmick
   *  @version 2.12
@@ -95,6 +94,10 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
     elem
   }
 
+  def removeFirst(): A = remove(0)
+
+  def removeLast(): A = remove(size - 1)
+
   override def remove(idx: Int, count: Int) = {
     checkIndex(idx)
     if (idx + count >= size) {
@@ -140,14 +143,13 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
   /**
     * Trims the capacity of this CircularBuffer's instance to be the current size
     */
-  def trimToSize(): Unit = accomodate(size)
+  def trimToSize(): Unit = accomodate(size - 1)
 
   @inline private def mod(x: Int) = x & (array.length - 1)  // modulus using bitmask since array.length is always power of 2
 
   @inline private def box(i: Int) = if (i <= 0) 0 else if (i >= size) size else i
 
   private def accomodate(len: Int) = {
-    require(len >= size)
     val array2 = ArrayDeque.alloc(len)
     arrayCopy(array2, srcStart = 0, destStart = 0, maxItems = size)
     end = size
@@ -181,7 +183,8 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
 }
 
 object ArrayDeque extends generic.SeqFactory[ArrayDeque] {
-  implicit def canBuildFrom[A]: generic.CanBuildFrom[Coll, A, ArrayDeque[A]] = ReusableCBF.asInstanceOf[GenericCanBuildFrom[A]]
+  implicit def canBuildFrom[A]: generic.CanBuildFrom[Coll, A, ArrayDeque[A]] =
+    ReusableCBF.asInstanceOf[GenericCanBuildFrom[A]]
 
   override def newBuilder[A]: mutable.Builder[A, ArrayDeque[A]] = new ArrayDeque[A]()
 
