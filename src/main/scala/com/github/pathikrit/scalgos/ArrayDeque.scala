@@ -52,6 +52,8 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
 
   override def length = mod(end - start)
 
+  override def isEmpty = start == end
+
   override def +=(elem: A) = {
     ensureCapacity()
     array(end) = elem.asInstanceOf[AnyRef]
@@ -59,7 +61,7 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
     this
   }
 
-  override def clear() = {
+  override def clear() = if (nonEmpty) {
     array = ArrayDeque.alloc(ArrayDeque.defaultInitialSize)
     start = end
   }
@@ -94,9 +96,21 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
     elem
   }
 
-  def removeFirst(): A = remove(0)
+  def removeFirst(): A = {
+    require(nonEmpty, "Empty collection")
+    val elem = array(start)
+    array(start) = null
+    start = mod(start + 1)
+    elem
+  }
 
-  def removeLast(): A = remove(size - 1)
+  def removeLast(): A = {
+    require(nonEmpty, "Empty collection")
+    end = mod(end - 1)
+    val elem = array(end)
+    array(end) = null
+    elem
+  }
 
   override def remove(idx: Int, count: Int) = {
     checkIndex(idx)
