@@ -2,12 +2,33 @@ package com.github.pathikrit.scalgos
 
 import scala.collection.{generic, mutable}
 
-/**
-  * A data structure that provides O(1) get, update, length, append, prepend, clear, trimStart and trimRight
+/** An implementation of a double-ended queue using a resizable circular buffer internally
+  *  (See: https://www.wikiwand.com/en/Double-ended_queue)
+  *  Appends, prepends, updates and random-access take constant time (amortized time).
+  *  Other operations (clear, trimStart, trimEnd and removes from the ends) are also in constant time
+  *  Removes and inserts at the middle take linear time
   *
-  * @author Pathikrit Bhowmick
-  * @tparam A
+  *  @author  Pathikrit Bhowmick
+  *  @version 2.12
+  *  @since   2.12
+  *
+  *  @tparam A    the type of this ArrayDeque's elements.
+  *
+  *  @define Coll `mutable.ArrayDeque`
+  *  @define coll array deque
+  *  @define thatinfo the class of the returned collection. In the standard library configuration,
+  *    `That` is always `ArrayDeque[B]` because an implicit of type `CanBuildFrom[ArrayDeque, B, ArrayDeque[B]]`
+  *    is defined in object `ArrayDeque`.
+  *  @define bfinfo an implicit value of class `CanBuildFrom` which determines the
+  *    result class `That` from the current representation type `Repr`
+  *    and the new element type `B`. This is usually the `canBuildFrom` value
+  *    defined in object `ArrayDeque`.
+  *  @define orderDependent
+  *  @define orderDependentFold
+  *  @define mayNotTerminateInf
+  *  @define willNotTerminateInf
   */
+@SerialVersionUID(1L)
 class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: Int)
   extends mutable.AbstractBuffer[A]
     with mutable.Buffer[A]
@@ -39,7 +60,10 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
     this
   }
 
-  override def clear() = start = end
+  override def clear() = {
+    array = ArrayDeque.alloc(ArrayDeque.defaultInitialSize)
+    start = end
+  }
 
   override def +=:(elem: A) = {
     ensureCapacity()
@@ -50,10 +74,14 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
 
   override def prependAll(xs: TraversableOnce[A]) = xs.toSeq.reverse.foreach(+=:)
 
-  override def insertAll(idx: Int, elems: Traversable[A]) = {
+  override def insertAll(idx: Int, elems: scala.collection.Traversable[A]) = {
     checkIndex(idx)
+    // TODO: This can be further optimized in various ways:
+    // 1. Use sizeHintIfCheap to pre-allocate array to correct size
+    // 2. Special case idx == 0 and idx == size
+    // 3. In general, figure out whether to move the suffix left or prefix right
     if (idx == 0) {
-      prependAll(elems) //TODO make this faster by using sizeHintIfCheap
+      prependAll(elems)
     } else {
       val shift = drop(idx)
       end = mod(start + idx)
@@ -75,13 +103,12 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
       if (idx == 0) {
         start = mod(start + count)
       } else {
-        ((idx + count) until size).foreach(i => this(i - count) = this(i)) //TODO: use arrayCopy here
+        // TODO: Same optimization as insertAll can be done here: figure out which block to move left or right
+        ((idx + count) until size).foreach(i => this(i - count) = this(i))
         end = mod(end - count)
       }
     }
   }
-
-  override def iterator = indices.iterator.map(apply)
 
   override def clone() = new ArrayDeque(array.clone, start, end)
 
@@ -149,6 +176,8 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
   override def companion = ArrayDeque
 
   override def result() = this
+
+  override def stringPrefix = "ArrayDeque"
 }
 
 object ArrayDeque extends generic.SeqFactory[ArrayDeque] {
@@ -158,6 +187,11 @@ object ArrayDeque extends generic.SeqFactory[ArrayDeque] {
 
   val defaultInitialSize = 8
 
+  /**
+    * Allocates an array whose size is next power of 2 > $len
+    * @param len
+    * @return
+    */
   private[ArrayDeque] def alloc(len: Int) = {
     var i = len max defaultInitialSize
     //See: http://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2
