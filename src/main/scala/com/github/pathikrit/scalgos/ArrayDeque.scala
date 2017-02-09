@@ -41,12 +41,12 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
 
   override def apply(idx: Int) = {
     checkIndex(idx)
-    array(mod(start + idx)).asInstanceOf[A]
+    get(idx).asInstanceOf[A]
   }
 
   override def update(idx: Int, elem: A) = {
     checkIndex(idx)
-    array(mod(start + idx)) = elem.asInstanceOf[AnyRef]
+    set(idx, elem.asInstanceOf[AnyRef])
   }
 
   override def length = mod(end - start)  //TODO: We can make this faster by incrementing/decrementing a private var _size a
@@ -130,17 +130,16 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
       end = size - removals
       start = 0
       array = array2
-    }*/
-    if (size - idx <= idx + removals) {
-      idx until size foreach {i =>
-        val elem = if (i + removals < size) this(i + removals) else null.asInstanceOf[A]
-        this(i) = elem
+    } else */if (size - idx <= idx + removals) {
+      (idx until size) foreach {i =>
+        val elem = if (i + removals < size) get(i + removals) else null
+        set(i, elem)
       }
       end = mod(end - removals)
     } else {
       (0 until (idx + removals)).reverse foreach {i =>
-        val elem = if (i - removals < 0) null.asInstanceOf[A] else this(i - removals)
-        this(i) = elem
+        val elem = if (i - removals < 0) null else get(i - removals)
+        set(i, elem)
       }
       start = mod(start + removals)
     }
@@ -181,6 +180,10 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
   @inline private def mod(x: Int) = x & (array.length - 1)  // modulus using bitmask since array.length is always power of 2
 
   @inline private def box(i: Int) = if (i <= 0) 0 else if (i >= size) size else i
+
+  @inline private def get(idx: Int) = array(mod(start + idx))
+
+  @inline private def set(idx: Int, elem: AnyRef) = array(mod(start + idx)) = elem
 
   private def accomodate(len: Int) = {
     val array2 = ArrayDeque.alloc(len)
@@ -225,6 +228,7 @@ object ArrayDeque extends generic.SeqFactory[ArrayDeque] {
 
   /**
     * Allocates an array whose size is next power of 2 > $len
+    *
     * @param len
     * @return
     */
