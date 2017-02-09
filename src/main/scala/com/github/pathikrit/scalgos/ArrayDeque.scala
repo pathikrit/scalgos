@@ -2,16 +2,15 @@ package com.github.pathikrit.scalgos
 
 import scala.collection.{generic, mutable}
 
-/** An implementation of a double-ended queue using a resizable circular buffer internally
-  *  Append, prepend, removeFirst, removeLast, clear and random-access
-  *  (indexed-lookup and indexed-replacement) take constant amortized time.
-  *  Removes and inserts at the middle take linear time.
+/** An implementation of a double-ended queue that internally uses a resizable circular buffer
+  *  Append, prepend, removeFirst, removeLast and random-access (indexed-lookup and indexed-replacement)
+  *  take amortized constant time. Removals and insertions in the middle take linear time.
   *
   *  @author  Pathikrit Bhowmick
   *  @version 2.12
   *  @since   2.12
   *
-  *  @tparam A    the type of this ArrayDeque's elements.
+  *  @tparam A  the type of this ArrayDeque's elements.
   *
   *  @define Coll `mutable.ArrayDeque`
   *  @define coll array deque
@@ -96,20 +95,26 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
     elem
   }
 
-  def removeFirst(): A = {
-    require(nonEmpty, "Empty collection")
-    val elem = array(start)
-    array(start) = null
-    start = mod(start + 1)
-    elem
+  def removeFirst(): Option[A] = {
+    if (isEmpty) {
+      None
+    } else {
+      val elem = array(start)
+      array(start) = null
+      start = mod(start + 1)
+      Some(elem.asInstanceOf[A])
+    }
   }
 
-  def removeLast(): A = {
-    require(nonEmpty, "Empty collection")
-    end = mod(end - 1)
-    val elem = array(end)
-    array(end) = null
-    elem
+  def removeLast(): Option[A] = {
+    if (isEmpty) {
+      None
+    } else {
+      end = mod(end - 1)
+      val elem = array(end)
+      array(end) = null
+      Some(elem.asInstanceOf[A])
+    }
   }
 
   override def remove(idx: Int, count: Int) = {
