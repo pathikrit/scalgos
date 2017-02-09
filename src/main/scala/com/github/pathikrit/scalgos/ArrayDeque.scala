@@ -49,7 +49,7 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
     array(mod(start + idx)) = elem.asInstanceOf[AnyRef]
   }
 
-  override def length = mod(end - start)
+  override def length = mod(end - start)  //TODO: We can make this faster by incrementing/decrementing a private var _size a
 
   override def isEmpty = start == end
 
@@ -117,18 +117,32 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
     }
   }
 
-  override def remove(idx: Int, count: Int) = {
+  override def remove(idx: Int, count: Int): Unit = {
     checkIndex(idx)
-    if (idx + count >= size) {
-      end = mod(start + idx)
-    } else if (count > 0) {
-      if (idx == 0) {
-        start = mod(start + count)
-      } else {
-        // TODO: Same optimization as insertAll can be done here: figure out which block to move left or right
-        ((idx + count) until size).foreach(i => this(i - count) = this(i))
-        end = mod(end - count)
+    if (count <= 0) return
+    val removals = (size - idx) min count
+    // If we are removing more than half the elements, its cheaper to start over
+    // Else, either move the prefix right or the suffix left - whichever is shorter
+    /*if(2*removals >= size) {
+      val array2 = ArrayDeque.alloc(size - removals)
+      arrayCopy(dest = array2, srcStart = 0, destStart = 0, maxItems = idx)
+      arrayCopy(dest = array2, srcStart = idx + removals - 1, destStart = idx, maxItems = size)
+      end = size - removals
+      start = 0
+      array = array2
+    }*/
+    if (size - idx <= idx + removals) {
+      idx until size foreach {i =>
+        val elem = if (i + removals < size) this(i + removals) else null.asInstanceOf[A]
+        this(i) = elem
       }
+      end = mod(end - removals)
+    } else {
+      (0 until (idx + removals)).reverse foreach {i =>
+        val elem = if (i - removals < 0) null.asInstanceOf[A] else this(i - removals)
+        this(i) = elem
+      }
+      start = mod(start + removals)
     }
   }
 
