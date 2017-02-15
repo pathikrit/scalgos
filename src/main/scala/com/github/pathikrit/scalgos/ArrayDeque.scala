@@ -4,7 +4,8 @@ import scala.collection.{generic, mutable}
 
 /** An implementation of a double-ended queue that internally uses a resizable circular buffer
   *  Append, prepend, removeFirst, removeLast and random-access (indexed-lookup and indexed-replacement)
-  *  take amortized constant time. Removals and insertions in the middle take linear time.
+  *  take amortized constant time. In general, removals and insertions at i-th index are O(min(i, n-i))
+  *  and thus insertions and removals from end/beginning are fast.
   *
   *  @author  Pathikrit Bhowmick
   *  @version 2.12
@@ -49,7 +50,7 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
     set(idx, elem.asInstanceOf[AnyRef])
   }
 
-  override def length = mod(end - start)  //TODO: We can make this faster by incrementing/decrementing a private var _size a
+  override def length = mod(end - start)
 
   override def isEmpty = start == end
 
@@ -58,11 +59,6 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
     array(end) = elem.asInstanceOf[AnyRef]
     end = mod(end + 1)
     this
-  }
-
-  override def clear() = if (nonEmpty) {
-    array = ArrayDeque.alloc(ArrayDeque.defaultInitialSize)
-    start = end
   }
 
   override def +=:(elem: A) = {
@@ -127,9 +123,7 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
       val array2 = ArrayDeque.alloc(size - removals)
       arrayCopy(dest = array2, srcStart = 0, destStart = 0, maxItems = idx)
       arrayCopy(dest = array2, srcStart = idx + removals - 1, destStart = idx, maxItems = size)
-      end = size - removals
-      start = 0
-      array = array2
+      set(array = array2, start = 0, end = size - removals)
     } else */if (size - idx <= idx + removals) {
       (idx until size) foreach {i =>
         val elem = if (i + removals < size) get(i + removals) else null
@@ -146,6 +140,8 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
   }
 
   override def clone() = new ArrayDeque(array.clone, start, end)
+
+  override def clear() = if (nonEmpty) set(array = ArrayDeque.alloc(ArrayDeque.defaultInitialSize), start = 0, end = 0)
 
   override def slice(from: Int, until: Int) = {
     val left = box(from)
@@ -185,12 +181,16 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
 
   @inline private def set(idx: Int, elem: AnyRef) = array(mod(start + idx)) = elem
 
+  @inline private def set(array: Array[AnyRef], start: Int, end: Int) = {
+    this.array = array
+    this.start = start
+    this.end = end
+  }
+
   private def accomodate(len: Int) = {
     val array2 = ArrayDeque.alloc(len)
     arrayCopy(array2, srcStart = 0, destStart = 0, maxItems = size)
-    end = size
-    start = 0
-    array = array2
+    set(array = array2, start = 0, end = size)
   }
 
   def arrayCopy(dest: Array[_], srcStart: Int, destStart: Int, maxItems: Int): Unit = {
