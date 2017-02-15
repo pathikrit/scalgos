@@ -1,6 +1,6 @@
 package com.github.pathikrit.scalgos
 
-import scala.collection.{generic, mutable}
+import scala.collection.{GenSeq, generic, mutable}
 
 /** An implementation of a double-ended queue that internally uses a resizable circular buffer
   *  Append, prepend, removeFirst, removeLast and random-access (indexed-lookup and indexed-replacement)
@@ -50,10 +50,6 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
     set(idx, elem.asInstanceOf[AnyRef])
   }
 
-  override def length = mod(end - start)
-
-  override def isEmpty = start == end
-
   override def +=(elem: A) = {
     ensureCapacity()
     array(end) = elem.asInstanceOf[AnyRef]
@@ -85,6 +81,32 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
     }
   }
 
+  override def remove(idx: Int, count: Int): Unit = {
+    checkIndex(idx)
+    if (count <= 0) return
+    val removals = (size - idx) min count
+    // If we are removing more than half the elements, its cheaper to start over
+    // Else, either move the prefix right or the suffix left - whichever is shorter
+    /*if(2*removals >= size) {
+      val array2 = ArrayDeque.alloc(size - removals)
+      arrayCopy(dest = array2, srcStart = 0, destStart = 0, maxItems = idx)
+      arrayCopy(dest = array2, srcStart = idx + removals - 1, destStart = idx, maxItems = size)
+      set(array = array2, start = 0, end = size - removals)
+    } else */if (size - idx <= idx + removals) {
+      (idx until size) foreach {i =>
+        val elem = if (i + removals < size) get(i + removals) else null
+        set(i, elem)
+      }
+      end = mod(end - removals)
+    } else {
+      (0 until (idx + removals)).reverse foreach {i =>
+        val elem = if (i - removals < 0) null else get(i - removals)
+        set(i, elem)
+      }
+      start = mod(start + removals)
+    }
+  }
+
   override def remove(idx: Int) = {
     val elem = this(idx)
     remove(idx, 1)
@@ -113,31 +135,9 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
     }
   }
 
-  override def remove(idx: Int, count: Int): Unit = {
-    checkIndex(idx)
-    if (count <= 0) return
-    val removals = (size - idx) min count
-    // If we are removing more than half the elements, its cheaper to start over
-    // Else, either move the prefix right or the suffix left - whichever is shorter
-    /*if(2*removals >= size) {
-      val array2 = ArrayDeque.alloc(size - removals)
-      arrayCopy(dest = array2, srcStart = 0, destStart = 0, maxItems = idx)
-      arrayCopy(dest = array2, srcStart = idx + removals - 1, destStart = idx, maxItems = size)
-      set(array = array2, start = 0, end = size - removals)
-    } else */if (size - idx <= idx + removals) {
-      (idx until size) foreach {i =>
-        val elem = if (i + removals < size) get(i + removals) else null
-        set(i, elem)
-      }
-      end = mod(end - removals)
-    } else {
-      (0 until (idx + removals)).reverse foreach {i =>
-        val elem = if (i - removals < 0) null else get(i - removals)
-        set(i, elem)
-      }
-      start = mod(start + removals)
-    }
-  }
+  override def length = mod(end - start)
+
+  override def isEmpty = start == end
 
   override def clone() = new ArrayDeque(array.clone, start, end)
 
@@ -168,35 +168,16 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
   override def copyToArray[B >: A](dest: Array[B], destStart: Int, len: Int) =
     arrayCopy(dest, srcStart = 0, destStart = destStart, maxItems = len)
 
-  /**
-    * Trims the capacity of this CircularBuffer's instance to be the current size
-    */
-  def trimToSize(): Unit = accomodate(size - 1)
+  override def companion = ArrayDeque
 
-  @inline private def mod(x: Int) = x & (array.length - 1)  // modulus using bitmask since array.length is always power of 2
+  override def result() = this
 
-  @inline private def box(i: Int) = if (i <= 0) 0 else if (i >= size) size else i
-
-  @inline private def get(idx: Int) = array(mod(start + idx))
-
-  @inline private def set(idx: Int, elem: AnyRef) = array(mod(start + idx)) = elem
-
-  @inline private def set(array: Array[AnyRef], start: Int, end: Int) = {
-    this.array = array
-    this.start = start
-    this.end = end
-  }
-
-  private def accomodate(len: Int) = {
-    val array2 = ArrayDeque.alloc(len)
-    arrayCopy(array2, srcStart = 0, destStart = 0, maxItems = size)
-    set(array = array2, start = 0, end = size)
-  }
+  override def stringPrefix = "ArrayDeque"
 
   def arrayCopy(dest: Array[_], srcStart: Int, destStart: Int, maxItems: Int): Unit = {
-    if(!dest.isDefinedAt(destStart)) throw new IndexOutOfBoundsException(destStart.toString)
+    checkIndex(destStart, dest)
     checkIndex(srcStart)
-    val toCopy = size min maxItems min (dest.length - destStart)
+    val toCopy = maxItems min (size - srcStart) min (dest.length - destStart)
     if (toCopy > 0) {
       val startIdx = mod(start + srcStart)
       val block1 = toCopy min (array.length - startIdx)
@@ -207,15 +188,35 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
     }
   }
 
-  private def checkIndex(idx: Int) = if(!isDefinedAt(idx)) throw new IndexOutOfBoundsException(idx.toString)
+  /**
+    * Trims the capacity of this CircularBuffer's instance to be the current size
+    */
+  def trimToSize(): Unit = resize(size - 1)
 
-  private def ensureCapacity() = if (size == array.length - 1) accomodate(array.length)
+  @inline private def checkIndex(idx: Int, seq: GenSeq[_] = this) =
+    if(!seq.isDefinedAt(idx)) throw new IndexOutOfBoundsException(idx.toString)
 
-  override def companion = ArrayDeque
+  @inline private def mod(x: Int) = x & (array.length - 1)  // modulus using bitmask since array.length is always power of 2
 
-  override def result() = this
+  @inline private def box(i: Int) = if (i <= 0) 0 else if (i >= size) size else i
 
-  override def stringPrefix = "ArrayDeque"
+  @inline private def get(idx: Int) = array(mod(start + idx))
+
+  @inline private def set(idx: Int, elem: AnyRef) = array(mod(start + idx)) = elem
+
+  private def set(array: Array[AnyRef], start: Int, end: Int) = {
+    this.array = array
+    this.start = start
+    this.end = end
+  }
+
+  private def ensureCapacity() = if (size == array.length - 1) resize(array.length)
+
+  private def resize(len: Int) = {
+    val array2 = ArrayDeque.alloc(len)
+    arrayCopy(array2, srcStart = 0, destStart = 0, maxItems = size)
+    set(array = array2, start = 0, end = size)
+  }
 }
 
 object ArrayDeque extends generic.SeqFactory[ArrayDeque] {
