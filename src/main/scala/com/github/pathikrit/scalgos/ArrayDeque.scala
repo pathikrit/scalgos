@@ -39,6 +39,9 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
     with mutable.Builder[A, ArrayDeque[A]]
     with Serializable {
 
+  private[this] val mask = array.length - 1   // modulus using bitmask since array.length is always power of 2
+  assert((array.length & mask) == 0, s"Array.length must be power of 2")
+
   def this(initialSize: Int = ArrayDeque.defaultInitialSize) = this(ArrayDeque.alloc(initialSize), 0, 0)
 
   override def apply(idx: Int) = {
@@ -54,13 +57,13 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
   override def +=(elem: A) = {
     ensureCapacity()
     array(end) = elem.asInstanceOf[AnyRef]
-    end = mod(end + 1)
+    end = (end + 1) & mask
     this
   }
 
   override def +=:(elem: A) = {
     ensureCapacity()
-    start = mod(start - 1)
+    start = (start - 1) & mask
     array(start) = elem.asInstanceOf[AnyRef]
     this
   }
@@ -72,17 +75,20 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
 
   override def insertAll(idx: Int, elems: scala.collection.Traversable[A]) = {
     checkIndex(idx)
-    // TODO: This can be further optimized in various ways:
-    // 1. Use sizeHintIfCheap to pre-allocate array to correct size
-    // 2. Special case idx == 0 and idx == size
-    // 3. In general, figure out whether to move the suffix left or prefix right
-    if (idx == 0) {
-      prependAll(elems)
-    } else {
-      val shift = drop(idx)
-      end = mod(start + idx)
-      this ++= elems ++= shift
-    }
+    val src = elems.toBuffer
+    /*val finalLength = src.length + this.length
+    // Either we resize right away or move prefix right or suffix left
+    if (2*finalLength >= array.length) {
+      val array2 = ArrayDeque.alloc(finalLength)
+      arrayCopy(dest = array2, srcStart = 0, destStart = 0, maxItems = idx)
+      Array.copy(src = src, srcPos = 0, dest = array2, destPos = idx, length = src.length)
+      arrayCopy(dest = array2, srcStart = idx, destStart = idx + src.length, maxItems = size)
+      set(array = array2, start = 0, end = finalLength)
+    } else {*/
+    val suffix = drop(idx)
+    end = (start + idx) & mask
+    this ++= src ++= suffix
+    //}
   }
 
   override def remove(idx: Int, count: Int): Unit = {
@@ -101,13 +107,13 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
         val elem = if (i + removals < size) get(i + removals) else null
         set(i, elem)
       }
-      end = mod(end - removals)
+      end = (end - removals) & mask
     } else {
       (0 until (idx + removals)).reverse foreach {i =>
         val elem = if (i - removals < 0) null else get(i - removals)
         set(i, elem)
       }
-      start = mod(start + removals)
+      start = (start + removals) & mask
     }
   }
 
@@ -123,7 +129,7 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
     } else {
       val elem = array(start)
       array(start) = null
-      start = mod(start + 1)
+      start = (start + 1) & mask
       Some(elem.asInstanceOf[A])
     }
   }
@@ -132,14 +138,14 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
     if (isEmpty) {
       None
     } else {
-      end = mod(end - 1)
+      end = (end - 1) & mask
       val elem = array(end)
       array(end) = null
       Some(elem.asInstanceOf[A])
     }
   }
 
-  override def length = mod(end - start)
+  override def length = (end - start) & mask
 
   override def isEmpty = start == end
 
@@ -189,7 +195,7 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
     checkIndex(srcStart)
     val toCopy = maxItems min (size - srcStart) min (dest.length - destStart)
     if (toCopy > 0) {
-      val startIdx = mod(start + srcStart)
+      val startIdx = (start + srcStart) & mask
       val block1 = toCopy min (array.length - startIdx)
       Array.copy(src = array, srcPos = startIdx, dest = dest, destPos = destStart, length = block1)
       if (block1 < toCopy) {
@@ -205,13 +211,11 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
 
   @inline private def checkIndex(idx: Int, seq: GenSeq[_] = this) = if(!seq.isDefinedAt(idx)) throw new IndexOutOfBoundsException(idx.toString)
 
-  @inline private def mod(x: Int) = x & (array.length - 1)  // modulus using bitmask since array.length is always power of 2
-
   @inline private def box(i: Int) = if (i <= 0) 0 else if (i >= size) size else i
 
-  @inline private def get(idx: Int) = array(mod(start + idx))
+  @inline private def get(idx: Int) = array((start + idx) & mask)
 
-  @inline private def set(idx: Int, elem: AnyRef) = array(mod(start + idx)) = elem
+  @inline private def set(idx: Int, elem: AnyRef) = array((start + idx) & mask) = elem
 
   @inline private def set(array: Array[AnyRef], start: Int, end: Int) = {
     this.array = array
