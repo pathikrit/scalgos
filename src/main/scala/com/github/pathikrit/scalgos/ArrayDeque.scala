@@ -1,6 +1,7 @@
 package com.github.pathikrit.scalgos
 
 import scala.collection.{GenSeq, generic, mutable}
+import scala.reflect.ClassTag
 
 /** An implementation of a double-ended queue that internally uses a resizable circular buffer
   *  Append, prepend, removeFirst, removeLast and random-access (indexed-lookup and indexed-replacement)
@@ -64,7 +65,10 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
     this
   }
 
-  override def prependAll(xs: TraversableOnce[A]) = xs.toSeq.reverse.foreach(+=:)
+  override def ++=:(xs: TraversableOnce[A]) = {
+    xs.foldRight(this)((x, coll) => x +=: coll)
+    this
+  }
 
   override def insertAll(idx: Int, elems: scala.collection.Traversable[A]) = {
     checkIndex(idx)
@@ -153,7 +157,7 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
       clone()
     } else {
       val array2 = ArrayDeque.alloc(len)
-      arrayCopy(array2, left, 0, len)
+      arrayCopy(dest = array2, srcStart = left, destStart = 0, maxItems = len)
       new ArrayDeque(array2, 0, len)
     }
   }
@@ -166,13 +170,19 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
   override def grouped(n: Int) = sliding(n, n)
 
   override def copyToArray[B >: A](dest: Array[B], destStart: Int, len: Int) =
-    arrayCopy(dest, srcStart = 0, destStart = destStart, maxItems = len)
+    arrayCopy(dest = dest, srcStart = 0, destStart = destStart, maxItems = len)
 
   override def companion = ArrayDeque
 
   override def result() = this
 
   override def stringPrefix = "ArrayDeque"
+
+  override def toArray[B >: A: ClassTag] = {
+    val array2 = Array.ofDim[B](size)
+    arrayCopy(dest = array2, srcStart = 0, destStart = 0, maxItems = size)
+    array2
+  }
 
   def arrayCopy(dest: Array[_], srcStart: Int, destStart: Int, maxItems: Int): Unit = {
     checkIndex(destStart, dest)
@@ -193,8 +203,7 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
     */
   def trimToSize(): Unit = resize(size - 1)
 
-  @inline private def checkIndex(idx: Int, seq: GenSeq[_] = this) =
-    if(!seq.isDefinedAt(idx)) throw new IndexOutOfBoundsException(idx.toString)
+  @inline private def checkIndex(idx: Int, seq: GenSeq[_] = this) = if(!seq.isDefinedAt(idx)) throw new IndexOutOfBoundsException(idx.toString)
 
   @inline private def mod(x: Int) = x & (array.length - 1)  // modulus using bitmask since array.length is always power of 2
 
@@ -204,7 +213,7 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
 
   @inline private def set(idx: Int, elem: AnyRef) = array(mod(start + idx)) = elem
 
-  private def set(array: Array[AnyRef], start: Int, end: Int) = {
+  @inline private def set(array: Array[AnyRef], start: Int, end: Int) = {
     this.array = array
     this.start = start
     this.end = end
@@ -214,7 +223,7 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
 
   private def resize(len: Int) = {
     val array2 = ArrayDeque.alloc(len)
-    arrayCopy(array2, srcStart = 0, destStart = 0, maxItems = size)
+    arrayCopy(dest = array2, srcStart = 0, destStart = 0, maxItems = size)
     set(array = array2, start = 0, end = size)
   }
 }
