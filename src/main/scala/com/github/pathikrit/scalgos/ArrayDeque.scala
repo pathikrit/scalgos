@@ -39,8 +39,8 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
     with mutable.Builder[A, ArrayDeque[A]]
     with Serializable {
 
-  private[this] val mask = array.length - 1   // modulus using bitmask since array.length is always power of 2
-  assert((array.length & mask) == 0, s"Array.length must be power of 2")
+  private[this] var mask = 0   // modulus using bitmask since array.length is always power of 2
+  set(array, start, end)
 
   def this(initialSize: Int = ArrayDeque.defaultInitialSize) = this(ArrayDeque.alloc(initialSize), 0, 0)
 
@@ -219,6 +219,8 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
 
   @inline private def set(array: Array[AnyRef], start: Int, end: Int) = {
     this.array = array
+    this.mask = array.length - 1
+    assert((array.length & mask) == 0, s"Array.length must be power of 2")
     this.start = start
     this.end = end
   }
