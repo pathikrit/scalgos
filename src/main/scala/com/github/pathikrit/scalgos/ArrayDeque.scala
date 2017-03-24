@@ -68,10 +68,8 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
     this
   }
 
-  override def ++=:(xs: TraversableOnce[A]) = {
-    xs.foldRight(this)((x, coll) => x +=: coll)
-    this
-  }
+  override def ++=:(xs: TraversableOnce[A]) =
+    xs.foldRight(this)((x, coll) => x +=: coll).asInstanceOf[this.type]
 
   override def insertAll(idx: Int, elems: scala.collection.Traversable[A]) = {
     checkIndex(idx)
@@ -85,10 +83,11 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
       arrayCopy(dest = array2, srcStart = idx, destStart = idx + src.length, maxItems = size)
       set(array = array2, start = 0, end = finalLength)
     } else {*/
-    val suffix = drop(idx)
-    end = (start + idx) & mask
-    this ++= src ++= suffix
-    //}
+      // TODO: choose to move prefix right or suffix left
+      val suffix = drop(idx)
+      end = (start + idx) & mask
+      this ++= src ++= suffix
+    /*}*/
   }
 
   override def remove(idx: Int, count: Int): Unit = {
@@ -97,12 +96,12 @@ class ArrayDeque[A] private(var array: Array[AnyRef], var start: Int, var end: I
     val removals = (size - idx) min count
     // If we are removing more than half the elements, its cheaper to start over
     // Else, either move the prefix right or the suffix left - whichever is shorter
-    /*if(2*removals >= size) {
+    if(2*removals >= size) {
       val array2 = ArrayDeque.alloc(size - removals)
       arrayCopy(dest = array2, srcStart = 0, destStart = 0, maxItems = idx)
       arrayCopy(dest = array2, srcStart = idx + removals - 1, destStart = idx, maxItems = size)
       set(array = array2, start = 0, end = size - removals)
-    } else */if (size - idx <= idx + removals) {
+    } else if (size - idx <= idx + removals) {
       (idx until size) foreach {i =>
         val elem = if (i + removals < size) get(i + removals) else null
         set(i, elem)
