@@ -22,4 +22,32 @@ class DisjointSetSpec extends Specification {
       ds.sets must containTheSameElementsAs(Seq(Set(1), Set(2,3), Set(4,5,6)))
     }
   }
+
+  //TODO: write scalacheck b/w DisjointSet and UnionFind
+
+  "UnionFind" should {
+    "work" in {
+      val edges = Seq(
+        2 -> 3,
+        1 -> 2,
+        6 -> 4,
+        4 -> 5
+      )
+
+      val ds = UnionFind(edges).toMap
+
+      val expected = Map(
+        2 -> 1,
+        3 -> 1,
+        1 -> 1,
+        6 -> 4,
+        5 -> 4,
+        4 -> 4
+      )
+
+      examplesBlock {
+        expected.foreach({case (u, v) => assert(ds(u) === ds(v))})
+      }
+    }
+  }
 }
