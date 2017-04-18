@@ -1,11 +1,12 @@
 package com.github.pathikrit.scalgos
 
+import scala.collection.generic.Clearable
 import scala.collection.mutable
 
 /**
   * Simpler implementation of @see DisjointSet
   */
-class UnionFind[A] extends PartialFunction[A, A] {
+class UnionFind[A] extends PartialFunction[A, A] with Clearable {
   private[this] val parent = mutable.Map.empty[A, A].withDefault(identity)
 
   private[this] def find(x: A): A = parent(x) match {
@@ -19,7 +20,7 @@ class UnionFind[A] extends PartialFunction[A, A] {
 
   override def apply(x: A) = find(x)
 
-  def toMap: Map[A, A] = parent.keys.map(u => u -> find(u)).toMap.withDefault(identity)
+  def toMap: Map[A, A] = (parent.keySet ++ parent.values).map(u => u -> find(u)).toMap
 
   def sets: Map[A, Iterable[A]] = parent.keys.groupBy(find)
 
@@ -30,6 +31,8 @@ class UnionFind[A] extends PartialFunction[A, A] {
     if (scala.util.Random.nextBoolean()) parent(find(x)) = find(y) else parent(find(y)) = find(x)
     this
   }
+
+  override def clear() = parent.clear()
 }
 
 object UnionFind {
