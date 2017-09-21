@@ -24,20 +24,7 @@ object Greedy {
     }
     solve(Nil, heights.zipWithIndex)
   }
-  
-  /**
-   * Merge a list of (possibly overlapping) closed-intervals into non-overlapping closed-intervals from left-to-right e.g.:
-   * input: [(18, 19), (3, 9), (7, 10), (1, 5), (12, 17), (19, 21), (0, 6)]
-   * output: [(0, 10), (12, 17), (18, 21)]
-   */
-  def mergeIntervals(intervals: (Int, Int)*): List[(Int, Int)] = {
-    def solve(intervals: List[(Int, Int)]): List[(Int, Int)] = intervals match {
-      case (x1, y1) :: (x2, y2) :: ps if y1 >= x2 => solve((x1, y1 max y2) :: ps)
-      case p1 :: pt => p1 :: solve(pt)
-      case _ => intervals
-    }
-    solve(intervals.toList.sorted)
-  }
+
   //TODO: stable marraige
   //TODO: 2SAT
 }
