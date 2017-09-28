@@ -38,7 +38,7 @@ class GraphSpec extends Specification {
     }
 
     "may not work for negative edges" in {
-      val g = new Graph(numberOfVertices = 4)
+      val g = new Graph[Double](numberOfVertices = 4)
       g(0->1) = 5
       g(1->2) = 5
       g(0->2) = 1
@@ -106,9 +106,9 @@ class GraphSpec extends Specification {
 
   "stronglyConnectedComponents" should {
     /**
-     * Given a graph and its strongly connected components check if all vertices are covered and mutual exclusion
-     */
-    def checkCoverage(g: Graph, sccs: Seq[Set[Int]]) = {
+      * Given a graph and its strongly connected components check if all vertices are covered and mutual exclusion
+      */
+    def checkCoverage(g: Graph[Double], sccs: Seq[Set[Int]]) = {
       for {
         (s1, s2) <- sccs X sccs if s1 != s2
       } s1.intersect(s2) must be empty
@@ -120,7 +120,7 @@ class GraphSpec extends Specification {
       val g = Graphs.zero
       val components = stronglyConnectedComponents(g)
       checkCoverage(g, components)
-      components must be empty
+      components must beEmpty
     }
 
     "work for graphs with 1 or 2 vertices" in todo
@@ -180,6 +180,47 @@ class GraphSpec extends Specification {
             trace(parents, v) must be equalTo path  // might be different paths with same cost - random chance of failure!
         }
       }
+    }
+  }
+
+  "max-flow" should {
+    "work for empty graphs" in {
+      val g = new Graph[Int](numberOfVertices = 0)
+      maxFlow(g, 0, 0) should throwA[AssertionError]
+    }
+
+    "work for graphs with no edges" in {
+      val g = new Graph[Int](numberOfVertices = 2)
+      maxFlow(g, 0, 1)._1 must be equalTo 0
+    }
+
+    "calculate maximum flow correctly" in {
+      val g = new Graph[Int](numberOfVertices = 7)
+      g(0->1) = 3
+      g(0->2) = 1
+      g(2->3) = 5
+      g(1->3) = 3
+      g(2->4) = 4
+      g(4->5) = 2
+      g(5->6) = 3
+      g(3->6) = 2
+      val (maximumFlow, _) = maxFlow(g, 0, 6)
+      maximumFlow must be equalTo 3
+    }
+
+    "calculate maximum flow correctly" in {
+      val g = new Graph[Int](numberOfVertices = 6)
+      g(0->1) = 4
+      g(1->2) = 3
+      g(2->3) = 2
+      g(3->4) = 4
+      g(0->5) = 2
+      g(5->4) = 4
+      g(4->0) = 3
+      g(4->1) = 1
+      g(2->4) = 1
+      val (maximumFlow, _) = maxFlow(g, 0, 3)
+      maximumFlow must be equalTo 2
     }
   }
 }
