@@ -1,20 +1,25 @@
 package com.github.pathikrit.scalgos
 
 import scala.collection.mutable
-
 import Implicits._
 
+import scala.reflect.ClassTag
+
+
 /**
- * A semi mutable weighted graph representation using adjacency list
- * Can add/remove/update edges but cannot add/remove vertices
- *
- * @param numberOfVertices Number of vertices in graph
- * @param isDirected true iff a directed graph
- */
-class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
+  * A semi mutable weighted graph representation using adjacency list
+  * Can add/remove/update edges but cannot add/remove vertices
+  *
+  * @param numberOfVertices Number of vertices in graph
+  * @param isDirected true iff a directed graph
+  */
+class Graph[W: Extrema :ClassTag](val numberOfVertices: Int, val isDirected: Boolean = true)(implicit num: Numeric[W]) {
   import Graph.EndPoints
 
-  private[this] val adjacencyList = Array.fill(numberOfVertices){mutable.Map.empty[Int, Double] withDefaultValue Double.PositiveInfinity}
+
+  private[this] val adjacencyList = Array.fill(numberOfVertices){
+    mutable.Map.empty[Int, W] withDefaultValue num.maxima
+  }
 
   private[this] implicit class Edge(points: EndPoints) {
     val (u, v) = points
@@ -28,7 +33,7 @@ class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
    * @param points (from,to)
    * @return edge value (else 0 if from==to or +infinity if from and to has no edge)
    */
-  def apply(points: EndPoints): Double = if (points.u == points.v) 0.0 else adjacencyList(points.u)(points.v)
+  def apply(points: EndPoints): W = if (points.u == points.v) num.zero else adjacencyList(points.u)(points.v)
 
   /**
    * curried alternative to @see apply(EndPoints)
@@ -37,7 +42,7 @@ class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
    * @param v to
    * @return edge value of u->v
    */
-  def apply(u: Int)(v: Int): Double = this(u->v)
+  def apply(u: Int)(v: Int): W = this(u->v)
 
   /**
    * Check if edge exists
@@ -63,7 +68,7 @@ class Graph(val numberOfVertices: Int, val isDirected: Boolean = true) {
    * @param points (from, to)
    * @param weight (from,to) = weight
    */
-  def update(points: EndPoints, weight: Double) = {
+  def update(points: EndPoints, weight: W) = {
     adjacencyList(points.u)(points.v) = weight
     if (!isDirected) {
       adjacencyList(points.v)(points.u) = weight
@@ -113,7 +118,7 @@ object Graph {
    * @param goal end vertex
    * @return result of A* search
    */
-  def dijkstra(g: Graph, start: Int, goal: Int) = new AStar[Int] {
+  def dijkstra(g: Graph[Double], start: Int, goal: Int) = new AStar[Int] {
     assume(g hasVertices (start, goal))
     def neighbors(n: Int) = g neighbours n
     override def distance(from: Int, to: Int) = g(from -> to)
@@ -129,7 +134,7 @@ object Graph {
    *         if x and y on negative weight cycle f(x)(y) = -infinity
    *         if x and y disconnected then f(x)(y) = +infinity
    */
-  def floydWarshall(g: Graph) = {
+  def floydWarshall(g: Graph[Double]) = {
     val f = g.adjacencyMatrix
 
     for (k <- g.vertices; i <- g.vertices; j <- g.vertices) {
@@ -151,7 +156,7 @@ object Graph {
    * @return the set of strongly connected components
    *         either a set is of size 1 or for every pair of vertex u,v in each set v is reachable from u
    */
-  def stronglyConnectedComponents(g: Graph) = {
+  def stronglyConnectedComponents(g: Graph[Double]) = {
     var count = 0
     val (index, lowLink) = (mutable.Map.empty[Int, Int], mutable.Map.empty[Int, Int])
     val stack = mutable.Stack[Int]()         //TODO: try empty here
@@ -175,14 +180,14 @@ object Graph {
       }
 
       if (index(u) == lowLink(u)) {
-       var v = -1
-       val scc = mutable.Set.empty[Int]
-       do {
-         v = stack.pop()
-         inProcess -= v
-         scc += v
-       } while(u != v)
-       components += scc.toSet
+        var v = -1
+        val scc = mutable.Set.empty[Int]
+        do {
+          v = stack.pop()
+          inProcess -= v
+          scc += v
+        } while(u != v)
+        components += scc.toSet
       }
     }
 
@@ -209,7 +214,7 @@ object Graph {
    *         and p(j) = parent of vertex j - follow back to source for path
    *                    should either end in -1 or a loop if d(i) is positive infinity
    */
-  def bellmanFord(g: Graph, source: Int) = {
+  def bellmanFord(g: Graph[Double], source: Int) = {
     val distance = Array.tabulate(g.numberOfVertices){g(source)}
     val parent = Array.fill(g.numberOfVertices)(-1)        // TODO: use Option instead of -1
 
@@ -230,7 +235,7 @@ object Graph {
    *
    * @return list of edges in the MST
    */
-  def kruskalsMst(g: Graph) = {
+  def kruskalsMst(g: Graph[Double]) = {
     val (d, mst) = (DisjointSet(g.vertices: _*), mutable.Set.empty[EndPoints])
     for ((u, v) <- g.edges sortBy g.apply if d(u) != d(v)) {
       d union (u, v)
@@ -245,7 +250,7 @@ object Graph {
    *
    * @return list of edges in the MST
    */
-  def primsMst(g: Graph) = g.vertices.toList match {
+  def primsMst(g: Graph[Double]) = g.vertices.toList match {
     case Nil => Set.empty[EndPoints]
     case v :: vs =>
       val (seen, unseen, mst) = (mutable.Set(v), mutable.Set(vs: _*), mutable.Set.empty[EndPoints])
@@ -266,7 +271,7 @@ object Graph {
    * @param f Apply f to each vertex in bfs order from source
    * @return If f is true at a vertex v, return Some(v) else None
    */
-  def bfs(g: Graph, source: Int, f: Int => Boolean): Option[Int] = {
+  def bfs(g: Graph[Double], source: Int, f: Int => Boolean): Option[Int] = {
     val (seen, queue) = (mutable.Set.empty[Int], mutable.Queue.empty[Int])
 
     def visit(i: Int) = {
@@ -295,7 +300,7 @@ object Graph {
    * @param f Apply f to each vertex in dfs order from source
    * @return If f is true at a vertex v, return Some(v) else None
    */
-  def dfs(g: Graph, u: Int, f: Int => Boolean, seen: Set[Int] = Set.empty[Int]): Option[Int] =
+  def dfs(g: Graph[Double], u: Int, f: Int => Boolean, seen: Set[Int] = Set.empty[Int]): Option[Int] =
     if (f(u)) Some(u) else g neighbours u filterNot seen firstDefined (dfs(g, _, f, seen + u))
 
   /**
@@ -306,7 +311,7 @@ object Graph {
    * @param g
    * @return Map from node to maxDepth
    */
-  def topologicalSort(g: Graph, root: Int): Map[Int, Int]  = {
+  def topologicalSort(g: Graph[Double], root: Int): Map[Int, Int]  = {
     val depth = mutable.Map.empty[Int, Int] withDefaultValue 0
     def dfs(visited: Set[Int])(u: Int): Unit = {
       require(!visited(u), s"Cycle detected involving $u")
@@ -315,5 +320,59 @@ object Graph {
     }
     dfs(Set.empty)(root)
     depth.toMap
+  }
+
+  /**
+   * Find the maximum flow of this graph
+   * O((V+E)f) - f is the maximum flow
+   * In practice, it will run much faster than the worst case
+   *
+   * @param g input graph with edges indicating capacity
+   * @param source source vertex
+   * @param sink sink vertex
+   * @return maximumFlow and its flow graph
+   */
+  def maxFlow(g: Graph[Int], source: Int, sink: Int): (Int, Graph[Int]) = {
+    def findAugPath(seen: Map[Int, Boolean], flowLeft: Array[Array[Int]])(cur: Int): Option[(List[Int], Int)] = {
+      if(cur == sink) Some((cur :: Nil, Int.MaxValue))
+      else if(seen(cur)) None
+      else {
+        val neighbors = g.neighbours(cur).filterNot(seen).filter(flowLeft(cur)(_) > 0)
+        neighbors.firstDefined(findAugPath(seen.updated(cur, true), flowLeft)).map { pathToSink =>
+          (cur :: pathToSink._1, Math.min(flowLeft(cur)(pathToSink._1.head), pathToSink._2))
+        }
+      }
+    }
+
+    def updateFlow(flowLeft: Array[Array[Int]], path: List[Int], aug: Int): Array[Array[Int]] = {
+      path match {
+        case _ :: Nil => flowLeft
+        case x :: y :: xs =>
+          updateFlow(
+            flowLeft
+              .updated(x, flowLeft(x).updated(y, flowLeft(x)(y)-aug))
+              .updated(y, flowLeft(y).updated(x, flowLeft(y)(x)+aug)),
+            y :: xs,
+            aug
+          )
+      }
+    }
+
+    def maxFlowAux(flowLeft: Array[Array[Int]] = g.adjacencyMatrix, maxFlow: Int = 0): (Int, Graph[Int]) = {
+      findAugPath(Map.empty[Int, Boolean].withDefaultValue(false), flowLeft)(source) match {
+        case Some((path, aug)) => maxFlowAux(updateFlow(flowLeft, path, aug), maxFlow + aug)
+        case None => {
+          val flowGraph = new Graph[Int](g.numberOfVertices)
+          val flow = g.adjacencyMatrix.zip(flowLeft).map(p => p._1.zip(p._2).map(p => p._1-p._2))
+          g.edges.map(p => (p._1, p._2, flow(p._1)(p._2))).filter(_._3 > 0).foreach { p =>
+            flowGraph(p._1->p._2) = p._3
+          }
+          (maxFlow, flowGraph)
+        }
+      }
+    }
+
+    assume(g hasVertices(source, sink))
+    maxFlowAux()
   }
 }

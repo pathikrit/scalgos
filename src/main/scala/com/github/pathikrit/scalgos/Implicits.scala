@@ -181,4 +181,34 @@ object Implicits { //TODO: Move to package.scala
   implicit class PipedFunctions[A](x: => A) {
     def |>[B](f: A => B) = f(x)
   }
+
+  trait Extrema[W] {
+    def maxValue: W
+    def minValue: W
+  }
+
+  implicit class numericExtension[W: Extrema](nw: Numeric[W]) {
+    def maxima: W = implicitly[Extrema[W]].maxValue
+
+    def minima: W = implicitly[Extrema[W]].minValue
+  }
+
+  implicit val integerExtrema: Extrema[Int] = new Extrema[Int] {
+    override def maxValue: Int = Int.MaxValue
+
+    override def minValue: Int = Int.MinValue
+  }
+
+  implicit val longExtrema: Extrema[Long] = new Extrema[Long] {
+    override def maxValue: Long = Long.MaxValue
+
+    override def minValue: Long = Long.MinValue
+  }
+
+  implicit val doubleExtrema: Extrema[Double] = new Extrema[Double] {
+    override def maxValue: Double = Double.PositiveInfinity
+
+    override def minValue: Double = Double.NegativeInfinity
+
+  }
 }
