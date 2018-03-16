@@ -19,6 +19,13 @@ object Combinatorics {
    * @return all 2^n ways of choosing elements from s
    */
   def combinations[A](s: Seq[A]) = for {i <- 0 to s.length; j <- s combinations i} yield j
+  
+  /**
+    * All 2^^n possible combos of n from 0 to 1<<n
+    * @param n
+    * @return
+    */
+  def combinations(n: Int): Seq[IndexedSeq[Int]] = (0 until 1<<n).map(i => (0 until n).map(j => ((i>>j)&1) == 1))
 
   /**
    * Combinations with repeats e.g. (2, Set(A,B,C)) -> AA, AB, AC, BA, BB, BC, CA, CB, CC
