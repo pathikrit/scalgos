@@ -17,6 +17,7 @@ object Randomized {
     require(k >= 0 && k < s.size)
     val pivot = s(Random.nextInt(s.length))
     val (low, rest) = s.partition(_ < pivot)
+    //TODO: s.groupBy(i => (i - pivot).signum).mapValues(_.size).withDefaultValue(0)
     if (k < low.size) {
       quickSelect(low, k)
     } else {
