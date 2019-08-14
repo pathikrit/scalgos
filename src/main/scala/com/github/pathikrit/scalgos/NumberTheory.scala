@@ -116,11 +116,11 @@ object NumberTheory {
     * @param n
     * @return
     */
-  def divisors(n: Long) = {
-    val divisors = Set.newBuilder[Long]
+  def divisors(n: Int) = {
+    val divisors = Set.newBuilder[Int]
     for {
       i <- 1 to sqrt(n.toDouble).toInt if n%i == 0
-    } divisors += i.toLong += n/i
+    } divisors += i += n/i
     divisors.result()
   }
 
