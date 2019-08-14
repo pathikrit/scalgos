@@ -109,6 +109,20 @@ object NumberTheory {
     case 1 if b >= a => (b + (b < 0))/c - (a - (a > 0))/c + (a <= 0 && b >= 0)
     case _ => throw new IllegalArgumentException
   }
+    
+   /**
+    * List all unqiue divisors of n including 1 and n 
+    * O(sqrt(n))
+    * @param n
+    * @return
+    */
+  def divisors(n: Long) = {
+    val divisors = Set.newBuilder[Long]
+    for {
+      i <- 1 to sqrt(n.toDouble).toInt if n%i == 0
+    } divisors += i.toLong += n/i
+    divisors.result()
+  }
 
   /**
    * Count factors of all numbers upto n
