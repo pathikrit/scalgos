@@ -85,7 +85,9 @@ object BitHacks {
    * O(64) bit-wise operations for Longs (O(32) for Ints)
    * 
    * We can easily modify this to search for smallest y such that is false by doing bitBinSearch(not(f)) + 1
-   * (see: http://codeforces.com/contest/785/submission/25516887)
+   * See: 
+   *   - https://codeforces.com/contest/785/submission/25516887
+   *   - https://codeforces.com/contest/1241/submission/62013923
    *
    * @return Some(x) such that x is the largest number for which f is true
    *         If no such x is found, None
