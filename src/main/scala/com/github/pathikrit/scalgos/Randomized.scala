@@ -13,17 +13,14 @@ object Randomized {
    *
    * @return the k-th item in s
    */
-  def quickSelect[A: Ordering](s: Seq[A], k: Int): A = {
+ def quickSelect[A](s: Seq[A], k: Int)(implicit ord: Ordering[A]): A = {
     require(k >= 0 && k < s.size)
-    val pivot = s(Random.nextInt(s.length))
-    val (low, rest) = s.partition(_ < pivot)
-    //TODO: s.groupBy(i => (i - pivot).signum).mapValues(_.size).withDefaultValue(0)
-    if (k < low.size) {
-      quickSelect(low, k)
-    } else {
-      val (equal, high) = rest.partition(_ == pivot)
-      if (k < low.size + equal.size) pivot else quickSelect(high, k - low.size - equal.size)
-    }
+    val pivot = s((Math.random() * s.length).toInt)
+    val table = s.groupBy(i => ord.compare(i, pivot)).withDefaultValue(Nil)
+    val Seq(low, equal, high) = Seq(-1, 0, 1).map(table)
+    if (k <= low.size) quickSelect(low, k)
+    else if (k <= low.size + equal.size) pivot
+    else quickSelect(high, k - low.size - equal.size)
   }
 
   /**
